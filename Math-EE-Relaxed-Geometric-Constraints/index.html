@@ -1,0 +1,137 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Relaxed Constraints</title>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+	<table>
+		<tr>
+			<td>
+				<label for="startsim"> Start Simulation:</label>
+				<input type="checkbox" id="startsim" name="startsim" onclick = "start()">
+			</td>
+			<td>
+				<label for="steps">Simulation Iterations per Frame</label>
+		 		<input value="10" type="text" id="steps" name="steps" oninput="applychanges()">
+			</td>
+			<td>
+				<button onclick="nextStep()">Next Step</button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="collide"> Enable Collisions</label>
+				<input type="checkbox" id="collide" name="collide" onclick = "collideCheck()">
+			</td>
+			<td>                
+				<div class="input">
+					<label for="constraintsIter">Constraint Solving Iteration</label>
+                    <input value="10" type="text" id="constraintsIter" name="constraintsIter" oninput="applychanges()">
+                    
+                </div>
+			</td>
+			
+		</tr>
+
+		<tr>
+			<td>                
+				<div class="input">
+					<label for="stiffness">Stiffness</label>
+                    <input value="0.1" type="text" id="stiffness" name="stiffness" oninput="applychanges()">
+                    
+                </div>
+			</td>
+			<td>
+				<label for="simulation">Choose Simulation</label>
+				<select onchange="checksim()" name="simulation" id="simulation">
+					<option value="cloth">Cloth</option>
+					<option value="truss">Truss</option>
+					<option value="beam">Beam</option>
+					<option value="pendulum">Pendulum</option>
+					<option value="spring">Linear Oscillator</option>
+					<option value="doublependulum">Double Pendulum</option>
+					<option value="softbody">Soft body</option>
+					<option value="rigidbody">Rigid body</option>
+					<option value="cradle">Newton's Cradle</option>
+				</select>
+			</td>
+		</tr>
+
+		<tr>
+
+			<td>Elapsed Time: <span id = "time">0</span>s</td>
+		</tr>
+	</table><br>
+	<canvas id="test"></canvas>
+	<p>Constrained dynamic system modelling with Geometric Relaxed Constraints.<br>
+Press tab to remove the last item. Press delete to clear all items. Double click on a particle to make it a pivot. Right-click to delete particle. All particles
+        are interactive.</p>
+
+
+
+    <table>
+        <tr>
+            <td>
+ 		<div class="input">
+                    <input value="0.002" type="text" id="timestep" name="timestep" oninput = "applychanges()"><br>
+                    <label for="timestep">Timestep</label>
+		</div>
+            </td>
+            <td>
+                <div class="input">
+                    <input value="100" type="text" id="gravity" name="gravity" oninput="applychanges()"><br>
+                    <label for="gravity">Gravity</label>
+                </div>
+            </td>
+            <td>
+                <div class="input">
+                    <input value="10" type="text" id="Drag" name="drag" oninput="applychanges()"><br>
+                    <label for="drag">Viscosity</label>
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+				<div class="input">
+                    <input value="0.005" type="text" id="maxforce" name="maxforce" oninput="applychanges()"><br>
+                    <label for="maxforce">Color change sensitivity</label>
+                </div>
+            </td>
+            <td>
+				<div class="input">
+                    <input value="1000" type="text" id="width" name="width" oninput="applychanges()"><br>
+                    <label for="width">Width</label>
+                </div>
+            </td>
+            <td>
+				<div class="input">
+                    <input value="700" type="text" id="height" name="height" oninput="applychanges()"><br>
+                    <label for="height">Height</label>
+                </div>
+            </td>
+        </tr>
+		<tr>
+			<td>
+
+			</td>
+		</tr>
+    </table>
+
+
+	
+	<script src="vector.js"></script>
+	<script src="particle.js"></script>
+	<script src = "constraint.js"></script>
+	<script src="frscript.js"></script>
+	<script src="setup.js"></script>
+    
+	<script src="solver.js"></script>
+</body>
+
+</html>
