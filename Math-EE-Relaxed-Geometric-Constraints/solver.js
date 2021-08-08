@@ -98,7 +98,7 @@ function solver() {
 
 	time = time + iterations * timestep;
 	clock.innerHTML = time;
-
+	/*
 	if(time - prevtime >= 0.5){
 		data.push([time,cl[cl.length-1].pos.y])
 		console.log(time)
@@ -108,7 +108,7 @@ function solver() {
 	if (time > 1503 && bruh == 0){
 		download_csv();
 		bruh++;
-	}
+	}*/
 
 }
 
