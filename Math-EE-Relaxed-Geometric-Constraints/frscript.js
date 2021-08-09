@@ -205,9 +205,6 @@ function rigidbody() {
         }
     }
 
-    for (circ of grid[0]) {
-        //circ.ispivot = true;
-    }
 
     dampen = 0;
     grid = [];
@@ -241,9 +238,6 @@ function rigidbody() {
         }
     }
 
-    for (circ of grid[0]) {
-        //circ.ispivot = true;
-    }
 
     dampen = 0;
     grid = [];
@@ -277,9 +271,7 @@ function rigidbody() {
         }
     }
 
-    for (circ of grid[0]) {
-        //circ.ispivot = true;
-    }
+
 }
 
 function cradle() {
