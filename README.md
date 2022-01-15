@@ -4,4 +4,4 @@ https://hanson-sun.github.io/Math-EE/
 Files and additional resources for my math EE
 
 
-maybe i should inlude the actual paper itself. Oh well, ill do that if i remember
+recommended to read math_ee.pdf, very helpful, very cool , a whole summer of suffering.
