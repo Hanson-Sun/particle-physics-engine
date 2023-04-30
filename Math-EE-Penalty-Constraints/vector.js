@@ -11,6 +11,7 @@ class Vector2D {
 	sub(vect) {
 		return (new Vector2D(this.x - vect.x, this.y - vect.y));
 	}
+	
 	mult(a) {
 		return (new Vector2D(this.x * a, this.y * a));
 	}
