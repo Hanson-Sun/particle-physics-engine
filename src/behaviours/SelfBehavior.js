@@ -7,16 +7,16 @@ class SelfBehavior {
      */
     constructor() {
         if (this.constructor == SelfBehavior) {
-            throw new Error("HashGridItem interface class cannot be instantiated.");
+            throw new Error("SelfBehavior interface class cannot be instantiated.");
         }
     }
 
-    /**
-     * 
-     * @param {*} timeStep 
-     */
     applyBehavior(particle, timeStep) {
-        throw new Error("Method 'getHashPos()' must be implemented.");
+        throw new Error("Method 'applyBehavior()' must be implemented.");
+    }
+
+    applyCorrection(particle) {
+        throw new Error("Method 'applyCorrection()' must be implemented.");
     }
 
 }

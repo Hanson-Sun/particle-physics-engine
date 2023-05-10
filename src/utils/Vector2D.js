@@ -141,4 +141,16 @@ class Vector2D {
 		}
 		return Math.acos(dot / mag1 / mag2) * 180 / Math.PI;
 	}
+
+	/**
+	 * Performs the mirror reflection for `this` about a normal vector.
+	 * @param {Vector2D} normal 
+	 * @returns Vector2D
+	 */
+	reflect(normal) {
+		let dot2 = 2 * (this.x * normal.x + this.y * normal.y);
+		let x = this.x - normal.x * dot2;
+		let y = this.y - normal.y * dot2;
+		return new Vector2D(x, y);
+	}
 }

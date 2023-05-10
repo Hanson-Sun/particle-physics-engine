@@ -26,4 +26,8 @@ class NearBehavior {
         throw new Error("Method 'range()' must be implemented.");
     }
 
+    applyCorrection(particle, particles) {
+        throw new Error("Method 'applyCorrection()' must be implemented.");
+    }
+
 }

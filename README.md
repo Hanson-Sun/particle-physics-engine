@@ -9,3 +9,27 @@ Some of my research about modelling constrained 2D particle-based physics system
 It took me a while to research and write everything, read the paper here https://github.com/Hanson-Sun/Math-EE/blob/main/HansonS_Math_EE.pdf (HansonS_Math_EE.pdf)
 
 This repository also includes additional files for demo purposes
+
+
+### TODO
+- [ ] Refactor code
+  - [ ] Add behaviors
+    - [x] Collision 
+    - [ ] Attraction
+    - [x] Drag
+    - [ ] Pivots
+  - [x] add walls
+    - [x] general walls/world/vertical+horizontal
+  - [x] add constraints
+    - [x] force based
+    - [x] position based
+  - [x] Fix solver, world, and others
+  - [ ] Fix renderer and potentially add more features
+    - [ ] constraint stress colours? 
+- [ ] write docs
+- [ ] formalize package
+- [ ] Optimize
+- [ ] update paper... maybe
+
+### Bugs
+- particles can teleport through walls way too easily --> perhaps implement a ray-casting algorithm instead of being velocity dependent

@@ -6,6 +6,7 @@
 class HashGridItem {
     _gridIndex = []
     _queryId = -1
+    wallCollide = true;
 
     /**
      * @constructor interface cannot be instantiated
@@ -17,18 +18,18 @@ class HashGridItem {
     }
 
     /**
-     * computes the coordinate position for the item within the `HashGrid`, expects center position.
+     * Computes the coordinate position for the item within the `HashGrid`, expects center position.
      * @abstract
-     * @returns {[float, float]} 
+     * @returns {[Number, Number]} 
      */
     getHashPos() {
         throw new Error("Method 'getHashPos()' must be implemented.");
     }
 
     /**
-     * computes the dimensions of the item for the `HashGrid`
+     * Computes the dimensions of the item for the `HashGrid`.
      * @abstract
-     * @returns {[float, float]} 
+     * @returns {[Number, Number]} rectangular dimensions in [width, height]
      */
     getHashDimensions() {
         throw new Error("Method 'getHashDimensions()' must be implemented.");

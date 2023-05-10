@@ -1,38 +1,35 @@
 /**
- * The SpatialHashGrid is is a data structure that stores and sorts items into distinct "2D grids".
+ * The `SpatialHashGrid` is is a data structure that stores and sorts items into distinct "2D grids".
  * It allows for the quick access of nearby items without brute force iteration.
- * This data structure can increase performance by ~100x for sufficiently large collision interactions in close proximity.
+ * This data structure can increase performance by ~100x for sufficiently large collision interactions in close proximity. 
+ * Note that this data structure is not directly iterable.
  *  
- * **Important:** Only items that implement the `HashGridItem` interface are compatible with the SpatialHashGrid.
- * 
- * Notes: implementation is work in progress, further optimizations expected. 
+ * **Important:** Only items that implement the `HashGridItem` interface are compatible with the `SpatialHashGrid`.
  */
 class SpatialHashGrid {
     #queryIds;
     #cells;
 
     /**
-     * @constructor instantiate new SpatialHashGrid
-     * @param {number} width width of HashGrid
-     * @param {number} height height of HashGrid
+     * @constructor instantiates new SpatialHashGrid
+     * @param {Number} width width of HashGrid
+     * @param {Number} height height of HashGrid
      * @param {int} xGrids number of grid separations on the x-axis
-     * @param {int} yGrids number of grid separations on the y-axis
+     * @param {int} [yGrids=null] optional param number of grid separations on the y-axis, defaults to same as xGrids
      * @access public
      */
     constructor(width, height, xGrids, yGrids=null) {
         this.width = width;
         this.height = height;
-        this.xGrids = xGrids;
-        this.yGrids = yGrids;
-        this.yGrids = yGrids || xGrids;
+        this.xGrids = Math.floor(xGrids);
+        this.yGrids = Math.floor(yGrids) || Math.floor(xGrids);
         this.#cells = [];
         this.#initialize();
         this.#queryIds = 0;
     }
 
     /**
-     * adds an item to the HashGrid
-     * @modifies this
+     * Adds an item to the HashGrid.
      * @param {HashGridItem} item 
      * @access public
      */
@@ -41,8 +38,7 @@ class SpatialHashGrid {
     }
 
     /**
-     * initializes 2D grid
-     * @modifies this
+     * Private method that initializes 2D grid.
      * @access private
      */
     #initialize() {
@@ -56,8 +52,7 @@ class SpatialHashGrid {
     }
 
     /**
-     * private method that inserts the item into its corresponding grid cell
-     * @modifies this
+     * Private method that inserts the item into its corresponding grid cell
      * @param {HashGridItem} item 
      * @access private
      */
@@ -78,21 +73,10 @@ class SpatialHashGrid {
     }
 
     /**
-     * private method that returns a string coordinate key
-     * @param {float} x 
-     * @param {float} y 
-     * @returns string coordinate key
-     * @access private
-     */
-    #key(x, y) {
-        return x + ", " + y;
-    }
-    
-    /**
-     * returns A pair of min and max coordinates representing the range of grids that the object occupies
-     * @param {float} x 
-     * @param {float} y 
-     * @returns {[[int, int],[int, int]]} 
+     * Finds the nearest grid coordinate that the encapsulates (x, y).
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns {[int, int]} grid coordinates
      * @access private
      */
     #getCellIndex(x, y) {
@@ -106,10 +90,9 @@ class SpatialHashGrid {
     }
 
     /**
-     * returns a list of the nearby items, and changes queryId
-     * @modifies this
+     * Finds the nearby items for a given item, and updates the queryId.
      * @param {HashGridItem} item 
-     * @param {[Number, Number]} range
+     * @param {[Number, Number]} range - optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.
      * @returns {HashGridItem[]}
      * @access public
      */
@@ -140,8 +123,7 @@ class SpatialHashGrid {
     }
 
     /**
-     * updates the grid positions of the item
-     * @modifies this
+     * Updates the grid positions of the item within the HashGrid. This function **MUST** be called after any position change.
      * @param {HashGridItem} item 
      * @access public
      */
@@ -166,7 +148,7 @@ class SpatialHashGrid {
     }
     
     /**
-     * delete item from HashGrid
+     * Delete item from HashGrid.
      * @modifies this
      * @param {HashGridItem} item
      */
@@ -181,7 +163,7 @@ class SpatialHashGrid {
     }
 
     /**
-     * return a unique list of all HashGridItems within HashGrid
+     * Returns a unique list of all HashGridItems the HashGrid. 
      * @modifies this
      * @returns {HashGridItem[]}
      */
