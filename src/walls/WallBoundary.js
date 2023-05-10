@@ -51,20 +51,21 @@ class WallBoundary extends Wall {
             if (distance < particle.radius && lambda < 0) {
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
                 particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance < particle.radius && lambda > 1) {
                 let diff = pos.sub(this.p2);
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
                 particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance < particle.radius) {
-                particle.vel = particle.vel.reflect(this.normal).mult(bounciness);
-                let mag = particle.vel.dot(this.normal);
-                particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag));
+                //particle.vel = particle.vel.reflect(this.normal).mult(bounciness);
+                let mag = particle.vel.reflect(this.normal).dot(this.normal);
+                particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag * bounciness));
             }
         }
+        this.collideCorrect(particles);
     }
 
     collideCorrect(particles) {

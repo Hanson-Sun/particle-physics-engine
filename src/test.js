@@ -12,7 +12,7 @@ var c = canvas.getContext("2d");
 canvas.width = width;
 canvas.height = height;
 
-const world = new World(canvas, width, height, 8, 8, 0.001, 1, 10);
+const world = new World(canvas, width, height, 8, 8, 0.001, 10, 30);
 
 const pos = new Vector2D(250, 100);
 const pos2 = new Vector2D(250, 400);
@@ -21,15 +21,15 @@ const vel2 = new Vector2D(0, 1);
 const vel3 = new Vector2D(0, -1);
 
 const mag = 0.5;
-const mass = 10
-const bounce = 0.9999;
+const mass = 1;
+const bounce = 1;
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 0; i++) {
 	let s1 = Math.random() < 0.5 ? -1 : 1;
 	let s2 = Math.random() < 0.5 ? -1 : 1;
 	let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
 	let p = new Vector2D(( width - 50) * Math.random() + 25, (height - 50) * Math.random() + 25);
-	let part = new Particle(p, v, mass, 7, bounce)
+	let part = new Particle(p, v, mass, 10, bounce)
 	world.addParticle(part);
 }
 
@@ -41,17 +41,17 @@ world.addParticle(pt2);
 
 const cons = new ForceDistanceConstraint(pt, pt2, 300, 10000);
 
-world.addConstraint(cons);
+//world.addConstraint(cons);
 
-softBody();
+ softBody();
 
-world.enableGravity(600);
-world.addWall(new WallBoundary(250, 300, 600, 300));
-world.addWall(new WallBoundary(200, 300, 500, 450));
+world.enableGravity(10);
+//world.addWall(new WallBoundary(250, 300, 600, 350));
+world.addWall(new WallBoundary(50, 690, 650, 690));
 
 world.enableCollisions();
 world.constrainBoundary(0, width, 0, height);
-//world.enableDrag(0.10);
+//world.enableDrag(100);
 
 var count = 0;
 setInterval(function () {
@@ -75,9 +75,9 @@ function softBody() {
     grid = [];
     size = 10;
     w = 20;
-	stiffness = 0.001;
-	radius = 8;
-	constraint = PositionDistanceConstraint;
+	stiffness = 10000;
+	radius = 1;
+	constraint = ForceDistanceConstraint;
     for (row = 0; row < size; row++) {
         r = [];
         for (col = 0; col < size; col++) {

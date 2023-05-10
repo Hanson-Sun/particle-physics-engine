@@ -11,8 +11,8 @@ class Drag extends SelfBehavior {
 		if (vMagSqr > this.LOWER_LIMIT && this.viscosity != 0) {
 			let dragC = 0.0001 * (Math.PI * this.viscosity * particle.radius) / particle.mass;
 			let vNormal = vel.normalize();
-			let fDrag = vNormal.mult(vMagSqr * -dragC);
-			particle.vel = vel.sub(fDrag.mult(timeStep));
+			let fDrag = vNormal.mult(vMagSqr * dragC);
+			//particle.vel = vel.sub(fDrag.mult(timeStep));
             particle.pos = particle.pos.sub(fDrag.mult(timeStep * timeStep));
 		}
 	}

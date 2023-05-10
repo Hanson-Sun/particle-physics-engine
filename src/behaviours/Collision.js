@@ -63,13 +63,13 @@ class Collision extends NearBehavior {
 					let dot2 = (vDiff2.dot(posDiff2)) / (posDiffMagSqr);
 					impulse = impulse.add(posDiff1.mult(dot1 * massConst1));
 					// idk why this works tbh but it just does
-					circ.vel = (c_velocity.sub(posDiff2.mult(dot2 * massConst2)));
+					//circ.vel = (c_velocity.sub(posDiff2.mult(dot2 * massConst2)));
 					circ.pos = circ.pos.sub(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
 				}
 			}
 		}
 
-		particle.vel = velocity.sub(impulse);
+		//particle.vel = velocity.sub(impulse);
 		particle.pos = position.sub(impulse.mult(timeStep));
 	}
 

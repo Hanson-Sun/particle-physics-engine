@@ -33,3 +33,6 @@ This repository also includes additional files for demo purposes
 
 ### Bugs
 - particles can teleport through walls way too easily --> perhaps implement a ray-casting algorithm instead of being velocity dependent
+- some degree of instability when particles are stacked up (?) --> could be an issue of the world constraints
+- unify solver behavior --> focus on position-based, velocity independent constraint and collision behavior.
+  - seems to have a tendency to lose energy when constraints are used.

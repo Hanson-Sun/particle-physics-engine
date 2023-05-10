@@ -178,7 +178,7 @@ class SpatialHashGrid {
         for (let row of this.#cells) {
             for (let set of row) {
                 for (let i of set) {
-                    if (i.queryId != queryId) {
+                    if (i.queryId !== queryId) {
                         i.queryId = queryId;
                         iterable.push(i);
                     }

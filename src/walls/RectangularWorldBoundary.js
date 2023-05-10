@@ -19,23 +19,23 @@ class RectangularWorldBoundary extends Wall {
             const velY = particle.vel.y;
             
             if (posX > this.maxW - radius) {
-                particle.vel.x = velX * -1 * bounce;
-                particle.pos.x = posX +  2 * particle.vel.x * timeStep;
+                //particle.vel.x = velX * -1 * bounce;
+                particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
             } 
 
             if (posX < this.minW + radius) {
-                particle.vel.x = velX * -1 * bounce;
-                particle.pos.x = posX +  2 * particle.vel.x * timeStep;
+                //particle.vel.x = velX * -1 * bounce;
+                particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
             } 
 
             if (posY > this.maxH - radius) {
-                particle.vel.y = velY * -1 * bounce;
-                particle.pos.y = posY + 2 * particle.vel.y * timeStep;
+                //particle.vel.y = velY * -1 * bounce;
+                particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
             } 
 
             if (posY < this.minH + radius) {
-                particle.vel.y = velY * -1 * bounce;
-                particle.pos.y = posY + 2 * particle.vel.y * timeStep;
+                //particle.vel.y = velY * -1 * bounce;
+                particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
             }
 
             if (particle.pos.x > this.maxW - radius) {
@@ -59,19 +59,19 @@ class RectangularWorldBoundary extends Wall {
     applyCorrection(particles) {
         for (let particle of particles) {
             const radius = particle.radius;
-            if (particle.pos.x >= this.maxW - radius) {
+            if (particle.pos.x > this.maxW - radius) {
                 particle.pos.x = this.maxW - radius;
             }
 
-            if (particle.pos.x <= this.minW + radius) {
+            if (particle.pos.x < this.minW + radius) {
                 particle.pos.x = this.minW + radius;
             }
 
-            if (particle.pos.y >= this.maxH - radius) {
+            if (particle.pos.y > this.maxH - radius) {
                 particle.pos.y = this.maxH - radius;
             }
 
-            if (particle.pos.y <= this.minH + radius) {
+            if (particle.pos.y < this.minH + radius) {
                 particle.pos.y = this.minH + radius;
             }
         }
@@ -82,13 +82,10 @@ class RectangularWorldBoundary extends Wall {
         const posY = particle.pos.y;
         const radius = particle.radius;
         
-        if ((posX >= this.maxW - radius) || (posX <= this.minW + radius) || 
-            (posY >= this.maxH - radius) || (posY <= this.minH + radius) || 
-            (particle.pos.x >= this.maxW - radius) || (particle.pos.x <= this.minW + radius) || 
-            (particle.pos.y >= this.maxH - radius) || (particle.pos.y <= this.minH + radius)) {
-            return true;
-        } 
-        return false;
+        return  (posX >= this.maxW - radius) || (posX <= this.minW + radius) || 
+                (posY >= this.maxH - radius) || (posY <= this.minH + radius) || 
+                (particle.pos.x >= this.maxW - radius) || (particle.pos.x <= this.minW + radius) || 
+                (particle.pos.y >= this.maxH - radius) || (particle.pos.y <= this.minH + radius)
     }
 
     getHashPos() {

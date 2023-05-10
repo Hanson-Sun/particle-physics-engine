@@ -27,15 +27,12 @@ class Solver {
 
     preMove() {
         for (let circ of this.particleList) {
-            // unsure if this is correct. May need to add corrections after moving actual position.
             if (!circ.isPivot) {
                 circ.prevPos = circ.pos;
                 circ.applyVelocity(circ.vel, this.timeStep);
             } else if (circ.isPivot) {
                 circ.vel = new Vector2D(0, 0);
             }
-
-            // we can apply some gravitational and behaviors here (non collisions)
         }
     }
 
