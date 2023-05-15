@@ -80,13 +80,16 @@ class SpatialHashGrid {
      * @access private
      */
     #getCellIndex(x, y) {
-        const xScaled = Math.min(Math.max(Math.abs(x / this.width), 0.0), 1.0);
-        const yScaled = Math.min(Math.max(Math.abs(y / this.height), 0.0), 1.0);
+        // 1.1 because it will not work for xScaled=1
+        const xScaled = Math.min(Math.max((x / this.width), 0.0), 1);
+        const yScaled = Math.min(Math.max((y / this.height), 0.0), 1);
 
-        const xIndex = Math.floor((this.xGrids - 1) * xScaled);
-        const yIndex = Math.floor((this.yGrids - 1) * yScaled);
+        const xIndex = Math.round((this.xGrids - 1) * xScaled);
+        const yIndex = Math.round((this.yGrids - 1) * yScaled);
 
         return [xIndex, yIndex];
+
+        
     }
 
     /**

@@ -111,4 +111,9 @@ class World {
         this.removeGlobalBehavior(this.dragBehavior);
     }
 
+    enableChargeInteractions() {
+        this.chargeBehavior = new ChargeInteraction();
+        this.addGlobalNearBehavior(this.chargeBehavior);
+    }
+
 }

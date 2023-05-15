@@ -63,13 +63,13 @@ class Collision extends NearBehavior {
 					let dot2 = (vDiff2.dot(posDiff2)) / (posDiffMagSqr);
 					impulse = impulse.add(posDiff1.mult(dot1 * massConst1));
 					// idk why this works tbh but it just does
-					//circ.vel = (c_velocity.sub(posDiff2.mult(dot2 * massConst2)));
+					circ.vel = (c_velocity.sub(posDiff2.mult(dot2 * massConst2)));
 					circ.pos = circ.pos.sub(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
 				}
 			}
 		}
 
-		//particle.vel = velocity.sub(impulse);
+		particle.vel = velocity.sub(impulse);
 		particle.pos = position.sub(impulse.mult(timeStep));
 	}
 
@@ -91,14 +91,20 @@ class Collision extends NearBehavior {
                 let c_radius = circ.radius;
 
 				let posDiff1 = position.sub(c_position);
-				if (posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius)) {
-					let direction1 = (c_position.sub(position)).normalize();
+				if (posDiff1.magSqr() <= (radius + c_radius) * (radius + c_radius)) {
+					let direction1 = posDiff1.normalize();
 					let overlap = radius + c_radius - posDiff1.mag();
 
 					if (circ.isPivot) {
-						particle.pos = position.sub(direction1.mult(overlap));
+						circ.pos = circ.pos.sub(direction1.mult(overlap));
 					} else {
-						particle.pos = position.sub(direction1.mult(overlap * c_mass / (mass + c_mass)));
+						circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
+					}
+
+					if (particle.isPivot) {
+						particle.pos = position.add(direction1.mult(overlap));
+					} else {
+						particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
 					}
 				}
 			}

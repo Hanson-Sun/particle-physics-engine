@@ -37,22 +37,6 @@ class RectangularWorldBoundary extends Wall {
                 //particle.vel.y = velY * -1 * bounce;
                 particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
             }
-
-            if (particle.pos.x > this.maxW - radius) {
-                particle.pos.x = this.maxW - radius;
-            }
-
-            if (particle.pos.x < this.minW + radius) {
-                particle.pos.x = this.minW + radius;
-            }
-
-            if (particle.pos.y > this.maxH - radius) {
-                particle.pos.y = this.maxH - radius;
-            }
-
-            if (particle.pos.y < this.minH + radius) {
-                particle.pos.y = this.minH + radius;
-            }
         }
     }
 

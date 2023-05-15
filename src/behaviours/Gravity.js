@@ -10,7 +10,7 @@ class Gravity extends SelfBehavior {
      * @param {*} timeStep 
      */
     applyBehavior(particle, timeStep) {
-        //particle.applyAcceleration(this.acceleration, timeStep);
+        particle.applyAcceleration(this.acceleration, timeStep);
         particle.pos = particle.pos.add(this.acceleration.mult(timeStep * timeStep));
     }
 

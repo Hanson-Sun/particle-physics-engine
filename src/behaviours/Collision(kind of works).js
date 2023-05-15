@@ -92,7 +92,7 @@ class Collision extends NearBehavior {
 		}
 	}
 
-    range() {
+    RANGE() {
         return null;
     }
 

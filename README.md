@@ -15,7 +15,7 @@ This repository also includes additional files for demo purposes
 - [ ] Refactor code
   - [ ] Add behaviors
     - [x] Collision 
-    - [ ] Attraction
+    - [x] Attraction
     - [x] Drag
     - [ ] Pivots
   - [x] add walls
@@ -36,3 +36,6 @@ This repository also includes additional files for demo purposes
 - some degree of instability when particles are stacked up (?) --> could be an issue of the world constraints
 - unify solver behavior --> focus on position-based, velocity independent constraint and collision behavior.
   - seems to have a tendency to lose energy when constraints are used.
+
+- wall penetration issue with charges???
+- 

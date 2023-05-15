@@ -65,7 +65,6 @@ class WallBoundary extends Wall {
                 particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag * bounciness));
             }
         }
-        this.collideCorrect(particles);
     }
 
     collideCorrect(particles) {
