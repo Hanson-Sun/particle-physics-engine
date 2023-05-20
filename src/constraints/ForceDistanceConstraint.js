@@ -31,13 +31,14 @@ class ForceDistanceConstraint extends Constraint {
         let x1 = a1.mult(timeStep * timeStep);
         let x2 = a2.mult(timeStep * timeStep);
 
-        if (!this.c1.isPivot) {
-            this.c1.pos = this.c1.pos.add(x1);
-            //this.c1.vel = this.c1.vel.add(a1.mult(timeStep));
-        }
-        if (!this.c2.isPivot) {
-            this.c2.pos = this.c2.pos.add(x2);
-            //this.c2.vel = this.c2.vel.add(a2.mult(timeStep));
-        }
+        this.c1.pos = this.c1.pos.add(x1);
+        //this.c1.vel = this.c1.vel.add(a1.mult(timeStep));
+        this.c2.pos = this.c2.pos.add(x2);
+        //this.c2.vel = this.c2.vel.add(a2.mult(timeStep));
     }
+
+	vertices() {
+        return [this.c1.pos, this.c2.pos];
+    }
+
 }

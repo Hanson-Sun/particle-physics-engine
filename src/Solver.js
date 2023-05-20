@@ -27,12 +27,9 @@ class Solver {
 
     preMove() {
         for (let circ of this.particleList) {
-            if (!circ.isPivot) {
-                circ.prevPos = circ.pos;
-                circ.applyVelocity(circ.vel, this.timeStep);
-            } else if (circ.isPivot) {
-                circ.vel = new Vector2D(0, 0);
-            }
+            circ.prevPos = circ.pos;
+            circ.applyVelocity(circ.vel, this.timeStep);
+
         }
     }
 
@@ -66,10 +63,7 @@ class Solver {
 
     updateVelocity() {
         for (let circ of this.particleList) {
-            if (!circ.isPivot) {
-                circ.vel = circ.pos.sub(circ.prevPos).mult(1 / this.timeStep);
-            }
-
+            circ.vel = circ.pos.sub(circ.prevPos).mult(1 / this.timeStep);
             this.particles.updateItem(circ);
         }
     }

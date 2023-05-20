@@ -1,13 +1,20 @@
+/**
+ * `Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.
+ */
 class Gravity extends SelfBehavior {
-
+	/**
+	 * Instantiates new Gravity behavior object
+	 * @constructor
+	 */     
     constructor(acceleration) {
         super();
         this.acceleration = acceleration;
     }
 
     /**
-     * 
-     * @param {*} timeStep 
+     * @override
+     * @param {Particle} particle 
+     * @param {Number} timeStep 
      */
     applyBehavior(particle, timeStep) {
         particle.applyAcceleration(this.acceleration, timeStep);
@@ -15,10 +22,9 @@ class Gravity extends SelfBehavior {
     }
 
     /**
-	 * Applies position correction on behavior.
-	 * @param {Particle} particle 
-	 * @param {Particle[]} particles 
-	 */
+     * @override
+     * @param {Particle} particle 
+     */
 	applyCorrection(particle) {
         return;
     }

@@ -15,9 +15,15 @@ class ConstraintRenderer {
     }
 
 	draw(c) {
-        this.context.beginPath();
-        this.context.moveTo(c.c1.pos.x, c.c1.pos.y);
-        this.context.lineTo(c.c2.pos.x, c.c2.pos.y);
-        this.context.stroke();
+        let vertices = c.vertices();
+        if (vertices.length > 1) {
+            this.context.beginPath();
+            this.context.moveTo(vertices[0].x, vertices[0].y);
+            for (let i = 1; i < vertices.length; i++) {
+                let vertex = vertices[i];
+                this.context.lineTo(vertex.x, vertex.y);
+            }
+            this.context.stroke();
+        }
 	}
 }

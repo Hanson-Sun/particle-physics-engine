@@ -13,11 +13,11 @@ This repository also includes additional files for demo purposes
 
 ### TODO
 - [ ] Refactor code
-  - [ ] Add behaviors
+  - [ ] Add behaviors (Maybe add more behaviors)
     - [x] Collision 
     - [x] Attraction
     - [x] Drag
-    - [ ] Pivots
+    - [x] Pivots (its very scuffed tho)
   - [x] add walls
     - [x] general walls/world/vertical+horizontal
   - [x] add constraints
@@ -27,6 +27,7 @@ This repository also includes additional files for demo purposes
   - [ ] Fix renderer and potentially add more features
     - [ ] constraint stress colours? 
 - [ ] write docs
+- [ ] Standardize units (?) 
 - [ ] formalize package
 - [ ] Optimize
 - [ ] update paper... maybe
@@ -38,4 +39,3 @@ This repository also includes additional files for demo purposes
   - seems to have a tendency to lose energy when constraints are used.
 
 - wall penetration issue with charges???
-- 

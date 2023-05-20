@@ -8,7 +8,7 @@
 const canvas = document.getElementById("test");
 const width = 700;
 const height = 700;
-var c = canvas.getContext("2d");
+const c = canvas.getContext("2d");
 canvas.width = width;
 canvas.height = height;
 
@@ -22,30 +22,36 @@ const vel3 = new Vector2D(0, -1);
 
 const mag = 0.5;
 const mass = 10;
-const bounce = 0.9;
+const bounce = 1;
 
-for (let i = 0; i < 0; i++) {
+for (let i = 0; i < 10; i++) {
 	let s1 = Math.random() < 0.5 ? -1 : 1;
 	let s2 = Math.random() < 0.5 ? -1 : 1;
 	let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
 	let p = new Vector2D(( width - 50) * Math.random() + 25, (height - 50) * Math.random() + 25);
-	let part = new Particle(p, v, mass, 15, bounce, 0);
+	let part = new Particle(p, v, mass, 15, bounce, charge=100);
 	world.addParticle(part);
 }
 
-const pt = new Particle(pos, vel, mass, 20, bounce, 0);
-const pt2 = new Particle(pos2, vel, 10, 30, bounce, 0);
+const pt = new Particle(pos, vel, mass, 20, bounce, 100);
+const pt2 = new Particle(pos2, vel, 10, 30, bounce, 100);
+
+
 
 world.addParticle(pt);
 world.addParticle(pt2);
+//pt2.mass = 10000000000000000;
+//pt2.addSelfBehavior(new PositionLock(pos2));
+//world.makePivot(pt2);
+
 
 const cons = new ForceDistanceConstraint(pt, pt2, 300, 100);
-
 //world.addConstraint(cons);
 
-softBody();
+//world.addConstraint(new ForcePivotConstraint(pos2, pt2, 0, 1));
+//softBody();
 
-world.enableGravity(0.1);
+world.enableGravity(0);
 //world.addWall(new WallBoundary(250, 300, 600, 350));
 //world.addWall(new WallBoundary(50, 690, 650, 690));
 // world.addWall(new WallBoundary(0, 700, 700, 700));
@@ -56,7 +62,8 @@ world.constrainBoundary(0, width, 0, height);
 //world.enableDrag(100);
 world.enableChargeInteractions();
 
-var count = 0;
+
+let count = 0;
 setInterval(function () {
 	world.nextFrame();
 	for (let p of world.particles.findNear(pt)) {

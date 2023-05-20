@@ -74,12 +74,19 @@ class World {
     }
 
     enableGravity(num) {
+        if (this.gravity) {
+            this.disableGravity();
+        }
         this.gravity = new Gravity(new Vector2D(0, num));
         this.addGlobalBehavior(this.gravity);
     }
 
     disableGravity() {
-        this.removeGlobalBehavior(this.gravity);
+        if (this.gravity) {
+            this.removeGlobalBehavior(this.gravity);
+            return true;
+        }
+        return false;
     }
 
     nextFrame() {
@@ -88,12 +95,19 @@ class World {
     }
 
     enableCollisions() {
+        if (this.collision) {
+            this.disableCollisions();
+        }
         this.collision = new Collision();
         this.addGlobalNearBehavior(this.collision);
     }
 
     disableCollisions() {
-        this.removeGlobalNearBehavior(this.collision);
+        if (this.collision) {
+            this.removeGlobalNearBehavior(this.collision);
+            return true;
+        }
+        return false;
     }
 
     // TODO: implement rayCasting for line obstacle support
@@ -103,17 +117,63 @@ class World {
     }
 
     enableDrag(viscosity) {
+        if (this.dragBehavior) {
+            this.disableDrag();
+        }
         this.dragBehavior = new Drag(viscosity);
         this.addGlobalBehavior(this.dragBehavior);
     }
 
     disableDrag() {
-        this.removeGlobalBehavior(this.dragBehavior);
+        if (this.dragBehavior) {
+            this.removeGlobalBehavior(this.dragBehavior);
+            return true;
+        }
+        return false;
     }
 
     enableChargeInteractions() {
+        if(this.chargeBehavior) {
+           this.disableChargeInteractions();
+        }
         this.chargeBehavior = new ChargeInteraction();
         this.addGlobalNearBehavior(this.chargeBehavior);
+    }
+
+    disableChargeInteractions() {
+        if (this.chargeBehavior) {
+            this.removeGlobalBehavior(this.chargeBehavior);
+            return true;
+        }
+        return false;
+    }
+
+    makePivot(p, pos=null) {
+        // this is incredibly scuffed, but this is what i could think of without introducing high cohesion
+        for (let b of p.selfBehavior) {
+            console.log(b);
+            if(b instanceof PositionLock) {
+                return false;
+            }
+        }
+        p.mass = p.mass + Number.MAX_SAFE_INTEGER / 10;
+        if(pos === null) {
+            p.addSelfBehavior(new PositionLock(p.pos));
+        } else {
+            p.addSelfBehavior(new PositionLock(pos));
+        }
+        return true;
+    }
+
+    freePivot(p) {
+        for (let b of p.selfBehavior) {
+            if(b instanceof PositionLock) {
+                p.mass = p.mass - Number.MAX_SAFE_INTEGER / 10;
+                p.removeSelfBehavior(b);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

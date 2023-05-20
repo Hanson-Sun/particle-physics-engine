@@ -1,10 +1,23 @@
+/**
+ * `Drag` is a `SelfBehavior` that applies a viscous drag force on the particle itself.
+ * It generally follows the circular quadratic drag formula in turbulent fluids. Units are arbitrary and should be tuned experimentally.
+ */
 class Drag extends SelfBehavior {
+	/**
+	 * Instantiates new Drag behavior object
+	 * @constructor
+	 */    
     constructor(viscosity) {
         super();
         this.viscosity = viscosity;
         this.LOWER_LIMIT = 0.01;
     }
 
+    /**
+     * @override
+     * @param {Particle} particle 
+     * @param {Number} timeStep 
+     */
     applyBehavior(particle, timeStep) {
         let vel = particle.vel;
         let vMagSqr = vel.magSqr();
@@ -17,11 +30,10 @@ class Drag extends SelfBehavior {
 		}
 	}
 
-    /**
-	 * Applies position correction on behavior.
-	 * @param {Particle} particle 
-	 * @param {Particle[]} particles 
-	 */
+     /**
+     * @override
+     * @param {Particle} particle 
+     */
 	applyCorrection(particle) {
         return;
     }

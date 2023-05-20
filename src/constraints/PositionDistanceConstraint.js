@@ -27,19 +27,16 @@ class PositionDistanceConstraint extends Constraint {
 
 		//let dv = dpUnit.mult(dpDiff / timeStep);
 		let dd = dpUnit.mult(dpDiff);
-
 		let disP = dd.mult(1 / (m1 + m2));
-
 		this.force = disP;
 
-		if (!this.c1.isPivot) {
-			this.c1.pos = pos1.add((disP.mult(m1)));
-		    //this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
-		}   
-        if (!this.c2.isPivot) {
-			this.c2.pos = pos2.sub((disP.mult(m2)));
-			//this.c2.vel = this.c2.vel.add(disP.mult(m2 / timeStep));
-		}
-
+		this.c1.pos = pos1.add((disP.mult(m1)));
+		//this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
+		this.c2.pos = pos2.sub((disP.mult(m2)));
+		//this.c2.vel = this.c2.vel.add(disP.mult(m2 / timeStep));
 	}
+
+	vertices() {
+        return [this.c1.pos, this.c2.pos];
+    }
 }

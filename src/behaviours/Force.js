@@ -1,13 +1,20 @@
+/**
+ * 
+ */
 class Force extends SelfBehavior {
-
+	/**
+	 * Instantiates new Force behavior object
+	 * @constructor
+	 */    
     constructor(force) {
         super();
         this.force = force;
     }
 
     /**
-     * 
-     * @param {*} timeStep 
+     * @override
+     * @param {Particle} particle 
+     * @param {Number} timeStep 
      */
     applyBehavior(particle, timeStep) {
         particle.applyForce(this.force, timeStep);
@@ -15,10 +22,9 @@ class Force extends SelfBehavior {
     }
     
     /**
-	 * Applies position correction on behavior.
-	 * @param {Particle} particle 
-	 * @param {Particle[]} particles 
-	 */
+     * @override
+     * @param {Particle} particle 
+     */
 	applyCorrection(particle) {
         return;
     }

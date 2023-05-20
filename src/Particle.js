@@ -1,7 +1,6 @@
 class Particle extends HashGridItem{
-	#isPivot
 
-	constructor(pos, vel, mass, radius, bounciness = 1, charge = 0) {
+	constructor(pos, vel, mass, radius, bounciness = 1, charge = 0, color="black") {
         super();
 		this.charge = charge || 0;
 		this.pos = pos;
@@ -12,29 +11,11 @@ class Particle extends HashGridItem{
 		this.radius = radius || 10;
 		this.bounciness = bounciness || 1;
 		this.prevPos = this.pos;
-		this.#isPivot = false;
-        this.color = "black";
+        this.color = color;
 		this.nearBehavior = [];
 		this.selfBehavior = [];
 	}
 
-    makePivot() {
-        this.#isPivot = true;
-        this.mass = 0;
-    }
-
-    unPivot() {
-        this.#isPivot = false;
-        this.mass = this.originalMass;
-    }
-
-    get isPivot() {
-        return this.#isPivot;
-    }
-
-	set setIsPivot(bool) {
-		this.#isPivot = bool;
-	}
 
 	applyVelocity(v, timeStep) {
 		this.pos = this.pos.add(v.mult(timeStep));
@@ -60,14 +41,18 @@ class Particle extends HashGridItem{
 		const index = this.nearBehavior.indexOf(b);
 		if (index > -1) {
 			this.nearBehavior.splice(index, 1);
+			return true;
 		}
+		return false;
 	}
 
 	removeSelfBehavior(b) {
 		const index = this.selfBehavior.indexOf(b);
 		if (index > -1) {
 			this.selfBehavior.splice(index, 1);
+			return true;
 		}
+		return false;
 	}
 
 	clearBehaviors() {
@@ -79,7 +64,6 @@ class Particle extends HashGridItem{
 	getHashPos() {
 		return [this.pos.x, this.pos.y];
 	}
-	
 
 	getHashDimensions() {
 		return [this.radius * 2, this.radius * 2];

@@ -1,4 +1,8 @@
-
+/**
+ * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.
+ * Collisions operate on impulse-based dynamics and are quite stiff. There are some potential issues with collision instability
+ * when too much force / number of collisions stack.
+ */
 class Collision extends NearBehavior {
 
 	/**
@@ -9,28 +13,27 @@ class Collision extends NearBehavior {
         super();
     }
 
-	/**
-	 * Applies collision behavior on a given particle.
-	 * @param {*} particle - particle with collision check
-	 * @param {*} timeStep - time-step of simulation
-	 * @param {*} particles - nearby particles that interact with `particle`
-	 */
+    /**
+     * @override
+     * @param {Particle} particle 
+     * @param {Number} timeStep 
+     * @param {Particle[]} particles 
+     */
     applyBehavior(particle, timeStep, particles) {
         this.collide(particle, particles, timeStep);
     }
 
-	/**
-	 * Applies position correction on behavior.
-	 * @param {Particle} particle 
-	 * @param {Particle[]} particles 
-	 */
+    /**
+     * @override
+     * @param {Particle} particle 
+     * @param {Particle[]} particles 
+     */
 	applyCorrection(particle, particles) {
         this.collideCorrection(particle, particles);
     }
 
 	/**
 	 * Perform the collision update of a `Particle` by calculating impulse based velocity and position changes. 
-	 * 
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 * @param {Number} timeStep 
@@ -75,7 +78,6 @@ class Collision extends NearBehavior {
 
 	/**
 	 * Performs the position-based correction after impulse collision. This ensures that particles are not stuck within each other.
-	 * 
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 */
@@ -95,26 +97,18 @@ class Collision extends NearBehavior {
 					let direction1 = posDiff1.normalize();
 					let overlap = radius + c_radius - posDiff1.mag();
 
-					if (circ.isPivot) {
-						circ.pos = circ.pos.sub(direction1.mult(overlap));
-					} else {
-						circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
-					}
-
-					if (particle.isPivot) {
-						particle.pos = position.add(direction1.mult(overlap));
-					} else {
-						particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
-					}
+					circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
+					particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
+					
 				}
 			}
 		}
 	}
 
-	/**
-	 * Implementation of range function such that `findNear()` method from `SpatialHashGrid` uses default hash dimensions
-	 * @returns null
-	 */
+   	/**
+     * @override
+     * @returns {null}
+     */
     range() {
         return null;
     }
@@ -126,7 +120,7 @@ class Collision extends NearBehavior {
 	 * @returns boolean
 	 * @static
 	 */
-	isCollide(p1, p2) {
+	static isCollide(p1, p2) {
 		let position = p1.pos;
 		let radius = p1.radius;
 		let c_position = p2.pos;

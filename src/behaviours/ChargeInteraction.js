@@ -1,3 +1,8 @@
+/**
+ * `ChargeInteraction` is a NearBehavior that calculates the charge repulsion/attraction forces between "nearby" particles.
+ * It follows Coulomb's law with `k=2`, which is arbitrarily chosen. Although charge interactions have infinite range, the default
+ * effective radius for this behavior is set to 100000 pixels.
+ */
 class ChargeInteraction extends NearBehavior {
     /**
      * @constructor abstract class cannot be instantiated
@@ -8,9 +13,10 @@ class ChargeInteraction extends NearBehavior {
     }
 
     /**
-     * 
+     * @override
+     * @param {Particle} particle 
      * @param {Number} timeStep 
-     * @param {Array<Particle>} particles 
+     * @param {Particle[]} particles 
      */
     applyBehavior(particle, timeStep, particles) {
         if(particle.charge !== 0){
@@ -26,28 +32,31 @@ class ChargeInteraction extends NearBehavior {
                         let dxNorm = dx.normalize();
                         let f = dxNorm.mult(2 * q1 * q2 / dxmSqr * timeStep);
 
-                        if (!circ.isPivot) {
-                            circ.vel = circ.vel.sub(f)
-                            circ.pos = circ.pos.sub(f.mult(timeStep / circ.mass));
-                        } 
-                        if (!particle.isPivot) {
-                            particle.vel = particle.vel.add(f)
-                            particle.pos = particle.pos.add(f.mult(timeStep * timeStep / particle.mass));
-                        }
+                        circ.vel = circ.vel.sub(f)
+                        circ.pos = circ.pos.sub(f.mult(timeStep / circ.mass));
+
+                        particle.vel = particle.vel.add(f)
+                        particle.pos = particle.pos.add(f.mult(timeStep * timeStep / particle.mass));
+                        
                     }
                 } 	
 		    }
 		}
     }
 
-	/**
-	 * Implementation of range function such that `findNear()` method from `SpatialHashGrid` uses the charge dimensions
-	 * @returns null
-	 */
+    /**
+     * @override
+     * @returns {[Number, Number]}
+     */
     range() {
         return [this.radius, this.radius];
     }
 
+    /**
+     * @override
+     * @param {Particle} particle 
+     * @param {Particle[]} particles 
+     */
     applyCorrection(particle, particles) {
         return;
     }
