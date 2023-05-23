@@ -1,7 +1,6 @@
 class Constraint {
-
     /**
-     * @constructor interface cannot be instantiated
+     * @constructor `Constraint` interface cannot be instantiated
      */
     constructor() {
         if (this.constructor == Constraint) {
@@ -10,8 +9,8 @@ class Constraint {
     }
 
     /**
-     * Updates the constraint
-     * @param {*} timeStep 
+     * Updates the constraint.
+     * @param {Number} timeStep 
      */
     update(timeStep) {
         throw new Error("Method 'update()' must be implemented.");

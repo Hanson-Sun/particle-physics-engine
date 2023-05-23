@@ -33,9 +33,9 @@ This repository also includes additional files for demo purposes
 - [ ] update paper... maybe
 
 ### Bugs
-- particles can teleport through walls way too easily --> perhaps implement a ray-casting algorithm instead of being velocity dependent
-- some degree of instability when particles are stacked up (?) --> could be an issue of the world constraints
+- some degree of instability when particles are stacked up (?) --> could be an issue of the world constraints (kind of fixed)
 - unify solver behavior --> focus on position-based, velocity independent constraint and collision behavior.
   - seems to have a tendency to lose energy when constraints are used.
-
-- wall penetration issue with charges???
+  - !!! i seem to have an issue with understanding when to change velocity in behavior. (consider velocity change in constraint)
+- Vector2D modify methods are inconsistent for some reason
+- charge interactions still a bit unstable

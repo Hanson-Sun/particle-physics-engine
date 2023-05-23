@@ -14,22 +14,22 @@ class Wall extends HashGridItem {
 
     /**
      * 
-     * @param {*} particles 
-     * @param {*} timeStep 
+     * @param {Particle[]} particles 
+     * @param {Number} timeStep 
      */
     resolveCollisions(particles, timeStep) {
         throw new Error("Method 'resolveCollisions()' must be implemented.");
     }
 
+    applyCorrection(particles) {
+        throw new Error("Method 'applyCorrection()' must be implemented.");
+    }
+
     /**
      * 
-     * @returns
+     * @returns {Vector2D[]}
      */
     vertices() {
         throw new Error("Method 'vertices()' must be implemented.");
-    }
-
-    applyCorrection(particles) {
-        throw new Error("Method 'applyCorrection()' must be implemented.");
     }
 }

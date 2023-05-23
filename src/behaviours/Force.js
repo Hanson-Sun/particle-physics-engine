@@ -1,5 +1,5 @@
 /**
- * 
+ * `Force` is a `SelfBehavior` that applies a constant force on the particle.   
  */
 class Force extends SelfBehavior {
 	/**
@@ -17,7 +17,7 @@ class Force extends SelfBehavior {
      * @param {Number} timeStep 
      */
     applyBehavior(particle, timeStep) {
-        particle.applyForce(this.force, timeStep);
+        //particle.applyForce(this.force, timeStep);
         particle.pos = particle.pos.add(this.force.mult(timeStep * timeStep / particle.mass));
     }
     

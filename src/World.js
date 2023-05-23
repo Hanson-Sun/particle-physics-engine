@@ -17,6 +17,8 @@ class World {
         
         this.solver = new Solver(this.timeStep, this.iterationPerFrame, this.constraintIteration, this.particles, this.constraints, this.walls);
         this.renderer = new Renderer(this.solver, this.canvas);
+
+        this.isRender = true;
     }
 
     addParticle(p) {
@@ -91,7 +93,9 @@ class World {
 
     nextFrame() {
         this.solver.nextFrame();
-        this.renderer.renderFrame();
+        if (this.isRender) {
+            this.renderer.renderFrame();
+        }
     }
 
     enableCollisions() {
