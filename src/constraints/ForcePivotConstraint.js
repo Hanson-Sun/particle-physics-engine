@@ -1,4 +1,17 @@
+/**
+ * `ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
+ * point in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.
+ */
 class ForcePivotConstraint extends Constraint {
+    /**
+     * Instantiates new `ForcePivotConstraint`
+     * @param {Vector2D} pos - position of pivot
+     * @param {Particle} c1 - constrained particle
+     * @param {Number} len - constrained length
+     * @param {Number} stiffness - the "spring constant", higher values are more stiff
+     * @param {Number} dampening - damping force on constraint, must be greater than 0
+     * @param {Number} breakForce - force at which the constraint breaks
+     */
     constructor(pos, c1, len, stiffness, dampening = 0, breakForce = Infinity) {
         super();
         if (c1 === null) {
@@ -14,6 +27,10 @@ class ForcePivotConstraint extends Constraint {
 		this.force = new Vector2D(0,0);	
 	}
 
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
     update(timeStep) {
         let dp = this.c1.pos.sub(this.pos);
         let dpMag = dp.mag();
@@ -33,6 +50,10 @@ class ForcePivotConstraint extends Constraint {
         }
     }
 
+    /**
+     * @override
+     * @returns {Vector2D[]}
+     */    
 	vertices() {
         return [this.pos, this.c1.pos];
     }

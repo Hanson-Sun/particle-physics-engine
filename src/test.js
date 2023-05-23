@@ -12,7 +12,7 @@ const c = canvas.getContext("2d");
 canvas.width = width;
 canvas.height = height;
 
-const world = new World(canvas, width, height, 8, 8, 0.1, 1, 10);
+const world = new World(canvas, width, height, 15, 15, 0.1, 1, 10);
 
 const pos = new Vector2D(250, 100);
 const pos2 = new Vector2D(250, 400);
@@ -22,14 +22,14 @@ const vel3 = new Vector2D(0, -1);
 
 const mag = 0.5;
 const mass = 10;
-const bounce = 0.95;
+const bounce = 0.9;
 
 for (let i = 0; i < 0; i++) {
 	let s1 = Math.random() < 0.5 ? -1 : 1;
 	let s2 = Math.random() < 0.5 ? -1 : 1;
 	let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
 	let p = new Vector2D(( width - 50) * Math.random() + 25, (height - 50) * Math.random() + 25);
-	let part = new Particle(p, v, mass, 15, bounce, charge=0);
+	let part = new Particle(p, v, mass, 8, bounce, 1000);
 	world.addParticle(part);
 }
 
@@ -49,11 +49,11 @@ const cons = new ForceDistanceConstraint(pt, pt2, 300, 100);
 //world.addConstraint(cons);
 
 //world.addConstraint(new ForcePivotConstraint(pos2, pt2, 0, 1));
-//softBody();
+softBody();
 
-world.enableGravity(0.2);
-//world.addWall(new WallBoundary(250, 300, 600, 350));
-//world.addWall(new WallBoundary(50, 690, 650, 690));
+world.enableGravity(0.4);
+world.addWall(new WallBoundary(250, 300, 600, 350));
+world.addWall(new WallBoundary(50, 690, 650, 690));
 // world.addWall(new WallBoundary(0, 700, 700, 700));
 // world.addWall(new WallBoundary(0, 0, 0, 700));
 // world.addWall(new WallBoundary(700, 0, 700, 700));
@@ -85,15 +85,15 @@ function softBody() {
     grid = [];
     size = 10;
     w = 20;
-	stiffness = 10;
-	radius = 10;
+	stiffness = 500;
+	radius = 8;
 	constraint = ForceDistanceConstraint;
     for (row = 0; row < size; row++) {
         r = [];
         for (col = 0; col < size; col++) {
             v = new Vector2D(0, 0);
-            p2 = new Vector2D(400 + col * w, 100 + row * w);
-            circ = new Particle(p2, v, 1, radius, 1);
+            p2 = new Vector2D(300 + col * w, 300 + row * w);
+            circ = new Particle(p2, v, 10, radius, 1);
             r.push(circ);
 			world.addParticle(circ);
 

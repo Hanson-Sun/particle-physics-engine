@@ -26,6 +26,7 @@ This repository also includes additional files for demo purposes
   - [x] Fix solver, world, and others
   - [ ] Fix renderer and potentially add more features
     - [ ] constraint stress colours? 
+  - [ ] Add constraint breaking
 - [ ] write docs
 - [ ] Standardize units (?) 
 - [ ] formalize package
@@ -39,3 +40,4 @@ This repository also includes additional files for demo purposes
   - !!! i seem to have an issue with understanding when to change velocity in behavior. (consider velocity change in constraint)
 - Vector2D modify methods are inconsistent for some reason
 - charge interactions still a bit unstable
+- SHIT TELEPORTS!!! THROUGH WALLS

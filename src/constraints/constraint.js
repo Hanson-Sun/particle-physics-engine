@@ -1,3 +1,7 @@
+/**
+ * Interface for all Constraints
+ * @interface
+ */
 class Constraint {
     /**
      * @constructor `Constraint` interface cannot be instantiated

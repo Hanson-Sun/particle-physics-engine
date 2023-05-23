@@ -1,3 +1,6 @@
+/**
+ * `PositionDistanceConstraint` is a `Constraint` that 
+ */
 class PositionDistanceConstraint extends Constraint {
     constructor(c1, c2, len, stiffness, dampening = 0, breakForce = Infinity) {
         super();
