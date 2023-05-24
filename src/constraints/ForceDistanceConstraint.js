@@ -25,8 +25,7 @@ class ForceDistanceConstraint extends Constraint {
 		this.dampening = dampening;
         this.stiffness = stiffness;
 		this.len = len;
-        this.color = "black";
-		this.force = new Vector2D(0,0);	
+
 	}
 
     /**

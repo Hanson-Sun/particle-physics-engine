@@ -51,6 +51,12 @@ class Solver {
         for (let i = 0; i < this.constraintIteration; i++) {
             for (let c of this.constraints) {
                 c.update(dt);
+                if (c.breakForce !== (null || Infinity) && c.force.mag() > c.breakForce) {
+                    const index = this.constraints.indexOf(c);
+                    if (index > -1) {
+                        this.constraints.splice(index, 1);
+                    }
+                }
             }
         }
     }

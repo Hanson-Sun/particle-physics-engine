@@ -7,6 +7,7 @@ class WallBoundary extends Wall {
         super();
         this.p1 = new Vector2D(x1, y1);
         this.p2 = new Vector2D(x2, y2);
+        this.direction = this.p1.sub(this.p2);
         this.width = width;
         this.normal = (new Vector2D((y2-y1), -(x2-x1))).normalize();
     }
@@ -48,21 +49,23 @@ class WallBoundary extends Wall {
             let projectedDiff = pos.sub(projected);
             let distance = projectedDiff.mag();
 
-            if (distance < particle.radius && lambda < 0) {
+            if (distance <= particle.radius && lambda < 0) {
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
                 //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
                 particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
-            } else if (distance < particle.radius && lambda > 1) {
+            } else if (distance <= particle.radius && lambda > 1) {
                 let diff = pos.sub(this.p2);
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
                 //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
                 particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
-            } else if (distance < particle.radius) {
+            } else if (distance <= particle.radius) {
                 //particle.vel = particle.vel.reflect(this.normal).mult(bounciness);
-                let mag = particle.vel.reflect(this.normal).dot(this.normal);
-                particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag * bounciness));
+                //let mag = particle.vel.reflect(this.normal).dot(this.normal);
+                //particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag * bounciness));
+                let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep * bounciness);
+                particle.pos = particle.pos.add(mag);
             }
         }
     }
@@ -101,7 +104,7 @@ class WallBoundary extends Wall {
             } else if (distance < particle.radius && lambda > 1) {
                 particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
             } else if (distance < particle.radius) {
-                particle.pos = particle.pos.sub(this.normal.mult(overlap));
+                particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
             }
         }
     }

@@ -38,6 +38,4 @@ This repository also includes additional files for demo purposes
 - unify solver behavior --> focus on position-based, velocity independent constraint and collision behavior.
   - seems to have a tendency to lose energy when constraints are used.
   - !!! i seem to have an issue with understanding when to change velocity in behavior. (consider velocity change in constraint)
-- Vector2D modify methods are inconsistent for some reason
-- charge interactions still a bit unstable
-- SHIT TELEPORTS!!! THROUGH WALLS
+- Vector2D modify methods are inconsistent for some reason --> test this

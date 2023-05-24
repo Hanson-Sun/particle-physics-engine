@@ -13,8 +13,6 @@ class PositionDistanceConstraint extends Constraint {
 		this.dampening = dampening;
         this.stiffness = stiffness;
 		this.len = len;
-        this.color = "black";
-		this.force = new Vector2D(0,0);	
 	}
 
     update(timeStep) {

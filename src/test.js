@@ -14,11 +14,11 @@ canvas.height = height;
 
 const world = new World(canvas, width, height, 15, 15, 0.1, 1, 10);
 
-const pos = new Vector2D(250, 100);
-const pos2 = new Vector2D(250, 400);
+const pos = new Vector2D(300, 100);
+const pos2 = new Vector2D(300, 400);
 const vel = new Vector2D(0, 0);
-const vel2 = new Vector2D(0, 1);
-const vel3 = new Vector2D(0, -1);
+const vel2 = new Vector2D(0, 2);
+const vel3 = new Vector2D(0, -2);
 
 const mag = 0.5;
 const mass = 10;
@@ -33,8 +33,8 @@ for (let i = 0; i < 0; i++) {
 	world.addParticle(part);
 }
 
-const pt = new Particle(pos, vel, mass, 20, bounce, 0);
-const pt2 = new Particle(pos2, vel, 10, 30, bounce, 0);
+const pt = new Particle(pos, vel3, mass, 5, bounce, 0);
+const pt2 = new Particle(pos2, vel3, 10, 5, bounce, 0);
 
 
 
@@ -44,15 +44,18 @@ world.addParticle(pt2);
 //pt2.addSelfBehavior(new PositionLock(pos2));
 //world.makePivot(pt2);
 
+v = new Vector2D(0,-2);
+console.log(v.reflect(new Vector2D(0, 1)), v.reflect(new Vector2D(0, -1)))
 
-const cons = new ForceDistanceConstraint(pt, pt2, 300, 100);
-//world.addConstraint(cons);
+
+const cons = new ForceDistanceConstraint(pt, pt2, 200, 10);
+world.addConstraint(cons);
 
 //world.addConstraint(new ForcePivotConstraint(pos2, pt2, 0, 1));
 softBody();
 
 world.enableGravity(0.4);
-world.addWall(new WallBoundary(250, 300, 600, 350));
+world.addWall(new WallBoundary(250, 310, 600, 300));
 world.addWall(new WallBoundary(50, 690, 650, 690));
 // world.addWall(new WallBoundary(0, 700, 700, 700));
 // world.addWall(new WallBoundary(0, 0, 0, 700));
@@ -83,16 +86,18 @@ setInterval(function () {
 function softBody() {
     dampen = 0;
     grid = [];
-    size = 10;
+    size = 30;
     w = 20;
-	stiffness = 500;
+	stiffness = 100;
 	radius = 8;
 	constraint = ForceDistanceConstraint;
+    breakForce = 800;
+
     for (row = 0; row < size; row++) {
         r = [];
         for (col = 0; col < size; col++) {
             v = new Vector2D(0, 0);
-            p2 = new Vector2D(300 + col * w, 300 + row * w);
+            p2 = new Vector2D(50 + col * w, 50 + row * w);
             circ = new Particle(p2, v, 10, radius, 1);
             r.push(circ);
 			world.addParticle(circ);
@@ -104,16 +109,16 @@ function softBody() {
     for (row = 0; row < size; row++) {
         for (col = 0; col < size; col++) {
             if (row + 1 < size) {
-                let c = new constraint(grid[row + 1][col], grid[row][col], w, stiffness);
+                let c = new constraint(grid[row + 1][col], grid[row][col], w, stiffness, 0, breakForce);
 				world.addConstraint(c);
             }
             if (col + 1 < size) {
-                let c = new constraint(grid[row][col], grid[row][col + 1], w, stiffness);
+                let c = new constraint(grid[row][col], grid[row][col + 1], w, stiffness, 0, breakForce);
 				world.addConstraint(c);
             }
             if (row + 1 < size && col + 1 < size) {
-                let c1 = new constraint(grid[row][col], grid[row + 1][col + 1], 2 ** 0.5 * w, stiffness);
-                let c2 = new constraint(grid[row + 1][col], grid[row][col + 1], 2 ** 0.5 * w, stiffness);
+                let c1 = new constraint(grid[row][col], grid[row + 1][col + 1], 2 ** 0.5 * w, stiffness, 0, breakForce);
+                let c2 = new constraint(grid[row + 1][col], grid[row][col + 1], 2 ** 0.5 * w, stiffness, 0, breakForce);
 				world.addConstraint(c1);
 				world.addConstraint(c2);
             }

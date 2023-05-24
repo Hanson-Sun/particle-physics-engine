@@ -81,13 +81,13 @@ class Vector2D {
 	}
 
 	/**
-	 * returns the "cross-product" of two vectors (`this` and `v`). Since these are 2D vectors,
-	 * this is a simplified meaning of cross product, and is different from normal cross products.
+	 * returns the "cross-product" of two vectors (`this` and `v`). Since these are 2D vectors, this is the 
+	 * z-coordinate of the 3D counter parts of these 2D vectors. It returns a scalar.
 	 * @param {Vector2D} v 
 	 * @returns {number}
 	 */
 	cross(v) {
-		return this.x * v.y - this.y * v.x;
+		return this.x * v.y - v.x * this.y;
 	}
 
 	/**
