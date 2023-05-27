@@ -34,7 +34,7 @@ class ForcePivotConstraint extends Constraint {
     update(timeStep) {
         let dp = this.c1.pos.sub(this.pos);
         let dpMag = dp.mag();
-        if(dp.mag() != 0) {
+        if(dpMag != 0) {
             let dpUnit = dp.mult(1 / dpMag);
             let dxMag = dpMag - this.len;
             let dv = this.c1.vel;

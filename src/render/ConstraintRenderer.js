@@ -5,6 +5,7 @@ class ConstraintRenderer {
         this.context = context;
         this.color = "black"
         this.context.strokeStyle = this.color;
+        this.showStress = false;
     }
 
     // call this anytime a new particle is added
@@ -26,4 +27,16 @@ class ConstraintRenderer {
             this.context.stroke();
         }
 	}
+
+    static calculateStressColor(c, maxForce, min=0, sensitivity = 2) {
+
+        let r = sensitivity * (c.force.mag() - min) / (maxForce - min) * 510;
+        if (r <= 255) {
+            return "rgb(" + Math.floor(r) + ", 255,0)";
+        } else if (r <= 510) {
+            return "rgb(255," + (510 - Math.floor(r)) + ",0)";
+        } else {
+            return "rgb(255,0,0)";
+        }
+    }
 }

@@ -180,4 +180,12 @@ class World {
         return false;
     }
 
+    /**
+     * 
+     * @param {Function} update 
+     */
+    setSolverUpdate(update) {
+        this.solver.update = update;
+    }
+
 }

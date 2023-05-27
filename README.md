@@ -1,6 +1,6 @@
 # Particle-based Physics Engine (with constraints)
 
-Currently in development: I'm working on several optimizations and refactorizations of the code!
+Currently in development: I'm working on several optimizations and major refactorizations of the code!
 
 https://hanson-sun.github.io/particle-physics-engine/
 
@@ -18,18 +18,19 @@ This repository also includes additional files for demo purposes
     - [x] Attraction
     - [x] Drag
     - [x] Pivots (its very scuffed tho)
+    - [ ] area constraints (low priority)
   - [x] add walls
     - [x] general walls/world/vertical+horizontal
   - [x] add constraints
     - [x] force based
     - [x] position based
   - [x] Fix solver, world, and others
-  - [ ] Fix renderer and potentially add more features
-    - [ ] constraint stress colours? 
-  - [ ] Add constraint breaking
+  - [x] Fix renderer and potentially add more features
+    - [x] constraint stress colours? 
+  - [x] Add constraint breaking
 - [ ] write docs
-- [ ] Standardize units (?) 
-- [ ] formalize package
+- [ ] Standardize units (?) grim... i need to do physics
+- [ ] formalize package (important!!!)
 - [ ] Optimize
 - [ ] update paper... maybe
 
@@ -39,3 +40,8 @@ This repository also includes additional files for demo purposes
   - seems to have a tendency to lose energy when constraints are used.
   - !!! i seem to have an issue with understanding when to change velocity in behavior. (consider velocity change in constraint)
 - Vector2D modify methods are inconsistent for some reason --> test this
+
+Notes:
+i think ill leave the rendering step with more freedom to the users 
+
+theres a setSolverUpdate() function that is like unity's Update() but kind of different...

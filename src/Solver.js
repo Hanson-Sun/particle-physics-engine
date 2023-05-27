@@ -18,11 +18,18 @@ class Solver {
         // apply correction, set forces to 0, apply velocity to get final pos.
         // there might be duplicate processes... i think i need to fix that
         this.preMove();
-        this.handleWallCollisions();
+        this.update();
         this.handleBehaviors();
         this.handleConstraints();
+        this.handleWallCollisions();
         this.updateVelocity();
+        
         this.positionCorrection();
+        
+    }
+
+    update(){
+        return;
     }
 
     preMove() {

@@ -31,10 +31,9 @@ class ChargeInteraction extends NearBehavior {
                     if (dxmSqr > (particle.radius + circ.radius) * (particle.radius + circ.radius) && dxmSqr < this.radius * this.radius) {
                         let dxNorm = dx.normalize();
                         let f = dxNorm.mult(2 * q1 * q2 / dxmSqr * timeStep);
-
+                        
                         //circ.vel = circ.vel.sub(f)
                         circ.pos = circ.pos.sub(f.mult(timeStep / circ.mass));
-
                         //particle.vel = particle.vel.add(f)
                         particle.pos = particle.pos.add(f.mult(timeStep * timeStep / particle.mass));
                         

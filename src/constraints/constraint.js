@@ -9,6 +9,7 @@ class Constraint {
     constructor() {
         this.color = "black";
 		this.force = new Vector2D(0,0);	
+        this.breakForce = Infinity;
         if (this.constructor == Constraint) {
             throw new Error("Constraint interface class cannot be instantiated.");
         }
