@@ -1,7 +1,3 @@
-const Constraint = require("./Constraint");
-const Particle = require("../core/Particle");
-const Vector2D = require("../utils/Vector2D");
-
 /**
  * `PositionDistanceConstraint` is a `Constraint` that constrains the distance between two particles using a purely position-based method.
  * This implementation is more energetically stable; however, it is also less energy conservative and cannot be affected by damping. 
@@ -61,5 +57,3 @@ class PositionDistanceConstraint extends Constraint {
         return [this.c1.pos, this.c2.pos];
     }
 }
-
-module.exports = PositionDistanceConstraint;

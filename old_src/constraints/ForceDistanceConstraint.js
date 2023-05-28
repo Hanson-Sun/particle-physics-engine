@@ -1,7 +1,3 @@
-const Constraint = require("./Constraint");
-const Particle = require("../core/Particle");
-const Vector2D = require("../utils/Vector2D");
-
 /**
  * `ForceDistanceConstraint` is a `Constraint` that constrains the distance between two particles.
  * It uses a force-based implementation and can be thought of as a spring between two particles.
@@ -68,5 +64,3 @@ class ForceDistanceConstraint extends Constraint {
     }
 
 }
-
-module.exports = ForceDistanceConstraint;

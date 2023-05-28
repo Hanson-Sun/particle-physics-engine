@@ -154,5 +154,3 @@ class Vector2D {
 		return new Vector2D(x, y);
 	}
 }
-
-module.exports = Vector2D;

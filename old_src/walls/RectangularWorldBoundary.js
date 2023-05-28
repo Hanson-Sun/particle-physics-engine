@@ -1,5 +1,3 @@
-const Wall = require("./Wall");
-
 // stand-in until i figure out how to implement the other walls.
 class RectangularWorldBoundary extends Wall {
 
@@ -86,5 +84,3 @@ class RectangularWorldBoundary extends Wall {
         return [];
     }
 }
-
-module.exports = RectangularWorldBoundary;

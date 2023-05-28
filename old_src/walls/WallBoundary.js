@@ -1,5 +1,3 @@
-const Wall = require("./Wall");
-
 /**
  * 
  */
@@ -154,5 +152,3 @@ class WallBoundary extends Wall {
         return [this.p1, this.p2];
     }
 }
-
-module.exports = WallBoundary;

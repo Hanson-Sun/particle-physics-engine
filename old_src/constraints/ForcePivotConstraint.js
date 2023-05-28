@@ -1,7 +1,3 @@
-const Constraint = require("./Constraint");
-const Particle = require("../core/Particle");
-const Vector2D = require("../utils/Vector2D");
-
 /**
  * `ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
  * point in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.
@@ -63,5 +59,3 @@ class ForcePivotConstraint extends Constraint {
     }
 
 }
-
-module.exports = ForcePivotConstraint;

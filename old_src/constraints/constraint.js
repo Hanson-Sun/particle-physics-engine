@@ -1,5 +1,3 @@
-const Vector2D = require("../utils/Vector2D");
-
 /**
  * Interface for all Constraints
  * @interface
@@ -33,5 +31,3 @@ class Constraint {
         throw new Error("Method 'vertices()' must be implemented");
     }
 }
-
-module.exports = Constraint;

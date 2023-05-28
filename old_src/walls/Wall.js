@@ -1,5 +1,3 @@
-const HashGridItem = require("../core/HashGridItem");
-
 /**
  * 
  */
@@ -35,5 +33,3 @@ class Wall extends HashGridItem {
         throw new Error("Method 'vertices()' must be implemented.");
     }
 }
-
-module.exports = Wall;

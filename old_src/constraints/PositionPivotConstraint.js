@@ -1,7 +1,3 @@
-const Constraint = require("./Constraint");
-const Particle = require("../core/Particle");
-const Vector2D = require("../utils/Vector2D");
-
 /**
  * `PositionPivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
  * point in space. The implementation of this constraint is position-based like that of `PositionDistanceConstraint`.
@@ -56,5 +52,3 @@ class PositionPivotConstraint extends Constraint {
         return [this.c1.pos, this.pos];
     }
 }
-
-module.exports = PositionPivotConstraint;
