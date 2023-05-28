@@ -4,8 +4,14 @@
   "description": "test nodejs modules for this project",
   "main": "modules.js",
   "scripts": {
+    "build":"webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Hanson Sun",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "webpack": "^5.84.1",
+    "webpack-cli": "^5.1.1"
+  }
 }

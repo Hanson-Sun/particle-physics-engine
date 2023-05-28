@@ -45,3 +45,6 @@ Notes:
 i think ill leave the rendering step with more freedom to the users 
 
 theres a setSolverUpdate() function that is like unity's Update() but kind of different...
+
+
+i think ill name it `PPhys2D` for **P**article-based **P**hysics engine **2D**
