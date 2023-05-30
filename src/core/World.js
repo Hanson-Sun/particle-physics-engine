@@ -1,5 +1,9 @@
 const RectangularWorldBoundary = require("../walls/RectangularWorldBoundary");
 const Collision = require("../behaviors/Collision");
+const SpatialHashGrid = require("../core/SpatialHashGrid");
+const Solver = require("../core/Solver");
+const Renderer = require("../renderers/Renderer");
+const Gravity = require("../behaviors/Gravity");
 
 class World {
     constructor(canvas, width, height, xGrids, yGrids = null, timeStep = 1, iterationPerFrame = 1, constraintIteration = 1) {
@@ -12,7 +16,7 @@ class World {
         this.xGrids = xGrids;
         this.yGrids = yGrids;
         this.gravity = null;
-
+        
         this.particles = new SpatialHashGrid(width, height, xGrids, yGrids);
         this.particlesList = [];
         this.constraints = [];

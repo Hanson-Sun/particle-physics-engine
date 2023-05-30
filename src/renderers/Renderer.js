@@ -1,3 +1,7 @@
+const ConstraintRenderer = require("./ConstraintRenderer");
+const ParticleRenderer = require("./ParticleRenderer");
+const WallRenderer = require("./WallRenderer");
+
 class Renderer {
     constructor(solver, canvas) {
         this.solver = solver;

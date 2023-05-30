@@ -92,7 +92,7 @@ class Particle extends HashGridItem {
 		return false;
 	}
 
-/**
+	/**
 	 * Removes `SelfBehavior` `b` if the particle has `b`  
 	 * @param {SelfBehavior} b 
 	 * @returns {Boolean} true if the action is successful

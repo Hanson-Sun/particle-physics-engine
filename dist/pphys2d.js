@@ -50,8 +50,8 @@ pphys.utils = __webpack_require__(1);
 pphys.constraints = __webpack_require__(3);
 pphys.walls = __webpack_require__(13);
 pphys.core = __webpack_require__(17);
-pphys.behaviors = __webpack_require__(22);
-pphys.renderers = __webpack_require__(28);
+pphys.behaviors = __webpack_require__(27);
+pphys.renderers = __webpack_require__(32);
 
 
 
@@ -466,7 +466,7 @@ class Particle extends HashGridItem {
 		return false;
 	}
 
-/**
+	/**
 	 * Removes `SelfBehavior` `b` if the particle has `b`  
 	 * @param {SelfBehavior} b 
 	 * @returns {Boolean} true if the action is successful
@@ -871,11 +871,14 @@ walls.RectangularWorldBoundary = __webpack_require__(16);
 const HashGridItem = __webpack_require__(7);
 
 /**
- * 
+ * `Wall` is an Interface for any wall objects. Walls are `HashGridItems`; however, it only uses the SpatialHashGrid methods
+ * that calculate the particles in its close proximity and **cannot** be added to the grid itself. Wall objects
+ * are also stationary and are not influenced by any external factors.
+ * @interface
  */
 class Wall extends HashGridItem {
     /**
-     * 
+     * Instantiates new `Wall`
      */
     constructor() {
         super();
@@ -885,20 +888,24 @@ class Wall extends HashGridItem {
     }
 
     /**
-     * 
-     * @param {Particle[]} particles 
+     * Resolve the collisions between the surrounding particles and the Wall itself.
+     * @param {Particle[]} particles surrounding particles that interact with the wall 
      * @param {Number} timeStep 
      */
     resolveCollisions(particles, timeStep) {
         throw new Error("Method 'resolveCollisions()' must be implemented.");
     }
 
+    /**
+     * Applies positional corrections on particles (walls do not move)
+     * @param {Particle[]} particles 
+     */
     applyCorrection(particles) {
         throw new Error("Method 'applyCorrection()' must be implemented.");
     }
 
     /**
-     * 
+     * Calculates the vertices of the wall
      * @returns {Vector2D[]}
      */
     vertices() {
@@ -912,13 +919,24 @@ module.exports = Wall;
 /* 15 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const Vector2D = __webpack_require__(2);
 const Wall = __webpack_require__(14);
 
 /**
- * 
+ * `WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions
+ * are generally meant to be immutable since the normal vector is calculated upon instantiation. However, wall position
+ * can be modified with some care.
  */
 class WallBoundary extends Wall {
 
+    /**
+     * Instantiates new `WallBoundary`
+     * @param {*} x1 x-position of first vertex
+     * @param {*} y1 y-position of first vertex
+     * @param {*} x2 x-position of second vertex
+     * @param {*} y2 y-position of second vertex
+     * @param {*} width rendered line width of wall (does not effect physics)
+     */
     constructor(x1, y1, x2, y2, width=1) {
         super();
         this.p1 = new Vector2D(x1, y1);
@@ -928,15 +946,13 @@ class WallBoundary extends Wall {
         this.normal = (new Vector2D((y2-y1), -(x2-x1))).normalize();
     }
 
+
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     * @param {Number} timeStep 
+     */
     resolveCollisions(particles, timeStep) {
-        this.collide(particles, timeStep);
-    }
-
-    applyCorrection(particles) {
-        this.collideCorrect(particles);
-    }
-
-    collide(particles, timeStep) {
         for (let particle of particles) {
             let pos = particle.pos;
             let bounciness = particle.bounciness;
@@ -986,7 +1002,11 @@ class WallBoundary extends Wall {
         }
     }
 
-    collideCorrect(particles) {
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     */
+    applyCorrection(particles) {
         for (let particle of particles) {
             let pos = particle.pos;
 
@@ -1025,6 +1045,11 @@ class WallBoundary extends Wall {
         }
     }
 
+    /**
+     * Checks if a Particle is colliding with the Wall
+     * @param {Particle} particle 
+     * @returns {Boolean} true if particle is colliding with wall
+     */
     isCollide(particle) {
         let pos = particle.pos;
 
@@ -1055,15 +1080,26 @@ class WallBoundary extends Wall {
             return distance < particle.radius;
     }
 
-
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
     getHashPos() {
         return [(this.p2.x + this.p1.x) / 2, (this.p2.y + this.p1.y) / 2];
     }
 
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
     getHashDimensions() {
         return [Math.abs(this.p2.x - this.p1.x), Math.abs(this.p2.y - this.p1.y)];
     }
 
+    /**
+     * @override
+     * @returns {[Vector2D, Vector2D]} 
+     */
     vertices() {
         return [this.p1, this.p2];
     }
@@ -1524,6 +1560,10 @@ module.exports = SpatialHashGrid;
 
 const RectangularWorldBoundary = __webpack_require__(16);
 const Collision = __webpack_require__(21);
+const SpatialHashGrid = __webpack_require__(19);
+const Solver = __webpack_require__(18);
+const Renderer = __webpack_require__(22);
+const Gravity = __webpack_require__(26);
 
 class World {
     constructor(canvas, width, height, xGrids, yGrids = null, timeStep = 1, iterationPerFrame = 1, constraintIteration = 1) {
@@ -1536,7 +1576,7 @@ class World {
         this.xGrids = xGrids;
         this.yGrids = yGrids;
         this.gravity = null;
-
+        
         this.particles = new SpatialHashGrid(width, height, xGrids, yGrids);
         this.particlesList = [];
         this.constraints = [];
@@ -1864,23 +1904,222 @@ module.exports = Collision;
 /* 22 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const ConstraintRenderer = __webpack_require__(23);
+const ParticleRenderer = __webpack_require__(24);
+const WallRenderer = __webpack_require__(25);
+
+class Renderer {
+    constructor(solver, canvas) {
+        this.solver = solver;
+        this.canvas = canvas;
+        this.context = this.canvas.getContext("2d");
+        this.constraintRenderer = new ConstraintRenderer(solver.constraints, this.context);
+        this.particleRenderer = new ParticleRenderer(solver.particles.values(), this.context);
+        this.wallRenderer = new WallRenderer(solver.walls, this.context);
+    }
+
+    // call this anytime a new particle is added
+    updateRendererParticles(list) {
+        this.particleRenderer.particles = list;
+    }
+
+    updateContext(context) {
+        this.constraintRenderer.context = context;
+        this.particleRenderer.context = context;
+    }
+
+    renderFrame() {
+        this.clear();
+        this.particleRenderer.renderFrame();
+        this.constraintRenderer.renderFrame();
+        this.wallRenderer.renderFrame();
+    }
+
+    clear() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+module.exports = Renderer;
+
+/***/ }),
+/* 23 */
+/***/ ((module) => {
+
+class ConstraintRenderer {
+
+    constructor(constraints, context) {
+        this.constraints = constraints;
+        this.context = context;
+        this.color = "black"
+        this.context.strokeStyle = this.color;
+        this.showStress = false;
+    }
+
+    // call this anytime a new particle is added
+    renderFrame() {
+        for (let c of this.constraints) {
+            this.draw(c);
+        }
+    }
+
+	draw(c) {
+        let vertices = c.vertices();
+        if (vertices.length > 1) {
+            this.context.beginPath();
+            this.context.moveTo(vertices[0].x, vertices[0].y);
+            for (let i = 1; i < vertices.length; i++) {
+                let vertex = vertices[i];
+                this.context.lineTo(vertex.x, vertex.y);
+            }
+            this.context.stroke();
+        }
+	}
+
+    static calculateStressColor(c, maxForce, min=0, sensitivity = 2) {
+
+        let r = sensitivity * (c.force.mag() - min) / (maxForce - min) * 510;
+        if (r <= 255) {
+            return "rgb(" + Math.floor(r) + ", 255,0)";
+        } else if (r <= 510) {
+            return "rgb(255," + (510 - Math.floor(r)) + ",0)";
+        } else {
+            return "rgb(255,0,0)";
+        }
+    }
+}
+
+module.exports = ConstraintRenderer;
+
+/***/ }),
+/* 24 */
+/***/ ((module) => {
+
+class ParticleRenderer {
+
+    constructor(particles, context) {
+        this.particles = particles;
+        this.context = context;
+    }
+
+    // call this anytime a new particle is added
+    renderFrame() {
+        for (let p of this.particles) {
+            this.draw(p);
+        }
+    }
+
+	draw(p) {
+		this.context.beginPath();
+		this.context.arc(p.pos.x, p.pos.y, p.radius, 0, Math.PI * 2, false);
+		this.context.strokeStyle = p.color;
+		this.context.fillStyle = p.color;
+		this.context.stroke();
+        
+	}
+
+}
+
+module.exports = ParticleRenderer;
+
+/***/ }),
+/* 25 */
+/***/ ((module) => {
+
+class WallRenderer {
+
+    constructor(walls, context) {
+        this.walls = walls;
+        this.context = context;
+        this.color = "black"
+        this.context.strokeStyle = this.color;
+    }
+
+    // call this anytime a new particle is added
+    renderFrame() {
+        for (let w of this.walls) {
+            this.draw(w);
+        }
+    }
+
+	draw(w) {
+        let vertices = w.vertices();
+        if (vertices.length >= 1) {
+            this.context.beginPath();
+            this.context.moveTo(vertices[0].x, vertices[0].y);
+            vertices.pop();
+            for (let p of vertices) {
+                this.context.lineTo(w.p2.x, w.p2.y);
+            }
+            this.context.stroke();
+        }
+
+	}
+}
+
+module.exports = WallRenderer;
+
+/***/ }),
+/* 26 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const SelfBehavior = __webpack_require__(8);
+
+/**
+ * `Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.
+ */
+class Gravity extends SelfBehavior {
+	/**
+	 * Instantiates new Gravity behavior object
+	 * @constructor
+	 */     
+    constructor(acceleration) {
+        super();
+        this.acceleration = acceleration;
+    }
+
+    /**
+     * @override
+     * @param {Particle} particle 
+     * @param {Number} timeStep 
+     */
+    applyBehavior(particle, timeStep) {
+        //particle.applyAcceleration(this.acceleration, timeStep);
+        particle.pos = particle.pos.add(this.acceleration.mult(timeStep * timeStep));
+    }
+
+    /**
+     * @override
+     * @param {Particle} particle 
+     */
+	applyCorrection(particle) {
+        return;
+    }
+}
+
+module.exports = Gravity;
+
+/***/ }),
+/* 27 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
 /**
  * Node module export for the the behaviors directory.
  */
 
 const behaviors = module.exports;
 
-behaviors.ChargeInteraction = __webpack_require__(23);
+behaviors.ChargeInteraction = __webpack_require__(28);
 behaviors.Collision = __webpack_require__(21);
-behaviors.Drag = __webpack_require__(24);
-behaviors.Force = __webpack_require__(25);
+behaviors.Drag = __webpack_require__(29);
+behaviors.Force = __webpack_require__(30);
 behaviors.Gravity = __webpack_require__(26);
-behaviors.PositionLock = __webpack_require__(27);
+behaviors.PositionLock = __webpack_require__(31);
 behaviors.NearBehavior = __webpack_require__(9);
 behaviors.SelfBehavior = __webpack_require__(8);
 
 /***/ }),
-/* 23 */
+/* 28 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const NearBehavior = __webpack_require__(9);
@@ -1951,7 +2190,7 @@ class ChargeInteraction extends NearBehavior {
 module.exports = ChargeInteraction;
 
 /***/ }),
-/* 24 */
+/* 29 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(8);
@@ -2000,7 +2239,7 @@ class Drag extends SelfBehavior {
 module.exports = Drag;
 
 /***/ }),
-/* 25 */
+/* 30 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(8);
@@ -2041,47 +2280,7 @@ class Force extends SelfBehavior {
 module.exports = Force;
 
 /***/ }),
-/* 26 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const SelfBehavior = __webpack_require__(8);
-
-/**
- * `Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.
- */
-class Gravity extends SelfBehavior {
-	/**
-	 * Instantiates new Gravity behavior object
-	 * @constructor
-	 */     
-    constructor(acceleration) {
-        super();
-        this.acceleration = acceleration;
-    }
-
-    /**
-     * @override
-     * @param {Particle} particle 
-     * @param {Number} timeStep 
-     */
-    applyBehavior(particle, timeStep) {
-        //particle.applyAcceleration(this.acceleration, timeStep);
-        particle.pos = particle.pos.add(this.acceleration.mult(timeStep * timeStep));
-    }
-
-    /**
-     * @override
-     * @param {Particle} particle 
-     */
-	applyCorrection(particle) {
-        return;
-    }
-}
-
-module.exports = Gravity;
-
-/***/ }),
-/* 27 */
+/* 31 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(8);
@@ -2120,7 +2319,7 @@ class PositionLock extends SelfBehavior {
 module.exports = PositionLock;
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -2129,165 +2328,10 @@ module.exports = PositionLock;
 
 const renderers = module.exports;
 
-renderers.Renderer = __webpack_require__(29);
-renderers.ParticleRenderer = __webpack_require__(30);
-renderers.ConstraintRenderer = __webpack_require__(31);
-renderers.WallRenderer = __webpack_require__(32);
-
-/***/ }),
-/* 29 */
-/***/ ((module) => {
-
-class Renderer {
-    constructor(solver, canvas) {
-        this.solver = solver;
-        this.canvas = canvas;
-        this.context = this.canvas.getContext("2d");
-        this.constraintRenderer = new ConstraintRenderer(solver.constraints, this.context);
-        this.particleRenderer = new ParticleRenderer(solver.particles.values(), this.context);
-        this.wallRenderer = new WallRenderer(solver.walls, this.context);
-    }
-
-    // call this anytime a new particle is added
-    updateRendererParticles(list) {
-        this.particleRenderer.particles = list;
-    }
-
-    updateContext(context) {
-        this.constraintRenderer.context = context;
-        this.particleRenderer.context = context;
-    }
-
-    renderFrame() {
-        this.clear();
-        this.particleRenderer.renderFrame();
-        this.constraintRenderer.renderFrame();
-        this.wallRenderer.renderFrame();
-    }
-
-    clear() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-}
-
-module.exports = Renderer;
-
-/***/ }),
-/* 30 */
-/***/ ((module) => {
-
-class ParticleRenderer {
-
-    constructor(particles, context) {
-        this.particles = particles;
-        this.context = context;
-    }
-
-    // call this anytime a new particle is added
-    renderFrame() {
-        for (let p of this.particles) {
-            this.draw(p);
-        }
-    }
-
-	draw(p) {
-		this.context.beginPath();
-		this.context.arc(p.pos.x, p.pos.y, p.radius, 0, Math.PI * 2, false);
-		this.context.strokeStyle = p.color;
-		this.context.fillStyle = p.color;
-		this.context.stroke();
-        
-	}
-
-}
-
-module.exports = ParticleRenderer;
-
-/***/ }),
-/* 31 */
-/***/ ((module) => {
-
-class ConstraintRenderer {
-
-    constructor(constraints, context) {
-        this.constraints = constraints;
-        this.context = context;
-        this.color = "black"
-        this.context.strokeStyle = this.color;
-        this.showStress = false;
-    }
-
-    // call this anytime a new particle is added
-    renderFrame() {
-        for (let c of this.constraints) {
-            this.draw(c);
-        }
-    }
-
-	draw(c) {
-        let vertices = c.vertices();
-        if (vertices.length > 1) {
-            this.context.beginPath();
-            this.context.moveTo(vertices[0].x, vertices[0].y);
-            for (let i = 1; i < vertices.length; i++) {
-                let vertex = vertices[i];
-                this.context.lineTo(vertex.x, vertex.y);
-            }
-            this.context.stroke();
-        }
-	}
-
-    static calculateStressColor(c, maxForce, min=0, sensitivity = 2) {
-
-        let r = sensitivity * (c.force.mag() - min) / (maxForce - min) * 510;
-        if (r <= 255) {
-            return "rgb(" + Math.floor(r) + ", 255,0)";
-        } else if (r <= 510) {
-            return "rgb(255," + (510 - Math.floor(r)) + ",0)";
-        } else {
-            return "rgb(255,0,0)";
-        }
-    }
-}
-
-module.exports = ConstraintRenderer;
-
-/***/ }),
-/* 32 */
-/***/ ((module) => {
-
-class WallRenderer {
-
-    constructor(walls, context) {
-        this.walls = walls;
-        this.context = context;
-        this.color = "black"
-        this.context.strokeStyle = this.color;
-    }
-
-    // call this anytime a new particle is added
-    renderFrame() {
-        for (let w of this.walls) {
-            this.draw(w);
-        }
-    }
-
-	draw(w) {
-        let vertices = w.vertices();
-        if (vertices.length >= 1) {
-            this.context.beginPath();
-            this.context.moveTo(vertices[0].x, vertices[0].y);
-            vertices.pop();
-            for (let p of vertices) {
-                this.context.lineTo(w.p2.x, w.p2.y);
-            }
-            this.context.stroke();
-        }
-
-	}
-}
-
-module.exports = WallRenderer;
+renderers.Renderer = __webpack_require__(22);
+renderers.ParticleRenderer = __webpack_require__(24);
+renderers.ConstraintRenderer = __webpack_require__(23);
+renderers.WallRenderer = __webpack_require__(25);
 
 /***/ })
 /******/ 	]);

@@ -1,10 +1,21 @@
+const Vector2D = require("../utils/Vector2D");
 const Wall = require("./Wall");
 
 /**
- * 
+ * `WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions
+ * are generally meant to be immutable since the normal vector is calculated upon instantiation. However, wall position
+ * can be modified with some care.
  */
 class WallBoundary extends Wall {
 
+    /**
+     * Instantiates new `WallBoundary`
+     * @param {*} x1 x-position of first vertex
+     * @param {*} y1 y-position of first vertex
+     * @param {*} x2 x-position of second vertex
+     * @param {*} y2 y-position of second vertex
+     * @param {*} width rendered line width of wall (does not effect physics)
+     */
     constructor(x1, y1, x2, y2, width=1) {
         super();
         this.p1 = new Vector2D(x1, y1);
@@ -14,15 +25,13 @@ class WallBoundary extends Wall {
         this.normal = (new Vector2D((y2-y1), -(x2-x1))).normalize();
     }
 
+
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     * @param {Number} timeStep 
+     */
     resolveCollisions(particles, timeStep) {
-        this.collide(particles, timeStep);
-    }
-
-    applyCorrection(particles) {
-        this.collideCorrect(particles);
-    }
-
-    collide(particles, timeStep) {
         for (let particle of particles) {
             let pos = particle.pos;
             let bounciness = particle.bounciness;
@@ -72,7 +81,11 @@ class WallBoundary extends Wall {
         }
     }
 
-    collideCorrect(particles) {
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     */
+    applyCorrection(particles) {
         for (let particle of particles) {
             let pos = particle.pos;
 
@@ -111,6 +124,11 @@ class WallBoundary extends Wall {
         }
     }
 
+    /**
+     * Checks if a Particle is colliding with the Wall
+     * @param {Particle} particle 
+     * @returns {Boolean} true if particle is colliding with wall
+     */
     isCollide(particle) {
         let pos = particle.pos;
 
@@ -141,15 +159,26 @@ class WallBoundary extends Wall {
             return distance < particle.radius;
     }
 
-
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
     getHashPos() {
         return [(this.p2.x + this.p1.x) / 2, (this.p2.y + this.p1.y) / 2];
     }
 
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
     getHashDimensions() {
         return [Math.abs(this.p2.x - this.p1.x), Math.abs(this.p2.y - this.p1.y)];
     }
 
+    /**
+     * @override
+     * @returns {[Vector2D, Vector2D]} 
+     */
     vertices() {
         return [this.p1, this.p2];
     }
