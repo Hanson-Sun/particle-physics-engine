@@ -23,15 +23,13 @@ module.exports = (env = {}) => {
   License ${pkg.license}${!minimize ? '\n\n' + license : ''}`;
   
   return {    
-    entry: {
-      "pphys":"./src/module/module.js"
-    },
+    entry:"./src/module/module.js",
     output: {
       library: 'pphys',
       libraryTarget: 'umd',
       umdNamedDefine: true,
       globalObject: 'this',
-      filename: `[name]${kind ? '.' + kind : ''}${minimize ? '.min' : ''}.js`,
+      filename: pkg.name + `${kind ? '.' + kind : ''}${minimize ? '.min' : ''}.js`,
     },
     optimization: { minimize },
     performance: {

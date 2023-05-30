@@ -1,8 +1,9 @@
-
 /**
- * 
+ * Node module exports for the constraints directory
  */
+
 const constraints =  module.exports;
+
 constraints.Constraint = require("./Constraint");
 constraints.ForceDistanceConstraint = require("./ForceDistanceConstraint");
 constraints.ForcePivotConstraint = require("./ForcePivotConstraint");

@@ -1,3 +1,7 @@
+/**
+ * Node module exports for the walls directory
+ */
+
 const walls = module.exports;
 
 walls.Wall = require("./Wall");

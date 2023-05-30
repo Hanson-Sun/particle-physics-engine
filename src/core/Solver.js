@@ -1,4 +1,23 @@
+const Constraint = require("../constraints/Constraint");
+const Wall = require("../walls/Wall");
+const Particle = require("./Particle");
+const SpatialHashGrid = require("./SpatialHashGrid");
+
+/**
+ * `Solver` is the discrete solver algorithm that calculates the movement of the physics world. It uses a modified 
+ * predictive-corrective semi-implicit Euler implementation. Because this is a local iterative solver, there may be 
+ * divergence issues at higher timeSteps and convergence can be tuned with the iterationPerFrame.
+ */
 class Solver {
+    /**
+     * Instantiates new `Solver`
+     * @param {Number} timeStep the change in time per frame (smaller is more accurate)
+     * @param {Number} iterationPerFrame the amount of time the solver is called per frame (**not** substepping, timeStep remains constant)
+     * @param {Number} constraintIteration the amount of times the constraints are solved per frame
+     * @param {SpatialHashGrid} particles SpatialHashGrid of particles
+     * @param {Constraint[]} constraints list of constraints
+     * @param {Wall[]} walls list of walls
+     */
     constructor(timeStep, iterationPerFrame, constraintIteration, particles, constraints, walls) {
         this.timeStep = timeStep;
         this.iterationPerFrame = iterationPerFrame;

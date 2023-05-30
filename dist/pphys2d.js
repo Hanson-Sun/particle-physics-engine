@@ -40,13 +40,17 @@ return /******/ (() => { // webpackBootstrap
 /* 0 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var pphys = module.exports;
+/**
+ * Node module encapsulation and export for entire physics engine
+ */
+
+const pphys = module.exports;
 
 pphys.utils = __webpack_require__(1);
 pphys.constraints = __webpack_require__(3);
-pphys.walls = __webpack_require__(11);
-pphys.core = __webpack_require__(15);
-pphys.behaviors = __webpack_require__(21);
+pphys.walls = __webpack_require__(13);
+pphys.core = __webpack_require__(17);
+pphys.behaviors = __webpack_require__(22);
 pphys.renderers = __webpack_require__(28);
 
 
@@ -56,6 +60,10 @@ pphys.renderers = __webpack_require__(28);
 /***/ }),
 /* 1 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Node module exports for the utils directory (i think ill add more later...)
+ */
 
 const utils = module.exports
 
@@ -228,16 +236,17 @@ module.exports = Vector2D;
 /* 3 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 /**
- * 
+ * Node module exports for the constraints directory
  */
+
 const constraints =  module.exports;
+
 constraints.Constraint = __webpack_require__(4);
 constraints.ForceDistanceConstraint = __webpack_require__(5);
-constraints.ForcePivotConstraint = __webpack_require__(8);
-constraints.PositionDistanceConstraint = __webpack_require__(9);
-constraints.PositionPivotConstraint = __webpack_require__(10);
+constraints.ForcePivotConstraint = __webpack_require__(10);
+constraints.PositionDistanceConstraint = __webpack_require__(11);
+constraints.PositionPivotConstraint = __webpack_require__(12);
 
 
 /***/ }),
@@ -365,8 +374,25 @@ module.exports = ForceDistanceConstraint;
 
 const HashGridItem = __webpack_require__(7);
 const Vector2D = __webpack_require__(2);
+const SelfBehavior = __webpack_require__(8);
+const NearBehavior = __webpack_require__(9);
+
+/**
+ * `Particle` is the main object of this physics engine. It is a 2D circle that is treated like a point mass at the center
+ * and does **not** rotate. `Particle` is also a `HashGridItem` so it can be added to a `SpatialHashGrid`.
+ */
 
 class Particle extends HashGridItem {
+	/**
+	 * Instantiates new `Particle`
+	 * @param {Vector2D} pos cartesian coordinates of the particle
+	 * @param {Vector2D} vel velocity of the particle
+	 * @param {Number} mass 
+	 * @param {Number} radius 
+	 * @param {Number} bounciness a value in [0,1] that represents the amount of energy retained after collision
+	 * @param {Number} charge similar to real physical charge
+	 * @param {String} color currently only supports HTML canvas colors format
+	 */
 	constructor(pos, vel, mass, radius, bounciness = 1, charge = 0, color="black") {
         super();
 		this.charge = charge || 0;
@@ -383,27 +409,54 @@ class Particle extends HashGridItem {
 		this.selfBehavior = [];
 	}
 
-
+	/**
+	 * Increments the position by velocity `v`
+	 * @param {Vector2D} v 
+	 * @param {Number} timeStep 
+	 */
 	applyVelocity(v, timeStep) {
 		this.pos = this.pos.add(v.mult(timeStep));
 	}
 
+	/**
+	 * Applies force `f` to the velocity
+	 * @param {Vector2D} f 
+	 * @param {Number} timeStep 
+	 */
     applyForce(f, timeStep) {
 		this.vel = this.vel.add(f.mult(timeStep / this.mass));
 	}
 
+	/**
+	 * Increments the velocity by an acceleration `a`
+	 * @param {Vector2D} a 
+	 * @param {Number} timeStep 
+	 */
 	applyAcceleration(a, timeStep) {
 		this.vel = this.vel.add(a.mult(timeStep));
 	}
 
+	/**
+	 * Adds a `SelfBehavior` to the particle
+	 * @param {SelfBehavior} b 
+	 */
 	addSelfBehavior(b) {
 		this.selfBehavior.push(b);
 	}
 
+	/**
+	 * Adds a `NearBehavior` to the particle
+	 * @param {NearBehavior} b 
+	 */
 	addNearBehavior(b) {
 		this.nearBehavior.push(b);
 	}
 
+	/**
+	 * Removes `NearBehavior` `b` if the particle has `b`  
+	 * @param {NearBehavior} b 
+	 * @returns {Boolean} true if the action is successful
+	 */
 	removeNearBehavior(b) {
 		const index = this.nearBehavior.indexOf(b);
 		if (index > -1) {
@@ -413,6 +466,11 @@ class Particle extends HashGridItem {
 		return false;
 	}
 
+/**
+	 * Removes `SelfBehavior` `b` if the particle has `b`  
+	 * @param {SelfBehavior} b 
+	 * @returns {Boolean} true if the action is successful
+	 */
 	removeSelfBehavior(b) {
 		const index = this.selfBehavior.indexOf(b);
 		if (index > -1) {
@@ -422,16 +480,26 @@ class Particle extends HashGridItem {
 		return false;
 	}
 
+	/**
+	 * Clears all behaviors of the particle
+	 */
 	clearBehaviors() {
 		this.nearBehavior = [];
 		this.selfBehavior = [];
 	}
 
-
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
 	getHashPos() {
 		return [this.pos.x, this.pos.y];
 	}
 
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
 	getHashDimensions() {
 		return [this.radius * 2, this.radius * 2];
 	}
@@ -486,6 +554,96 @@ module.exports = HashGridItem;
 
 /***/ }),
 /* 8 */
+/***/ ((module) => {
+
+/**
+ * Abstract class that represents self interactions. These behaviors are only dependent on the singular particle it is attached to.
+ */
+class SelfBehavior {
+    /**
+     * @constructor abstract class cannot be instantiated
+     */
+    constructor() {
+        if (this.constructor == SelfBehavior) {
+            throw new Error("SelfBehavior interface class cannot be instantiated.");
+        }
+    }
+
+    /**
+     * Apply behavior on `particle`
+     * @param {Particle} particle 
+     * @param {Number} timeStep 
+     * @abstract
+     */
+    applyBehavior(particle, timeStep) {
+        throw new Error("Method 'applyBehavior()' must be implemented.");
+    }
+
+    /**
+     * Apply a positional correction to `particle`
+     * @param {Particle} particle 
+     * @abstract
+     */
+    applyCorrection(particle) {
+        throw new Error("Method 'applyCorrection()' must be implemented.");
+    }
+
+}
+
+module.exports = SelfBehavior;
+
+/***/ }),
+/* 9 */
+/***/ ((module) => {
+
+/**
+ * Abstract class that represents nearby interactions. This type behavior will influence, or is dependent on a set of particles in its near proximity
+ */
+class NearBehavior {
+    /**
+     * @constructor abstract class cannot be instantiated
+     */
+    constructor() {
+        if (this.constructor == NearBehavior) {
+            throw new Error("NearBehavior interface class cannot be instantiated.");
+        }
+    }
+
+    /**
+     * Apply behavior on `particle` and/or `particles`
+     * @param {Particle} particle main particle
+     * @param {Number} timeStep time step of simulation
+     * @param {Particle[]} particles surrounding particles
+     * @abstract
+     */
+    applyBehavior(particle, timeStep, particles) {
+        throw new Error("Method 'applyBehavior()' must be implemented.");
+    }
+
+    /**
+     * Returns the effective range / defines the size of the nearby range
+     * @returns {[Number, Number]} pair of rectangular dimensions that represent the effective range
+     * @abstract
+     */
+    range() {
+        throw new Error("Method 'range()' must be implemented.");
+    }
+
+    /**
+     * Apply a positional correction to `particle` and/or `particles`
+     * @param {Particle} particle 
+     * @param {Particle[]} particles 
+     * @abstract
+     */
+    applyCorrection(particle, particles) {
+        throw new Error("Method 'applyCorrection()' must be implemented.");
+    }
+}
+
+module.exports = NearBehavior;
+
+/***/ }),
+/* 10 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(4);
@@ -557,7 +715,7 @@ class ForcePivotConstraint extends Constraint {
 module.exports = ForcePivotConstraint;
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(4);
@@ -627,7 +785,7 @@ class PositionDistanceConstraint extends Constraint {
 module.exports = PositionDistanceConstraint;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(4);
@@ -692,18 +850,22 @@ class PositionPivotConstraint extends Constraint {
 module.exports = PositionPivotConstraint;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Node module exports for the walls directory
+ */
 
 const walls = module.exports;
 
-walls.Wall = __webpack_require__(12);
-walls.WallBoundary = __webpack_require__(13);
-walls.RectangularWorldBoundary = __webpack_require__(14);
+walls.Wall = __webpack_require__(14);
+walls.WallBoundary = __webpack_require__(15);
+walls.RectangularWorldBoundary = __webpack_require__(16);
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const HashGridItem = __webpack_require__(7);
@@ -747,10 +909,10 @@ class Wall extends HashGridItem {
 module.exports = Wall;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Wall = __webpack_require__(12);
+const Wall = __webpack_require__(14);
 
 /**
  * 
@@ -910,10 +1072,10 @@ class WallBoundary extends Wall {
 module.exports = WallBoundary;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Wall = __webpack_require__(12);
+const Wall = __webpack_require__(14);
 
 // stand-in until i figure out how to implement the other walls.
 class RectangularWorldBoundary extends Wall {
@@ -1005,22 +1167,45 @@ class RectangularWorldBoundary extends Wall {
 module.exports = RectangularWorldBoundary;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Node module exports for the core directory
+ */
 
 const core = module.exports;
 
 core.HashGridItem = __webpack_require__(7);
 core.Particle = __webpack_require__(6);
-core.Solver = __webpack_require__(16);
-core.SpatialHashGrid = __webpack_require__(17);
-core.World = __webpack_require__(18);
+core.Solver = __webpack_require__(18);
+core.SpatialHashGrid = __webpack_require__(19);
+core.World = __webpack_require__(20);
 
 /***/ }),
-/* 16 */
-/***/ ((module) => {
+/* 18 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const Constraint = __webpack_require__(4);
+const Wall = __webpack_require__(14);
+const Particle = __webpack_require__(6);
+const SpatialHashGrid = __webpack_require__(19);
+
+/**
+ * `Solver` is the discrete solver algorithm that calculates the movement of the physics world. It uses a modified 
+ * predictive-corrective semi-implicit Euler implementation. Because this is a local iterative solver, there may be 
+ * divergence issues at higher timeSteps and convergence can be tuned with the iterationPerFrame.
+ */
 class Solver {
+    /**
+     * Instantiates new `Solver`
+     * @param {Number} timeStep the change in time per frame (smaller is more accurate)
+     * @param {Number} iterationPerFrame the amount of time the solver is called per frame (**not** substepping, timeStep remains constant)
+     * @param {Number} constraintIteration the amount of times the constraints are solved per frame
+     * @param {SpatialHashGrid} particles SpatialHashGrid of particles
+     * @param {Constraint[]} constraints list of constraints
+     * @param {Wall[]} walls list of walls
+     */
     constructor(timeStep, iterationPerFrame, constraintIteration, particles, constraints, walls) {
         this.timeStep = timeStep;
         this.iterationPerFrame = iterationPerFrame;
@@ -1134,7 +1319,7 @@ class Solver {
 module.exports = Solver;
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ ((module) => {
 
 /**
@@ -1334,11 +1519,11 @@ class SpatialHashGrid {
 module.exports = SpatialHashGrid;
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const RectangularWorldBoundary = __webpack_require__(14);
-const Collision = __webpack_require__(19);
+const RectangularWorldBoundary = __webpack_require__(16);
+const Collision = __webpack_require__(21);
 
 class World {
     constructor(canvas, width, height, xGrids, yGrids = null, timeStep = 1, iterationPerFrame = 1, constraintIteration = 1) {
@@ -1536,10 +1721,10 @@ module.exports = World;
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const NearBehavior = __webpack_require__(20);
+const NearBehavior = __webpack_require__(9);
 
 /**
  * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.
@@ -1676,75 +1861,29 @@ class Collision extends NearBehavior {
 module.exports = Collision;
 
 /***/ }),
-/* 20 */
-/***/ ((module) => {
-
-/**
- * Abstract class that represents nearby interactions. This type behavior will influence, or is dependent on a set of particles in its near proximity
- */
-class NearBehavior {
-    /**
-     * @constructor abstract class cannot be instantiated
-     */
-    constructor() {
-        if (this.constructor == NearBehavior) {
-            throw new Error("NearBehavior interface class cannot be instantiated.");
-        }
-    }
-
-    /**
-     * Apply behavior on `particle` and/or `particles`
-     * @param {Particle} particle main particle
-     * @param {Number} timeStep time step of simulation
-     * @param {Particle[]} particles surrounding particles
-     * @abstract
-     */
-    applyBehavior(particle, timeStep, particles) {
-        throw new Error("Method 'applyBehavior()' must be implemented.");
-    }
-
-    /**
-     * Returns the effective range / defines the size of the nearby range
-     * @returns {[Number, Number]} pair of rectangular dimensions that represent the effective range
-     * @abstract
-     */
-    range() {
-        throw new Error("Method 'range()' must be implemented.");
-    }
-
-    /**
-     * Apply a positional correction to `particle` and/or `particles`
-     * @param {Particle} particle 
-     * @param {Particle[]} particles 
-     * @abstract
-     */
-    applyCorrection(particle, particles) {
-        throw new Error("Method 'applyCorrection()' must be implemented.");
-    }
-}
-
-module.exports = NearBehavior;
-
-/***/ }),
-/* 21 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const behavior = module.exports;
-
-behavior.ChargeInteraction = __webpack_require__(22);
-behavior.Collision = __webpack_require__(19);
-behavior.Drag = __webpack_require__(23);
-behavior.Force = __webpack_require__(25);
-behavior.Gravity = __webpack_require__(26);
-behavior.PositionLock = __webpack_require__(27);
-behavior.NearBehavior = __webpack_require__(20);
-behavior.SelfBehavior = __webpack_require__(24);
-
-/***/ }),
 /* 22 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const NearBehavior = __webpack_require__(20);
+/**
+ * Node module export for the the behaviors directory.
+ */
+
+const behaviors = module.exports;
+
+behaviors.ChargeInteraction = __webpack_require__(23);
+behaviors.Collision = __webpack_require__(21);
+behaviors.Drag = __webpack_require__(24);
+behaviors.Force = __webpack_require__(25);
+behaviors.Gravity = __webpack_require__(26);
+behaviors.PositionLock = __webpack_require__(27);
+behaviors.NearBehavior = __webpack_require__(9);
+behaviors.SelfBehavior = __webpack_require__(8);
+
+/***/ }),
+/* 23 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const NearBehavior = __webpack_require__(9);
 
 /**
  * `ChargeInteraction` is a NearBehavior that calculates the charge repulsion/attraction forces between "nearby" particles.
@@ -1812,10 +1951,10 @@ class ChargeInteraction extends NearBehavior {
 module.exports = ChargeInteraction;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(24);
+const SelfBehavior = __webpack_require__(8);
 
 /**
  * `Drag` is a `SelfBehavior` that applies a viscous drag force on the particle itself.
@@ -1861,50 +2000,10 @@ class Drag extends SelfBehavior {
 module.exports = Drag;
 
 /***/ }),
-/* 24 */
-/***/ ((module) => {
-
-/**
- * Abstract class that represents self interactions. These behaviors are only dependent on the singular particle it is attached to.
- */
-class SelfBehavior {
-    /**
-     * @constructor abstract class cannot be instantiated
-     */
-    constructor() {
-        if (this.constructor == SelfBehavior) {
-            throw new Error("SelfBehavior interface class cannot be instantiated.");
-        }
-    }
-
-    /**
-     * Apply behavior on `particle`
-     * @param {Particle} particle 
-     * @param {Number} timeStep 
-     * @abstract
-     */
-    applyBehavior(particle, timeStep) {
-        throw new Error("Method 'applyBehavior()' must be implemented.");
-    }
-
-    /**
-     * Apply a positional correction to `particle`
-     * @param {Particle} particle 
-     * @abstract
-     */
-    applyCorrection(particle) {
-        throw new Error("Method 'applyCorrection()' must be implemented.");
-    }
-
-}
-
-module.exports = SelfBehavior;
-
-/***/ }),
 /* 25 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(24);
+const SelfBehavior = __webpack_require__(8);
 
 /**
  * `Force` is a `SelfBehavior` that applies a constant force on the particle.   
@@ -1945,7 +2044,7 @@ module.exports = Force;
 /* 26 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(24);
+const SelfBehavior = __webpack_require__(8);
 
 /**
  * `Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.
@@ -1985,7 +2084,7 @@ module.exports = Gravity;
 /* 27 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(24);
+const SelfBehavior = __webpack_require__(8);
 
 /**
  * 
@@ -2023,6 +2122,10 @@ module.exports = PositionLock;
 /***/ }),
 /* 28 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Node module exports for the renderers directory
+ */
 
 const renderers = module.exports;
 

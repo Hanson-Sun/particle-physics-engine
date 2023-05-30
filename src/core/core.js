@@ -1,3 +1,7 @@
+/**
+ * Node module exports for the core directory
+ */
+
 const core = module.exports;
 
 core.HashGridItem = require("./HashGridItem");

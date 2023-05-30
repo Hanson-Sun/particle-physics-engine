@@ -40,6 +40,7 @@ This repository also includes additional files for demo purposes
   - seems to have a tendency to lose energy when constraints are used.
   - !!! i seem to have an issue with understanding when to change velocity in behavior. (consider velocity change in constraint)
 - Vector2D modify methods are inconsistent for some reason --> test this
+- **Fix iteration per frame to use sub-stepping** --> somehow include it idk
 
 Notes:
 i think ill leave the rendering step with more freedom to the users 
@@ -48,3 +49,5 @@ theres a setSolverUpdate() function that is like unity's Update() but kind of di
 
 
 i think ill name it `PPhys2D` for **P**article-based **P**hysics engine **2D**
+
+
