@@ -30,6 +30,9 @@ class Solver {
         this.walls = walls;
     }
 
+    /**
+     * Solves one iteration of the current physics world
+     */
     solve() {
         // calculate future pos and store current pos as previous pos
         // apply behaviors, any forces, and corrections
@@ -42,23 +45,29 @@ class Solver {
         this.handleConstraints();
         this.handleWallCollisions();
         this.updateVelocity();
-        
         this.positionCorrection();
-        
     }
 
+    /**
+     * Optional function that can be defined to exhibit certain behavior in the solve loop.
+     */
     update(){
         return;
     }
 
+    /**
+     * Move particle positions forward to the "future-position"
+     */
     preMove() {
         for (let circ of this.particleList) {
             circ.prevPos = circ.pos;
             circ.applyVelocity(circ.vel, this.timeStep);
-
         }
     }
 
+    /**
+     * Solve physics interactions from Behaviors
+     */
     handleBehaviors() {
         for (let circ of this.particleList) {
 
@@ -72,6 +81,9 @@ class Solver {
         }
     }
 
+    /**
+     * Solve physics interactions from Constraints
+     */
     handleConstraints() {
         let dt = this.timeStep / this.constraintIteration;
         for (let i = 0; i < this.constraintIteration; i++) {
@@ -87,12 +99,18 @@ class Solver {
         }
     }
 
+    /**
+     * Solve collision interactions with Walls
+     */
     handleWallCollisions() {
         for (let wall of this.walls) {
             wall.resolveCollisions(this.particles.findNear(wall), this.timeStep);
         }
     }
 
+    /**
+     * Update final particle velocities
+     */
     updateVelocity() {
         for (let circ of this.particleList) {
             circ.vel = circ.pos.sub(circ.prevPos).mult(1 / this.timeStep);
@@ -100,6 +118,9 @@ class Solver {
         }
     }
 
+    /**
+     * Correct particle positions 
+     */
     positionCorrection() {
         for (let circ of this.particleList) {
 
@@ -117,12 +138,18 @@ class Solver {
         }
     }
 
+    /**
+     * Computes next frame or "world-state"
+     */
     nextFrame() {
         for (let i = 0; i < this.iterationPerFrame; i++) {
             this.solve();
         }
     }
 
+    /**
+     * Update the particle positions in the SpatialHashGrid
+     */
     updateSolverParticles() {
         this.particleList = this.particles.values();
     }

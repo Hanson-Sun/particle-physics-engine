@@ -41,6 +41,7 @@ This repository also includes additional files for demo purposes
   - !!! i seem to have an issue with understanding when to change velocity in behavior. (consider velocity change in constraint)
 - Vector2D modify methods are inconsistent for some reason --> test this
 - **Fix iteration per frame to use sub-stepping** --> somehow include it idk
+- resolve constructor complexity by changing how the options work
 
 Notes:
 i think ill leave the rendering step with more freedom to the users 

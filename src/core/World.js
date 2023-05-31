@@ -5,7 +5,24 @@ const Solver = require("../core/Solver");
 const Renderer = require("../renderers/Renderer");
 const Gravity = require("../behaviors/Gravity");
 
+/**
+ * `World` the global-state instance of the physics engine that keeps track of all the objects. This provides
+ * a higher level of abstraction from the user but may be limiting in some ways. It is a good idea to extend and 
+ * override this class for any specific properties. With the current SpatialHashing algorithm, the world should have
+ * finite bounds.
+ */
 class World {
+    /**
+     * Instantiates new `World` instance
+     * @param {HTMLCanvasElement} canvas HTML canvas where the elements are displayed
+     * @param {Number} width width of world
+     * @param {Number} height height of world
+     * @param {Number} xGrids integer number of grid separations in the x direction
+     * @param {Number} yGrids integer number of grid separations in the y direction
+     * @param {Number} timeStep change in time per solve iteration
+     * @param {Number} iterationPerFrame number of solve iterations per frame
+     * @param {Number} constraintIteration number of times constraints are solved per iteration
+     */
     constructor(canvas, width, height, xGrids, yGrids = null, timeStep = 1, iterationPerFrame = 1, constraintIteration = 1) {
         this.timeStep = timeStep;
         this.iterationPerFrame = iterationPerFrame;
@@ -28,60 +45,101 @@ class World {
         this.isRender = true;
     }
 
+    /**
+     * Adds a particle to the world
+     * @param {Particle} p 
+     */
     addParticle(p) {
         this.particles.add(p);
         this.updateParticleList();
     }
 
+    /**
+     * Adds a constraint to the world
+     * @param {Constraint} c 
+     */
     addConstraint(c) {
         this.constraints.push(c);
     }
 
+    /**
+     * Adds a wall to the world
+     * @param {Wall} w 
+     */
     addWall(w) {
         this.walls.push(w);
     }
 
+    /**
+     * Clears all of the particles
+     */
     clearParticles() {
         this.particles = new SpatialHashGrid(this.width, this.height, this.xGrids, this.yGrids);
         this.updateParticleList();
     }
 
+    /**
+     * Clears all of the constraints
+     */
     clearConstraints() {
         this.constraints = [];
         this.updateParticleList();
     }
 
-    // add everyTime the number of particles change.
+    /**
+     * Update the list of particles. Must be called every time the number of particles change.
+     */
     updateParticleList() {
         this.particlesList = this.particles.values();
         this.renderer.updateRendererParticles(this.particlesList);
         this.solver.updateSolverParticles();
     }
 
+    /**
+     * Adds a SelfBehavior to all the particles
+     * @param {SelfBehavior} b 
+     */
     addGlobalBehavior(b) {
         for (let p of this.particlesList) {
             p.addSelfBehavior(b);
         }
     }
 
+    /**
+     * Removes a SelfBehavior from all the particles
+     * @param {SelfBehavior} b 
+     */
     removeGlobalBehavior(b) {
         for (let p of this.particlesList) {
             p.removeSelfBehavior(b);
         }
     }
 
+    /**
+     * Adds a NearBehavior to all the particles
+     * @param {NearBehavior} b 
+     */
     addGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
             p.addNearBehavior(b);
         }
     }
 
+    /**
+     * Removes a NearBehavior to all the particles
+     * @param {NearBehavior} b 
+     */
     removeGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
             p.removeNearBehavior(b);
         }
     }
 
+    /**
+     * Disables gravity and adds a new global gravity behavior to all the particles, while updating 
+     * the gravity pointer
+     * @param {Number} num 
+     */
     enableGravity(num) {
         if (this.gravity) {
             this.disableGravity();
@@ -90,6 +148,10 @@ class World {
         this.addGlobalBehavior(this.gravity);
     }
 
+    /**
+     * Removes the global gravity behavior
+     * @returns {Boolean} true if gravity is successfully disabled
+     */
     disableGravity() {
         if (this.gravity) {
             this.removeGlobalBehavior(this.gravity);
@@ -98,6 +160,9 @@ class World {
         return false;
     }
 
+    /**
+     * Progresses world to next area
+     */
     nextFrame() {
         this.solver.nextFrame();
         if (this.isRender) {
