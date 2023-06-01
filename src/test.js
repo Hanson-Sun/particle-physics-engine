@@ -103,10 +103,10 @@ function softBody() {
     grid = [];
     size = 15;
     w = 20;
-    stiffness = 100;
+    stiffness = 1000;
     radius = 8;
     constraint = ForceDistanceConstraint;
-    breakForce = 1000;
+    breakForce = 10000;
 
     for (row = 0; row < size; row++) {
         r = [];

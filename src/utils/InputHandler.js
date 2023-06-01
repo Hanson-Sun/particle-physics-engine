@@ -82,7 +82,8 @@ class InputHandler {
 
     createConstraint(handler) {
         let stiffness = handler.currentlySelectedParticle.mass * 50;
-        handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
+        //handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
+        handler.particleConstraint = new PositionPivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, 0.90);
         handler.world.addConstraint(handler.particleConstraint);
     }
 
