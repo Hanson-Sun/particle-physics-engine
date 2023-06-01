@@ -63,6 +63,20 @@ class World {
     }
 
     /**
+     * Removes a constraint from the world
+     * @param {Constraint} c 
+     * @returns {Boolean} true if the constraint is removed
+     */
+    removeConstraint(c) {
+        const index = this.constraints.indexOf(c);
+		if (index > -1) {
+			this.constraints.splice(index, 1);
+			return true;
+		}
+		return false;
+    }
+
+    /**
      * Adds a wall to the world
      * @param {Wall} w 
      */

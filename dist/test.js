@@ -11,8 +11,9 @@ const Vector2D = pphys.utils.Vector2D,
       ForceDistanceConstraint = pphys.constraints.ForceDistanceConstraint,
       PositionPivotConstraint = pphys.constraints.PositionPivotConstraint,
       WallBoundary = pphys.walls.WallBoundary,
-      Collision = pphys.behaviors.Collision
-      ConstraintRenderer = pphys.renderers.ConstraintRenderer;
+      Collision = pphys.behaviors.Collision,
+      ConstraintRenderer = pphys.renderers.ConstraintRenderer,
+      InputHandler = pphys.utils.InputHandler;
 
 const canvas = document.getElementById("test");
 const width = 700;
@@ -22,6 +23,9 @@ canvas.width = width;
 canvas.height = height;
 
 const world = new World(canvas, width, height, 20, 20, 0.05, 1, 20);
+const handler = new InputHandler(world);
+
+handler.startMouseHandling();
 
 const pos = new Vector2D(600, 100);
 const pos2 = new Vector2D(600, 400);

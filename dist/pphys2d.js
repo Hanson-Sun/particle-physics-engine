@@ -47,11 +47,11 @@ return /******/ (() => { // webpackBootstrap
 const pphys = module.exports;
 
 pphys.utils = __webpack_require__(1);
-pphys.constraints = __webpack_require__(3);
-pphys.walls = __webpack_require__(13);
-pphys.core = __webpack_require__(17);
-pphys.behaviors = __webpack_require__(27);
-pphys.renderers = __webpack_require__(32);
+pphys.constraints = __webpack_require__(10);
+pphys.walls = __webpack_require__(14);
+pphys.core = __webpack_require__(18);
+pphys.behaviors = __webpack_require__(28);
+pphys.renderers = __webpack_require__(33);
 
 
 
@@ -68,6 +68,7 @@ pphys.renderers = __webpack_require__(32);
 const utils = module.exports
 
 utils.Vector2D = __webpack_require__(2);
+utils.InputHandler = __webpack_require__(3);
 
 /***/ }),
 /* 2 */
@@ -236,146 +237,134 @@ module.exports = Vector2D;
 /* 3 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const Particle = __webpack_require__(4);
+const Vector2D = __webpack_require__(2);
+const ForcePivotConstraint = __webpack_require__(8);
+
 /**
- * Node module exports for the constraints directory
+ * Will only work inside a website --> Node version wont work.
  */
+class InputHandler {
+    constructor(world, enableMouseInteractions=true) {
+        this.world = world;
+        this.canvas = world.canvas;
 
-const constraints =  module.exports;
+        this.mouseDownPosition = new Vector2D(0,0);
+        this.mousePosition = new Vector2D(0,0);
+        this.mouseIsDown = false;
 
-constraints.Constraint = __webpack_require__(4);
-constraints.ForceDistanceConstraint = __webpack_require__(5);
-constraints.ForcePivotConstraint = __webpack_require__(10);
-constraints.PositionDistanceConstraint = __webpack_require__(11);
-constraints.PositionPivotConstraint = __webpack_require__(12);
+        this.keyPress = "";
 
+        this.selectedParticle = null;
+        this.currentlySelectedParticle = null;
+        this.particleConstraint = null;
+
+        this.keyEvents = new Map();
+
+        this.minSelectRadius = 3;
+
+        this.enableMouseInteractions = enableMouseInteractions;
+    }
+
+    getMousePos(event, handler) {
+        const rect = handler.canvas.getBoundingClientRect();
+        return new Vector2D(event.clientX - rect.left, event.clientY - rect.top);
+    }
+
+    startMouseHandling() {
+        this.canvas.addEventListener("mousedown", (event) => {this.mousedown(event, this)});
+        this.canvas.addEventListener("mousemove", (event) => {this.mousemove(event, this)});
+        window.addEventListener("mouseup", (event) => {this.mouseup(event, this)});
+    }
+
+    mousedown(event, handler) {
+        handler.mousePosition, handler.mouseDownPosition = handler.getMousePos(event, handler);
+        handler.mouseIsDown = true;
+        handler.findSelectedParticle(handler);
+
+        if (handler.currentlySelectedParticle !== null && handler.enableMouseInteractions) {
+            handler.createConstraint(handler);
+        }
+    }
+
+    mousemove(event, handler) {
+        handler.mousePosition = handler.getMousePos(event, handler);
+        if (handler.particleConstraint) {
+            handler.particleConstraint.pos = handler.mousePosition;
+        }
+    }
+
+    mouseup(event, handler) {
+        handler.mouseIsDown = false;
+        handler.currentlySelectedParticle = null;
+        handler.removeConstraint(handler);
+    }
+
+    findSelectedParticle(handler) {
+        const zero = new Vector2D(0,0);
+        const testParticle = new Particle(handler.mouseDownPosition, zero, 1, 10);
+        for (let particle of handler.world.particles.findNear(testParticle)) {
+            if (particle.radius <= handler.minSelectRadius) {
+                // idk what this is
+                if (particle.pos.sub(handler.mouseDownPosition).mag() <= particle.radius * 10 * (handler.minSelectRadius + 1 - particle.radius)) {
+                    handler.selectedParticle = particle;
+                    handler.currentlySelectedParticle = particle;
+                }
+            } else if (particle.radius >= handler.minSelectRadius) {
+                if (particle.pos.sub(handler.mouseDownPosition).mag() <= particle.radius) {
+                    handler.selectedParticle = particle;
+                    handler.currentlySelectedParticle = particle;
+                }
+            }
+        }
+    }
+
+    createConstraint(handler) {
+        let stiffness = handler.currentlySelectedParticle.mass * 50;
+        handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
+        handler.world.addConstraint(handler.particleConstraint);
+    }
+
+    removeConstraint(handler) {
+        if (handler.particleConstraint !== null) {
+            handler.world.removeConstraint(handler.particleConstraint);
+            handler.particleConstraint = null;
+        }
+    }
+
+    startKeyHandling() {
+        // this is cursed as hell...
+        this.canvas.addEventListener("keydown", function(event) {
+            const key = e.keyCode;
+            for (let [keyEvent, eventFunction] of this.keyEvents) {
+                if(key === keyEvent) {
+                    eventFunction();
+                }
+            }
+        })
+        
+        this.canvas.addEventListener("keyup", function(event) {
+            this.keyPress = null;
+        })
+    }
+
+    addKeyEvent(keyCode, fn) {
+        this.keyEvents.set(keyCode, fn);
+    }
+
+
+}
+
+module.exports = InputHandler;
 
 /***/ }),
 /* 4 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const HashGridItem = __webpack_require__(5);
 const Vector2D = __webpack_require__(2);
-
-/**
- * Interface for all Constraints
- * @interface
- */
-class Constraint {
-    /**
-     * @constructor `Constraint` interface cannot be instantiated
-     */
-    constructor() {
-        this.color = "black";
-		this.force = new Vector2D(0,0);	
-        this.breakForce = Infinity;
-        if (this.constructor == Constraint) {
-            throw new Error("Constraint interface class cannot be instantiated.");
-        }
-    }
-
-    /**
-     * Updates the constraint.
-     * @param {Number} timeStep 
-     */
-    update(timeStep) {
-        throw new Error("Method 'update()' must be implemented.");
-    }
-
-    /**
-     * Calculates the list of vertices that will be used in the rendering process
-     * @returns {Vector2D[]}
-     */
-    vertices() {
-        throw new Error("Method 'vertices()' must be implemented");
-    }
-}
-
-module.exports = Constraint;
-
-/***/ }),
-/* 5 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const Constraint = __webpack_require__(4);
-const Particle = __webpack_require__(6);
-const Vector2D = __webpack_require__(2);
-
-/**
- * `ForceDistanceConstraint` is a `Constraint` that constrains the distance between two particles.
- * It uses a force-based implementation and can be thought of as a spring between two particles.
- * In general, energy conservation is better at lower stiffness, and it can behave unstable or 
- * energetically inconsistent at higher stiffness.
- */
-class ForceDistanceConstraint extends Constraint {
-    /**
-     * Instantiates new `ForceDistanceConstraint`
-     * @param {Particle} c1 - particle 1
-     * @param {Particle} c2 - particle 2
-     * @param {Number} len - constrained length
-     * @param {Number} stiffness - the "spring constant", higher values are more stiff
-     * @param {Number} dampening - damping force on constraint, must be greater than 0
-     * @param {Number} breakForce - force at which the constraint breaks
-     */
-    constructor(c1, c2, len, stiffness, dampening = 0, breakForce = Infinity) {
-        super();
-        if (c1 === null || c2 === null) {
-            throw new Error("One of the particles is null!");
-        }
-		this.c1 = c1;
-		this.c2 = c2;
-		this.breakForce = breakForce;
-		this.dampening = dampening;
-        this.stiffness = stiffness;
-		this.len = len;
-
-	}
-
-    /**
-     * @override
-     * @param {Number} timeStep 
-     */
-    update(timeStep) {
-        let dp = this.c1.pos.sub(this.c2.pos);
-        let dpMag = dp.mag();
-
-        let dpUnit = dp.mult(1 / dpMag);
-        let dxMag = dpMag - this.len;
-        let dv = this.c1.vel.sub(this.c2.vel);
-        let damp = this.dampening * dv.dot(dp) / dpMag;
-
-        this.force = dpUnit.mult(-this.stiffness * dxMag - damp);
-
-        const a1 = this.force.mult(1 / this.c1.mass);
-        const a2 = this.force.mult(-1 / this.c2.mass);
-
-        let x1 = a1.mult(timeStep * timeStep);
-        let x2 = a2.mult(timeStep * timeStep);
-
-        this.c1.pos = this.c1.pos.add(x1);
-        //this.c1.vel = this.c1.vel.add(a1.mult(timeStep));
-        this.c2.pos = this.c2.pos.add(x2);
-        //this.c2.vel = this.c2.vel.add(a2.mult(timeStep));
-    }
-
-    /**
-     * @override
-     * @returns {Vector2D[]}
-     */
-	vertices() {
-        return [this.c1.pos, this.c2.pos];
-    }
-
-}
-
-module.exports = ForceDistanceConstraint;
-
-/***/ }),
-/* 6 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const HashGridItem = __webpack_require__(7);
-const Vector2D = __webpack_require__(2);
-const SelfBehavior = __webpack_require__(8);
-const NearBehavior = __webpack_require__(9);
+const SelfBehavior = __webpack_require__(6);
+const NearBehavior = __webpack_require__(7);
 
 /**
  * `Particle` is the main object of this physics engine. It is a 2D circle that is treated like a point mass at the center
@@ -508,7 +497,7 @@ class Particle extends HashGridItem {
 module.exports = Particle;
 
 /***/ }),
-/* 7 */
+/* 5 */
 /***/ ((module) => {
 
 /**
@@ -553,7 +542,7 @@ class HashGridItem {
 module.exports = HashGridItem;
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ ((module) => {
 
 /**
@@ -593,7 +582,7 @@ class SelfBehavior {
 module.exports = SelfBehavior;
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ ((module) => {
 
 /**
@@ -643,11 +632,11 @@ class NearBehavior {
 module.exports = NearBehavior;
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Constraint = __webpack_require__(4);
-const Particle = __webpack_require__(6);
+const Constraint = __webpack_require__(9);
+const Particle = __webpack_require__(4);
 const Vector2D = __webpack_require__(2);
 
 /**
@@ -715,11 +704,147 @@ class ForcePivotConstraint extends Constraint {
 module.exports = ForcePivotConstraint;
 
 /***/ }),
+/* 9 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const Vector2D = __webpack_require__(2);
+
+/**
+ * Interface for all Constraints
+ * @interface
+ */
+class Constraint {
+    /**
+     * @constructor `Constraint` interface cannot be instantiated
+     */
+    constructor() {
+        this.color = "black";
+		this.force = new Vector2D(0,0);	
+        this.breakForce = Infinity;
+        if (this.constructor == Constraint) {
+            throw new Error("Constraint interface class cannot be instantiated.");
+        }
+    }
+
+    /**
+     * Updates the constraint.
+     * @param {Number} timeStep 
+     */
+    update(timeStep) {
+        throw new Error("Method 'update()' must be implemented.");
+    }
+
+    /**
+     * Calculates the list of vertices that will be used in the rendering process
+     * @returns {Vector2D[]}
+     */
+    vertices() {
+        throw new Error("Method 'vertices()' must be implemented");
+    }
+}
+
+module.exports = Constraint;
+
+/***/ }),
+/* 10 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Node module exports for the constraints directory
+ */
+
+const constraints =  module.exports;
+
+constraints.Constraint = __webpack_require__(9);
+constraints.ForceDistanceConstraint = __webpack_require__(11);
+constraints.ForcePivotConstraint = __webpack_require__(8);
+constraints.PositionDistanceConstraint = __webpack_require__(12);
+constraints.PositionPivotConstraint = __webpack_require__(13);
+
+
+/***/ }),
 /* 11 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Constraint = __webpack_require__(4);
-const Particle = __webpack_require__(6);
+const Constraint = __webpack_require__(9);
+const Particle = __webpack_require__(4);
+const Vector2D = __webpack_require__(2);
+
+/**
+ * `ForceDistanceConstraint` is a `Constraint` that constrains the distance between two particles.
+ * It uses a force-based implementation and can be thought of as a spring between two particles.
+ * In general, energy conservation is better at lower stiffness, and it can behave unstable or 
+ * energetically inconsistent at higher stiffness.
+ */
+class ForceDistanceConstraint extends Constraint {
+    /**
+     * Instantiates new `ForceDistanceConstraint`
+     * @param {Particle} c1 - particle 1
+     * @param {Particle} c2 - particle 2
+     * @param {Number} len - constrained length
+     * @param {Number} stiffness - the "spring constant", higher values are more stiff
+     * @param {Number} dampening - damping force on constraint, must be greater than 0
+     * @param {Number} breakForce - force at which the constraint breaks
+     */
+    constructor(c1, c2, len, stiffness, dampening = 0, breakForce = Infinity) {
+        super();
+        if (c1 === null || c2 === null) {
+            throw new Error("One of the particles is null!");
+        }
+		this.c1 = c1;
+		this.c2 = c2;
+		this.breakForce = breakForce;
+		this.dampening = dampening;
+        this.stiffness = stiffness;
+		this.len = len;
+
+	}
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    update(timeStep) {
+        let dp = this.c1.pos.sub(this.c2.pos);
+        let dpMag = dp.mag();
+
+        let dpUnit = dp.mult(1 / dpMag);
+        let dxMag = dpMag - this.len;
+        let dv = this.c1.vel.sub(this.c2.vel);
+        let damp = this.dampening * dv.dot(dp) / dpMag;
+
+        this.force = dpUnit.mult(-this.stiffness * dxMag - damp);
+
+        const a1 = this.force.mult(1 / this.c1.mass);
+        const a2 = this.force.mult(-1 / this.c2.mass);
+
+        let x1 = a1.mult(timeStep * timeStep);
+        let x2 = a2.mult(timeStep * timeStep);
+
+        this.c1.pos = this.c1.pos.add(x1);
+        //this.c1.vel = this.c1.vel.add(a1.mult(timeStep));
+        this.c2.pos = this.c2.pos.add(x2);
+        //this.c2.vel = this.c2.vel.add(a2.mult(timeStep));
+    }
+
+    /**
+     * @override
+     * @returns {Vector2D[]}
+     */
+	vertices() {
+        return [this.c1.pos, this.c2.pos];
+    }
+
+}
+
+module.exports = ForceDistanceConstraint;
+
+/***/ }),
+/* 12 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const Constraint = __webpack_require__(9);
+const Particle = __webpack_require__(4);
 const Vector2D = __webpack_require__(2);
 
 /**
@@ -785,11 +910,11 @@ class PositionDistanceConstraint extends Constraint {
 module.exports = PositionDistanceConstraint;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Constraint = __webpack_require__(4);
-const Particle = __webpack_require__(6);
+const Constraint = __webpack_require__(9);
+const Particle = __webpack_require__(4);
 const Vector2D = __webpack_require__(2);
 
 /**
@@ -850,7 +975,7 @@ class PositionPivotConstraint extends Constraint {
 module.exports = PositionPivotConstraint;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -859,16 +984,16 @@ module.exports = PositionPivotConstraint;
 
 const walls = module.exports;
 
-walls.Wall = __webpack_require__(14);
-walls.WallBoundary = __webpack_require__(15);
-walls.RectangularWorldBoundary = __webpack_require__(16);
+walls.Wall = __webpack_require__(15);
+walls.WallBoundary = __webpack_require__(16);
+walls.RectangularWorldBoundary = __webpack_require__(17);
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const HashGridItem = __webpack_require__(7);
+const HashGridItem = __webpack_require__(5);
 
 /**
  * `Wall` is an Interface for any wall objects. Walls are `HashGridItems`; however, it only uses the SpatialHashGrid methods
@@ -916,11 +1041,11 @@ class Wall extends HashGridItem {
 module.exports = Wall;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Vector2D = __webpack_require__(2);
-const Wall = __webpack_require__(14);
+const Wall = __webpack_require__(15);
 
 /**
  * `WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions
@@ -1108,10 +1233,10 @@ class WallBoundary extends Wall {
 module.exports = WallBoundary;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Wall = __webpack_require__(14);
+const Wall = __webpack_require__(15);
 
 // stand-in until i figure out how to implement the other walls.
 class RectangularWorldBoundary extends Wall {
@@ -1203,7 +1328,7 @@ class RectangularWorldBoundary extends Wall {
 module.exports = RectangularWorldBoundary;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -1212,20 +1337,20 @@ module.exports = RectangularWorldBoundary;
 
 const core = module.exports;
 
-core.HashGridItem = __webpack_require__(7);
-core.Particle = __webpack_require__(6);
-core.Solver = __webpack_require__(18);
-core.SpatialHashGrid = __webpack_require__(19);
-core.World = __webpack_require__(20);
+core.HashGridItem = __webpack_require__(5);
+core.Particle = __webpack_require__(4);
+core.Solver = __webpack_require__(19);
+core.SpatialHashGrid = __webpack_require__(20);
+core.World = __webpack_require__(21);
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Constraint = __webpack_require__(4);
-const Wall = __webpack_require__(14);
-const Particle = __webpack_require__(6);
-const SpatialHashGrid = __webpack_require__(19);
+const Constraint = __webpack_require__(9);
+const Wall = __webpack_require__(15);
+const Particle = __webpack_require__(4);
+const SpatialHashGrid = __webpack_require__(20);
 
 /**
  * `Solver` is the discrete solver algorithm that calculates the movement of the physics world. It uses a modified 
@@ -1254,6 +1379,9 @@ class Solver {
         this.walls = walls;
     }
 
+    /**
+     * Solves one iteration of the current physics world
+     */
     solve() {
         // calculate future pos and store current pos as previous pos
         // apply behaviors, any forces, and corrections
@@ -1266,23 +1394,29 @@ class Solver {
         this.handleConstraints();
         this.handleWallCollisions();
         this.updateVelocity();
-        
         this.positionCorrection();
-        
     }
 
+    /**
+     * Optional function that can be defined to exhibit certain behavior in the solve loop.
+     */
     update(){
         return;
     }
 
+    /**
+     * Move particle positions forward to the "future-position"
+     */
     preMove() {
         for (let circ of this.particleList) {
             circ.prevPos = circ.pos;
             circ.applyVelocity(circ.vel, this.timeStep);
-
         }
     }
 
+    /**
+     * Solve physics interactions from Behaviors
+     */
     handleBehaviors() {
         for (let circ of this.particleList) {
 
@@ -1296,6 +1430,9 @@ class Solver {
         }
     }
 
+    /**
+     * Solve physics interactions from Constraints
+     */
     handleConstraints() {
         let dt = this.timeStep / this.constraintIteration;
         for (let i = 0; i < this.constraintIteration; i++) {
@@ -1311,12 +1448,18 @@ class Solver {
         }
     }
 
+    /**
+     * Solve collision interactions with Walls
+     */
     handleWallCollisions() {
         for (let wall of this.walls) {
             wall.resolveCollisions(this.particles.findNear(wall), this.timeStep);
         }
     }
 
+    /**
+     * Update final particle velocities
+     */
     updateVelocity() {
         for (let circ of this.particleList) {
             circ.vel = circ.pos.sub(circ.prevPos).mult(1 / this.timeStep);
@@ -1324,6 +1467,9 @@ class Solver {
         }
     }
 
+    /**
+     * Correct particle positions 
+     */
     positionCorrection() {
         for (let circ of this.particleList) {
 
@@ -1341,12 +1487,18 @@ class Solver {
         }
     }
 
+    /**
+     * Computes next frame or "world-state"
+     */
     nextFrame() {
         for (let i = 0; i < this.iterationPerFrame; i++) {
             this.solve();
         }
     }
 
+    /**
+     * Update the particle positions in the SpatialHashGrid
+     */
     updateSolverParticles() {
         this.particleList = this.particles.values();
     }
@@ -1355,7 +1507,7 @@ class Solver {
 module.exports = Solver;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ ((module) => {
 
 /**
@@ -1555,17 +1707,34 @@ class SpatialHashGrid {
 module.exports = SpatialHashGrid;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const RectangularWorldBoundary = __webpack_require__(16);
-const Collision = __webpack_require__(21);
-const SpatialHashGrid = __webpack_require__(19);
-const Solver = __webpack_require__(18);
-const Renderer = __webpack_require__(22);
-const Gravity = __webpack_require__(26);
+const RectangularWorldBoundary = __webpack_require__(17);
+const Collision = __webpack_require__(22);
+const SpatialHashGrid = __webpack_require__(20);
+const Solver = __webpack_require__(19);
+const Renderer = __webpack_require__(23);
+const Gravity = __webpack_require__(27);
 
+/**
+ * `World` the global-state instance of the physics engine that keeps track of all the objects. This provides
+ * a higher level of abstraction from the user but may be limiting in some ways. It is a good idea to extend and 
+ * override this class for any specific properties. With the current SpatialHashing algorithm, the world should have
+ * finite bounds.
+ */
 class World {
+    /**
+     * Instantiates new `World` instance
+     * @param {HTMLCanvasElement} canvas HTML canvas where the elements are displayed
+     * @param {Number} width width of world
+     * @param {Number} height height of world
+     * @param {Number} xGrids integer number of grid separations in the x direction
+     * @param {Number} yGrids integer number of grid separations in the y direction
+     * @param {Number} timeStep change in time per solve iteration
+     * @param {Number} iterationPerFrame number of solve iterations per frame
+     * @param {Number} constraintIteration number of times constraints are solved per iteration
+     */
     constructor(canvas, width, height, xGrids, yGrids = null, timeStep = 1, iterationPerFrame = 1, constraintIteration = 1) {
         this.timeStep = timeStep;
         this.iterationPerFrame = iterationPerFrame;
@@ -1588,60 +1757,115 @@ class World {
         this.isRender = true;
     }
 
+    /**
+     * Adds a particle to the world
+     * @param {Particle} p 
+     */
     addParticle(p) {
         this.particles.add(p);
         this.updateParticleList();
     }
 
+    /**
+     * Adds a constraint to the world
+     * @param {Constraint} c 
+     */
     addConstraint(c) {
         this.constraints.push(c);
     }
 
+    /**
+     * Removes a constraint from the world
+     * @param {Constraint} c 
+     * @returns {Boolean} true if the constraint is removed
+     */
+    removeConstraint(c) {
+        const index = this.constraints.indexOf(c);
+		if (index > -1) {
+			this.constraints.splice(index, 1);
+			return true;
+		}
+		return false;
+    }
+
+    /**
+     * Adds a wall to the world
+     * @param {Wall} w 
+     */
     addWall(w) {
         this.walls.push(w);
     }
 
+    /**
+     * Clears all of the particles
+     */
     clearParticles() {
         this.particles = new SpatialHashGrid(this.width, this.height, this.xGrids, this.yGrids);
         this.updateParticleList();
     }
 
+    /**
+     * Clears all of the constraints
+     */
     clearConstraints() {
         this.constraints = [];
         this.updateParticleList();
     }
 
-    // add everyTime the number of particles change.
+    /**
+     * Update the list of particles. Must be called every time the number of particles change.
+     */
     updateParticleList() {
         this.particlesList = this.particles.values();
         this.renderer.updateRendererParticles(this.particlesList);
         this.solver.updateSolverParticles();
     }
 
+    /**
+     * Adds a SelfBehavior to all the particles
+     * @param {SelfBehavior} b 
+     */
     addGlobalBehavior(b) {
         for (let p of this.particlesList) {
             p.addSelfBehavior(b);
         }
     }
 
+    /**
+     * Removes a SelfBehavior from all the particles
+     * @param {SelfBehavior} b 
+     */
     removeGlobalBehavior(b) {
         for (let p of this.particlesList) {
             p.removeSelfBehavior(b);
         }
     }
 
+    /**
+     * Adds a NearBehavior to all the particles
+     * @param {NearBehavior} b 
+     */
     addGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
             p.addNearBehavior(b);
         }
     }
 
+    /**
+     * Removes a NearBehavior to all the particles
+     * @param {NearBehavior} b 
+     */
     removeGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
             p.removeNearBehavior(b);
         }
     }
 
+    /**
+     * Disables gravity and adds a new global gravity behavior to all the particles, while updating 
+     * the gravity pointer
+     * @param {Number} num 
+     */
     enableGravity(num) {
         if (this.gravity) {
             this.disableGravity();
@@ -1650,6 +1874,10 @@ class World {
         this.addGlobalBehavior(this.gravity);
     }
 
+    /**
+     * Removes the global gravity behavior
+     * @returns {Boolean} true if gravity is successfully disabled
+     */
     disableGravity() {
         if (this.gravity) {
             this.removeGlobalBehavior(this.gravity);
@@ -1658,6 +1886,9 @@ class World {
         return false;
     }
 
+    /**
+     * Progresses world to next area
+     */
     nextFrame() {
         this.solver.nextFrame();
         if (this.isRender) {
@@ -1761,10 +1992,10 @@ module.exports = World;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const NearBehavior = __webpack_require__(9);
+const NearBehavior = __webpack_require__(7);
 
 /**
  * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.
@@ -1901,12 +2132,12 @@ class Collision extends NearBehavior {
 module.exports = Collision;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const ConstraintRenderer = __webpack_require__(23);
-const ParticleRenderer = __webpack_require__(24);
-const WallRenderer = __webpack_require__(25);
+const ConstraintRenderer = __webpack_require__(24);
+const ParticleRenderer = __webpack_require__(25);
+const WallRenderer = __webpack_require__(26);
 
 class Renderer {
     constructor(solver, canvas) {
@@ -1943,7 +2174,7 @@ class Renderer {
 module.exports = Renderer;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((module) => {
 
 class ConstraintRenderer {
@@ -1992,7 +2223,7 @@ class ConstraintRenderer {
 module.exports = ConstraintRenderer;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ ((module) => {
 
 class ParticleRenderer {
@@ -2023,7 +2254,7 @@ class ParticleRenderer {
 module.exports = ParticleRenderer;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ ((module) => {
 
 class WallRenderer {
@@ -2060,10 +2291,10 @@ class WallRenderer {
 module.exports = WallRenderer;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(8);
+const SelfBehavior = __webpack_require__(6);
 
 /**
  * `Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.
@@ -2100,7 +2331,7 @@ class Gravity extends SelfBehavior {
 module.exports = Gravity;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -2109,20 +2340,20 @@ module.exports = Gravity;
 
 const behaviors = module.exports;
 
-behaviors.ChargeInteraction = __webpack_require__(28);
-behaviors.Collision = __webpack_require__(21);
-behaviors.Drag = __webpack_require__(29);
-behaviors.Force = __webpack_require__(30);
-behaviors.Gravity = __webpack_require__(26);
-behaviors.PositionLock = __webpack_require__(31);
-behaviors.NearBehavior = __webpack_require__(9);
-behaviors.SelfBehavior = __webpack_require__(8);
+behaviors.ChargeInteraction = __webpack_require__(29);
+behaviors.Collision = __webpack_require__(22);
+behaviors.Drag = __webpack_require__(30);
+behaviors.Force = __webpack_require__(31);
+behaviors.Gravity = __webpack_require__(27);
+behaviors.PositionLock = __webpack_require__(32);
+behaviors.NearBehavior = __webpack_require__(7);
+behaviors.SelfBehavior = __webpack_require__(6);
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const NearBehavior = __webpack_require__(9);
+const NearBehavior = __webpack_require__(7);
 
 /**
  * `ChargeInteraction` is a NearBehavior that calculates the charge repulsion/attraction forces between "nearby" particles.
@@ -2190,10 +2421,10 @@ class ChargeInteraction extends NearBehavior {
 module.exports = ChargeInteraction;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(8);
+const SelfBehavior = __webpack_require__(6);
 
 /**
  * `Drag` is a `SelfBehavior` that applies a viscous drag force on the particle itself.
@@ -2239,10 +2470,10 @@ class Drag extends SelfBehavior {
 module.exports = Drag;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(8);
+const SelfBehavior = __webpack_require__(6);
 
 /**
  * `Force` is a `SelfBehavior` that applies a constant force on the particle.   
@@ -2280,10 +2511,10 @@ class Force extends SelfBehavior {
 module.exports = Force;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const SelfBehavior = __webpack_require__(8);
+const SelfBehavior = __webpack_require__(6);
 
 /**
  * 
@@ -2319,7 +2550,7 @@ class PositionLock extends SelfBehavior {
 module.exports = PositionLock;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -2328,10 +2559,10 @@ module.exports = PositionLock;
 
 const renderers = module.exports;
 
-renderers.Renderer = __webpack_require__(22);
-renderers.ParticleRenderer = __webpack_require__(24);
-renderers.ConstraintRenderer = __webpack_require__(23);
-renderers.WallRenderer = __webpack_require__(25);
+renderers.Renderer = __webpack_require__(23);
+renderers.ParticleRenderer = __webpack_require__(25);
+renderers.ConstraintRenderer = __webpack_require__(24);
+renderers.WallRenderer = __webpack_require__(26);
 
 /***/ })
 /******/ 	]);
