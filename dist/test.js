@@ -26,6 +26,8 @@ const world = new World(canvas, width, height, 20, 20, 0.05, 1, 20);
 const handler = new InputHandler(world);
 
 handler.startMouseHandling();
+handler.startKeyHandling();
+handler.addKeyEvent(new InputHandler.KeyInput("a", () => {world.clearParticles()}));
 
 const pos = new Vector2D(600, 100);
 const pos2 = new Vector2D(600, 400);
