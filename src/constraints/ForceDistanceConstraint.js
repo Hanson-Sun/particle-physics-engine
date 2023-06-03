@@ -67,6 +67,14 @@ class ForceDistanceConstraint extends Constraint {
         return [this.c1.pos, this.c2.pos];
     }
 
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1, this.c2];
+    }
+
 }
 
 module.exports = ForceDistanceConstraint;

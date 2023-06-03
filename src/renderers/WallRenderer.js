@@ -1,7 +1,7 @@
 class WallRenderer {
 
-    constructor(walls, context) {
-        this.walls = walls;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
         this.color = "black"
         this.context.strokeStyle = this.color;
@@ -9,7 +9,7 @@ class WallRenderer {
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let w of this.walls) {
+        for (let w of this.solver.walls) {
             this.draw(w);
         }
     }
@@ -20,7 +20,7 @@ class WallRenderer {
             this.context.beginPath();
             this.context.moveTo(vertices[0].x, vertices[0].y);
             vertices.pop();
-            for (let p of vertices) {
+            for (let _ of vertices) {
                 this.context.lineTo(w.p2.x, w.p2.y);
             }
             this.context.stroke();

@@ -32,6 +32,14 @@ class Constraint {
     vertices() {
         throw new Error("Method 'vertices()' must be implemented");
     }
+
+     /**
+     * Calculates the list of particles that is involved with the constraint
+     * @returns {Particle[]}
+     */
+    particles() {
+        throw new Error("Method 'vertices()' must be implemented");
+    }
 }
 
 module.exports = Constraint;

@@ -62,6 +62,14 @@ class ForcePivotConstraint extends Constraint {
         return [this.pos, this.c1.pos];
     }
 
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
+    }
+
 }
 
 module.exports = ForcePivotConstraint;

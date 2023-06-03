@@ -1,7 +1,7 @@
 class ConstraintRenderer {
 
-    constructor(constraints, context) {
-        this.constraints = constraints;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
         this.color = "black"
         this.context.strokeStyle = this.color;
@@ -10,7 +10,7 @@ class ConstraintRenderer {
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let c of this.constraints) {
+        for (let c of this.solver.constraints) {
             this.draw(c);
         }
     }

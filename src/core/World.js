@@ -4,6 +4,7 @@ const SpatialHashGrid = require("../core/SpatialHashGrid");
 const Solver = require("../core/Solver");
 const Renderer = require("../renderers/Renderer");
 const Gravity = require("../behaviors/Gravity");
+const Particle = require("./Particle");
 
 /**
  * `World` the global-state instance of the physics engine that keeps track of all the objects. This provides
@@ -55,6 +56,26 @@ class World {
     }
 
     /**
+     * Removes a particle from the world
+     * @param {Particle} p
+     */
+    removeParticle(p) {
+        this.particles.deleteItem(p);
+        let removeCons = [];
+        for (let c of this.constraints) {
+            if (c.particles().includes(p)) {
+                removeCons.push(c) 
+            }
+        }
+
+        for (let c of removeCons) {
+            this.removeConstraint(c);
+        }
+        
+        this.updateParticleList();
+    }
+
+    /**
      * Adds a constraint to the world
      * @param {Constraint} c 
      */
@@ -84,11 +105,22 @@ class World {
         this.walls.push(w);
     }
 
+    removeWall(w) {
+        const index = this.walls.indexOf(w);
+		if (index > -1) {
+			this.walls.splice(index, 1);
+			return true;
+		}
+		return false;
+    }
+
     /**
-     * Clears all of the particles
+     * Clears all of the particles and constraints
      */
     clearParticles() {
         this.particles = new SpatialHashGrid(this.width, this.height, this.xGrids, this.yGrids);
+        this.solver.particles = this.particles;
+        this.clearConstraints();
         this.updateParticleList();
     }
 
@@ -97,7 +129,13 @@ class World {
      */
     clearConstraints() {
         this.constraints = [];
+        this.solver.constraints = this.constraints;
         this.updateParticleList();
+    }
+
+    clearWalls() {
+        this.walls = [];
+        this.solver.walls = [];
     }
 
     /**
@@ -105,7 +143,6 @@ class World {
      */
     updateParticleList() {
         this.particlesList = this.particles.values();
-        this.renderer.updateRendererParticles(this.particlesList);
         this.solver.updateSolverParticles();
     }
 

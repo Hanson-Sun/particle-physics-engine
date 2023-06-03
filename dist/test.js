@@ -27,7 +27,11 @@ const handler = new InputHandler(world);
 
 handler.startMouseHandling();
 handler.startKeyHandling();
-handler.addKeyEvent(new InputHandler.KeyInput("a", () => {world.clearParticles()}));
+handler.addKeyEvent(new InputHandler.KeyInput("a", 
+    () => {
+        bruh = world.particlesList[0];
+        world.removeParticle(bruh);
+    }));
 
 const pos = new Vector2D(600, 100);
 const pos2 = new Vector2D(600, 400);

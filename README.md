@@ -42,8 +42,8 @@ This repository also includes additional files for demo purposes
 - Vector2D modify methods are inconsistent for some reason --> test this
 - **Fix iteration per frame to use sub-stepping** --> somehow include it idk
 - resolve constructor complexity by changing how the options work
-- clearing constraints or particles clearly do not work.
-
+- clearing constraints or particles clearly do not work. (should be fixed)
+- 
 Notes:
 i think ill leave the rendering step with more freedom to the users 
 

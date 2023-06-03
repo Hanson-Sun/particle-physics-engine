@@ -730,6 +730,14 @@ class ForcePivotConstraint extends Constraint {
         return [this.pos, this.c1.pos];
     }
 
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
+    }
+
 }
 
 module.exports = ForcePivotConstraint;
@@ -770,6 +778,14 @@ class Constraint {
      * @returns {Vector2D[]}
      */
     vertices() {
+        throw new Error("Method 'vertices()' must be implemented");
+    }
+
+     /**
+     * Calculates the list of particles that is involved with the constraint
+     * @returns {Particle[]}
+     */
+    particles() {
         throw new Error("Method 'vertices()' must be implemented");
     }
 }
@@ -866,6 +882,14 @@ class ForceDistanceConstraint extends Constraint {
         return [this.c1.pos, this.c2.pos];
     }
 
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1, this.c2];
+    }
+
 }
 
 module.exports = ForceDistanceConstraint;
@@ -936,6 +960,14 @@ class PositionDistanceConstraint extends Constraint {
 	vertices() {
         return [this.c1.pos, this.c2.pos];
     }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1, this.c2];
+    }
 }
 
 module.exports = PositionDistanceConstraint;
@@ -1000,6 +1032,14 @@ class PositionPivotConstraint extends Constraint {
      */	
 	vertices() {
         return [this.c1.pos, this.pos];
+    }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
     }
 }
 
@@ -1747,6 +1787,7 @@ const SpatialHashGrid = __webpack_require__(20);
 const Solver = __webpack_require__(19);
 const Renderer = __webpack_require__(23);
 const Gravity = __webpack_require__(27);
+const Particle = __webpack_require__(4);
 
 /**
  * `World` the global-state instance of the physics engine that keeps track of all the objects. This provides
@@ -1798,6 +1839,26 @@ class World {
     }
 
     /**
+     * Removes a particle from the world
+     * @param {Particle} p
+     */
+    removeParticle(p) {
+        this.particles.deleteItem(p);
+        let removeCons = [];
+        for (let c of this.constraints) {
+            if (c.particles().includes(p)) {
+                removeCons.push(c) 
+            }
+        }
+
+        for (let c of removeCons) {
+            this.removeConstraint(c);
+        }
+        
+        this.updateParticleList();
+    }
+
+    /**
      * Adds a constraint to the world
      * @param {Constraint} c 
      */
@@ -1827,11 +1888,22 @@ class World {
         this.walls.push(w);
     }
 
+    removeWall(w) {
+        const index = this.walls.indexOf(w);
+		if (index > -1) {
+			this.walls.splice(index, 1);
+			return true;
+		}
+		return false;
+    }
+
     /**
-     * Clears all of the particles
+     * Clears all of the particles and constraints
      */
     clearParticles() {
         this.particles = new SpatialHashGrid(this.width, this.height, this.xGrids, this.yGrids);
+        this.solver.particles = this.particles;
+        this.clearConstraints();
         this.updateParticleList();
     }
 
@@ -1840,7 +1912,13 @@ class World {
      */
     clearConstraints() {
         this.constraints = [];
+        this.solver.constraints = this.constraints;
         this.updateParticleList();
+    }
+
+    clearWalls() {
+        this.walls = [];
+        this.solver.walls = [];
     }
 
     /**
@@ -1848,7 +1926,6 @@ class World {
      */
     updateParticleList() {
         this.particlesList = this.particles.values();
-        this.renderer.updateRendererParticles(this.particlesList);
         this.solver.updateSolverParticles();
     }
 
@@ -2175,9 +2252,9 @@ class Renderer {
         this.solver = solver;
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
-        this.constraintRenderer = new ConstraintRenderer(solver.constraints, this.context);
-        this.particleRenderer = new ParticleRenderer(solver.particles.values(), this.context);
-        this.wallRenderer = new WallRenderer(solver.walls, this.context);
+        this.constraintRenderer = new ConstraintRenderer(solver, this.context);
+        this.particleRenderer = new ParticleRenderer(solver, this.context);
+        this.wallRenderer = new WallRenderer(solver, this.context);
     }
 
     // call this anytime a new particle is added
@@ -2210,8 +2287,8 @@ module.exports = Renderer;
 
 class ConstraintRenderer {
 
-    constructor(constraints, context) {
-        this.constraints = constraints;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
         this.color = "black"
         this.context.strokeStyle = this.color;
@@ -2220,7 +2297,7 @@ class ConstraintRenderer {
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let c of this.constraints) {
+        for (let c of this.solver.constraints) {
             this.draw(c);
         }
     }
@@ -2259,14 +2336,14 @@ module.exports = ConstraintRenderer;
 
 class ParticleRenderer {
 
-    constructor(particles, context) {
-        this.particles = particles;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
     }
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let p of this.particles) {
+        for (let p of this.solver.particleList) {
             this.draw(p);
         }
     }
@@ -2290,8 +2367,8 @@ module.exports = ParticleRenderer;
 
 class WallRenderer {
 
-    constructor(walls, context) {
-        this.walls = walls;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
         this.color = "black"
         this.context.strokeStyle = this.color;
@@ -2299,7 +2376,7 @@ class WallRenderer {
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let w of this.walls) {
+        for (let w of this.solver.walls) {
             this.draw(w);
         }
     }
@@ -2310,7 +2387,7 @@ class WallRenderer {
             this.context.beginPath();
             this.context.moveTo(vertices[0].x, vertices[0].y);
             vertices.pop();
-            for (let p of vertices) {
+            for (let _ of vertices) {
                 this.context.lineTo(w.p2.x, w.p2.y);
             }
             this.context.stroke();
