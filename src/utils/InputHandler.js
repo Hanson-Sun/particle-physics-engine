@@ -10,6 +10,9 @@ class InputHandler {
         this.world = world;
         this.canvas = world.canvas;
 
+        this.mouseFocusElement = this.canvas;
+        this.keyFocusElement = window;
+
         this.mouseDownPosition = new Vector2D(0,0);
         this.mousePosition = new Vector2D(0,0);
         this.mouseIsDown = false;
@@ -44,20 +47,15 @@ class InputHandler {
     }
 
     startMouseHandling() {
-        this.canvas.addEventListener("mousedown", (event) => {this.mousedown(event, this)});
-        this.canvas.addEventListener("mousemove", (event) => {this.mousemove(event, this)});
+        this.mouseFocusElement.addEventListener("mousedown", (event) => {this.mousedown(event, this)});
+        this.mouseFocusElement.addEventListener("mousemove", (event) => {this.mousemove(event, this)});
         window.addEventListener("mouseup", (event) => {this.mouseup(event, this)});
     }
 
     startKeyHandling() {
         // this is cursed as hell...
-        window.addEventListener("keydown", (event)  => {
-            this.handleKeyInputs(event, this);
-        })
-        
-        window.addEventListener("keyup", (event) => {
-            this.keyPress = null;
-        })
+        this.keyFocusElement.addEventListener("keydown", (event)  => {this.keyDown(event, this)});   
+        this.keyFocusElement.addEventListener("keyup", (event) => {this.keyUp(event, this)});
     }
 
     mousedown(event, handler) {
@@ -125,7 +123,7 @@ class InputHandler {
         }
     }
 
-    handleKeyInputs(event, handler) {
+    keyDown(event, handler) {
         const key = event.key;
         for (let keyInput of handler.keyEvents) {
             if (keyInput.isMouseDown) {
@@ -140,6 +138,10 @@ class InputHandler {
                 }
             }
         }
+    }
+
+    keyUp(event, handler) {
+        handler.keyPress = null
     }
 
     addKeyEvent(keyInput) {
