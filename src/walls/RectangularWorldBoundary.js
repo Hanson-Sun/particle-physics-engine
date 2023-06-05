@@ -21,22 +21,22 @@ class RectangularWorldBoundary extends Wall {
             const velY = particle.vel.y;
             
             if (posX > this.maxW - radius) {
-                //particle.vel.x = velX * -1 * bounce;
+                particle.vel.x = velX * -1 * bounce;
                 particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
             } 
 
             if (posX < this.minW + radius) {
-                //particle.vel.x = velX * -1 * bounce;
+                particle.vel.x = velX * -1 * bounce;
                 particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
             } 
 
             if (posY > this.maxH - radius) {
-                //particle.vel.y = velY * -1 * bounce;
+                particle.vel.y = velY * -1 * bounce;
                 particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
             } 
 
             if (posY < this.minH + radius) {
-                //particle.vel.y = velY * -1 * bounce;
+                particle.vel.y = velY * -1 * bounce;
                 particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
             }
         }
@@ -79,7 +79,7 @@ class RectangularWorldBoundary extends Wall {
     }
 
     getHashDimensions() {
-        return [this.maxW - this.minW, this.maxH - this.minH];
+        return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
     }
 
     vertices() {

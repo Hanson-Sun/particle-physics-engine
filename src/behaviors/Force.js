@@ -20,7 +20,8 @@ class Force extends SelfBehavior {
      */
     applyBehavior(particle, timeStep) {
         //particle.applyForce(this.force, timeStep);
-        particle.pos = particle.pos.add(this.force.mult(timeStep * timeStep / particle.mass));
+        //particle.pos = particle.pos.add(this.force.mult(timeStep * timeStep / particle.mass));
+        particle.pos.addTo(this.force.mult(timeStep * timeStep / particle.mass));
     }
     
     /**

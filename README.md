@@ -36,6 +36,8 @@ This repository also includes additional files for demo purposes
 
 ### Bugs
 - some degree of instability when particles are stacked up (?) --> probably and issue with the collision stiffness and iterative update.
+  - i now think its because of the position resolver --> its not converging to what its supposed to be
+  - issue with stationary collision detection
 - unify solver behavior --> focus on position-based, velocity independent constraint and collision behavior.
   - seems to have a tendency to lose energy when constraints are used.
   - semi-fixed
@@ -44,6 +46,8 @@ This repository also includes additional files for demo purposes
   - fix time inconsistencies for iteration # changes
 - resolve constructor complexity by changing how the options work
 - fix mouse edge movement instability
+- test custom mouse function input
+- WHY DOES LOW BOUNCE VALUES NOT WORK...
 
 - IMPROVE SPATIAL HASH ALGORITHM (make it dense) + test if its actually better  
   - after testing, i have concluded that is isnt really better for this case

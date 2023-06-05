@@ -40,22 +40,24 @@ class ForceDistanceConstraint extends Constraint {
         let dp = this.c1.pos.sub(this.c2.pos);
         let dpMag = dp.mag();
 
-        let dpUnit = dp.mult(1 / dpMag);
+        dp.multTo(1 / dpMag);
         let dxMag = dpMag - this.len;
         let dv = this.c1.vel.sub(this.c2.vel);
-        let damp = this.dampening * dv.dot(dp) / dpMag;
+        let damp = this.dampening * dv.dot(dp);
 
-        this.force = dpUnit.mult(-this.stiffness * dxMag - damp);
+        this.force = dp.mult(-this.stiffness * dxMag - damp);
 
         const a1 = this.force.mult(1 / this.c1.mass);
         const a2 = this.force.mult(-1 / this.c2.mass);
 
-        let x1 = a1.mult(timeStep * timeStep);
-        let x2 = a2.mult(timeStep * timeStep);
+        a1.multTo(timeStep * timeStep);
+        a2.multTo(timeStep * timeStep);
 
-        this.c1.pos = this.c1.pos.add(x1);
+        //this.c1.pos = this.c1.pos.add(x1);
+        this.c1.pos.addTo(a1);
         //this.c1.vel = this.c1.vel.add(a1.mult(timeStep));
-        this.c2.pos = this.c2.pos.add(x2);
+        //this.c2.pos = this.c2.pos.add(x2);
+        this.c2.pos.addTo(a2);
         //this.c2.vel = this.c2.vel.add(a2.mult(timeStep));
     }
 

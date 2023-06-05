@@ -40,10 +40,10 @@ class Solver {
         // apply correction, set forces to 0, apply velocity to get final pos.
         // there might be duplicate processes... i think i need to fix that
         this.preMove();
+        this.handleWallCollisions();
         this.update();
         this.handleBehaviors();
         this.handleConstraints();
-        this.handleWallCollisions();
         this.updateVelocity();
         this.positionCorrection();
     }
@@ -122,6 +122,7 @@ class Solver {
      * Correct particle positions 
      */
     positionCorrection() {
+
         for (let circ of this.particleList) {
 
             for (let sb of circ.selfBehavior) {
@@ -132,6 +133,7 @@ class Solver {
                 nb.applyCorrection(circ, this.particles.findNear(circ, nb.range()));
             }       
         }
+   
 
         for (let wall of this.walls) {
             wall.applyCorrection(this.particles.findNear(wall));

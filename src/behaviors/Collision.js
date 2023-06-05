@@ -56,8 +56,8 @@ class Collision extends NearBehavior {
                 let c_radius = circ.radius;
 
 				let posDiff1 = position.sub(c_position);
-				if (posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius)) {
-					let posDiffMagSqr = posDiff1.magSqr();
+				let posDiffMagSqr = posDiff1.magSqr();
+				if (posDiffMagSqr < (radius + c_radius) * (radius + c_radius)) {
 					let massConst1 = 2 * c_mass / (mass + c_mass);
 					let vDiff1 = velocity.sub(c_velocity);
 					let dot1 = (vDiff1.dot(posDiff1)) / (posDiffMagSqr);
@@ -66,16 +66,20 @@ class Collision extends NearBehavior {
 					let vDiff2 = c_velocity.sub(velocity);
 					let posDiff2 = c_position.sub(position);
 					let dot2 = (vDiff2.dot(posDiff2)) / (posDiffMagSqr);
-					impulse = impulse.add(posDiff1.mult(dot1 * massConst1));
+					impulse.addTo(posDiff1.mult(dot1 * massConst1));
 					// idk why this works tbh but it just does
-					circ.vel = (c_velocity.sub(posDiff2.mult(dot2 * massConst2)));
-					circ.pos = circ.pos.sub(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
+					// circ.vel = c_velocity.sub(posDiff2.mult(dot2 * massConst2));
+					c_velocity.subTo(posDiff2.mult(dot2 * massConst2 * bounciness));
+					//circ.pos = circ.pos.sub(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
+					circ.pos.subTo(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
 				}
 			}
 		}
 
-		particle.vel = velocity.sub(impulse);
-		particle.pos = position.sub(impulse.mult(timeStep));
+		//particle.vel = velocity.sub(impulse);
+		velocity.subTo(impulse.mult(bounciness));
+		//particle.pos = position.sub(impulse.mult(timeStep));
+		position.subTo(impulse.mult(timeStep * bounciness));
 	}
 
 	/**
@@ -95,13 +99,14 @@ class Collision extends NearBehavior {
                 let c_radius = circ.radius;
 
 				let posDiff1 = position.sub(c_position);
-				if (posDiff1.magSqr() <= (radius + c_radius) * (radius + c_radius)) {
+				if (posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius)) {
 					let direction1 = posDiff1.normalize();
 					let overlap = radius + c_radius - posDiff1.mag();
 
-					circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
-					particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
-					
+					//circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
+					c_position.subTo(direction1.mult(overlap * mass / (mass + c_mass)));
+					//particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
+					position.addTo(direction1.mult(overlap * c_mass / (mass + c_mass)));
 				}
 			}
 		}

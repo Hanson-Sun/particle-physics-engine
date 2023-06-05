@@ -28,7 +28,8 @@ class Drag extends SelfBehavior {
 			let vNormal = vel.normalize();
 			let fDrag = vNormal.mult(vMagSqr * dragC);
 			//particle.vel = vel.sub(fDrag.mult(timeStep));
-            particle.pos = particle.pos.sub(fDrag.mult(timeStep * timeStep));
+            //particle.pos = particle.pos.sub(fDrag.mult(timeStep * timeStep));
+            particle.pos.subTo(fDrag.mult(timeStep * timeStep));
 		}
 	}
 

@@ -68,7 +68,7 @@ class InputHandler {
             handler.createConstraint(handler);
         }
 
-        handler.mouseDownFunction;
+        handler.mouseDownFunction();
     }
 
     mousemove(event, handler) {
@@ -82,7 +82,7 @@ class InputHandler {
         handler.mouseIsDown = false;
         handler.currentlySelectedParticle = null;
         handler.removeConstraint(handler);
-        handler.mouseUpFunction;
+        handler.mouseUpFunction();
     }
 
     findSelectedParticle(handler) {
@@ -112,7 +112,8 @@ class InputHandler {
     createConstraint(handler) {
         //let stiffness = handler.currentlySelectedParticle.mass * 50;
         //handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
-        handler.particleConstraint = new PositionPivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, 0.8);
+        handler.particleConstraint = new PositionPivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, 
+            0.8 / handler.world.iterationPerFrame / handler.world.iterationPerFrame);
         handler.world.addConstraint(handler.particleConstraint);
     }
 
