@@ -7,9 +7,9 @@ class Renderer {
         this.solver = solver;
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
-        this.constraintRenderer = new ConstraintRenderer(solver.constraints, this.context);
-        this.particleRenderer = new ParticleRenderer(solver.particles.values(), this.context);
-        this.wallRenderer = new WallRenderer(solver.walls, this.context);
+        this.constraintRenderer = new ConstraintRenderer(solver, this.context);
+        this.particleRenderer = new ParticleRenderer(solver, this.context);
+        this.wallRenderer = new WallRenderer(solver, this.context);
     }
 
     // call this anytime a new particle is added

@@ -55,6 +55,14 @@ class PositionPivotConstraint extends Constraint {
 	vertices() {
         return [this.c1.pos, this.pos];
     }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
+    }
 }
 
 module.exports = PositionPivotConstraint;

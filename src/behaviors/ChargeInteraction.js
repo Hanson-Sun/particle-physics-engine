@@ -12,6 +12,7 @@ class ChargeInteraction extends NearBehavior {
     constructor(radius=100000) {
         super();
         this.radius = radius;
+        this.epsilon = 0.00001;
     }
 
     /**
@@ -21,9 +22,9 @@ class ChargeInteraction extends NearBehavior {
      * @param {Particle[]} particles 
      */
     applyBehavior(particle, timeStep, particles) {
-        if(particle.charge !== 0){
+        if(particle.charge >= this.epsilon){
 			for (let circ of particles) {
-                if (particle !== circ && circ.charge !== 0) {
+                if (particle !== circ && circ.charge >= this.epsilon) {
                     let q1 = particle.charge;
                     let q2 = circ.charge;
                     let x1 = particle.pos;
@@ -31,13 +32,15 @@ class ChargeInteraction extends NearBehavior {
                     let dx = x1.sub(x2);
                     let dxmSqr = dx.magSqr();
                     if (dxmSqr > (particle.radius + circ.radius) * (particle.radius + circ.radius) && dxmSqr < this.radius * this.radius) {
-                        let dxNorm = dx.normalize();
-                        let f = dxNorm.mult(2 * q1 * q2 / dxmSqr * timeStep);
+                        dx.normalizeTo();
+                        dx.multTo(2 * q1 * q2 / dxmSqr * timeStep);
                         
                         //circ.vel = circ.vel.sub(f)
-                        circ.pos = circ.pos.sub(f.mult(timeStep / circ.mass));
+                        //circ.pos = circ.pos.sub(f.mult(timeStep / circ.mass));
+                        circ.pos.subTo(dx.mult(timeStep / circ.mass));
                         //particle.vel = particle.vel.add(f)
-                        particle.pos = particle.pos.add(f.mult(timeStep * timeStep / particle.mass));
+                        //particle.pos = particle.pos.add(f.mult(timeStep * timeStep / particle.mass));
+                        particle.pos.addTo(dx.mult(timeStep * timeStep / particle.mass));
                         
                     }
                 } 	

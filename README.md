@@ -35,13 +35,27 @@ This repository also includes additional files for demo purposes
 - [ ] update paper... maybe
 
 ### Bugs
-- some degree of instability when particles are stacked up (?) --> could be an issue of the world constraints (kind of fixed)
+- some degree of instability when particles are stacked up (?) --> probably and issue with the collision stiffness and iterative update.
+  - i now think its because of the position resolver --> its not converging to what its supposed to be
+  - issue with stationary collision detection
 - unify solver behavior --> focus on position-based, velocity independent constraint and collision behavior.
   - seems to have a tendency to lose energy when constraints are used.
-  - !!! i seem to have an issue with understanding when to change velocity in behavior. (consider velocity change in constraint)
+  - semi-fixed
 - Vector2D modify methods are inconsistent for some reason --> test this
-- **Fix iteration per frame to use sub-stepping** --> somehow include it idk
+- **Fix iteration per frame to use sub-stepping** --> current implementation does not use explicit substepping  
+  - fix time inconsistencies for iteration # changes
 - resolve constructor complexity by changing how the options work
+- fix mouse edge movement instability
+- test custom mouse function input
+- WHY DOES LOW BOUNCE VALUES NOT WORK...
+
+- IMPROVE SPATIAL HASH ALGORITHM (make it dense) + test if its actually better  
+  - after testing, i have concluded that is isnt really better for this case
+  - dense structure 
+    - pros: more memory efficient, unbounded (ish, there will be hash collisions), syntactically simpler;
+    - cons: cannot be iteratively updated (deal breaker), slightly slower
+  - current sparse structure
+    - memory shouldnt be a huge issue at this point, **unbounded behavior can be simulated** with `((this % n) + n) % n`, more convoluted code in general, but should be abstracted away from the user
 
 Notes:
 i think ill leave the rendering step with more freedom to the users 

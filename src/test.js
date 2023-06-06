@@ -18,13 +18,13 @@ const pos = new Vector2D(350, 100);
 const pos2 = new Vector2D(350, 400);
 const vel = new Vector2D(0, 0);
 const vel2 = new Vector2D(0, 2);
-const vel3 = new Vector2D(0, -1);
+const vel3 = new Vector2D(0, -10);
 
 const mag = 0.5;
 const mass = 10;
-const bounce = 0.90;
+const bounce = 1;
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 0; i++) {
     let s1 = Math.random() < 0.5 ? -1 : 1;
     let s2 = Math.random() < 0.5 ? -1 : 1;
     let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
@@ -47,7 +47,7 @@ world.addParticle(pt2);
 v = new Vector2D(0, -2);
 
 
-const cons = new ForceDistanceConstraint(pt, pt2, 200, 10);
+const cons = new ForceDistanceConstraint(pt, pt2, 200, 10000);
 //world.addConstraint(cons);
 
 world.addConstraint(new PositionPivotConstraint(pos2, pt2, 0, 0.1));

@@ -39,17 +39,17 @@ class ForcePivotConstraint extends Constraint {
         let dp = this.c1.pos.sub(this.pos);
         let dpMag = dp.mag();
         if(dpMag != 0) {
-            let dpUnit = dp.mult(1 / dpMag);
+            dp.multTo(1 / dpMag);
             let dxMag = dpMag - this.len;
             let dv = this.c1.vel;
-            let damp = this.dampening * dv.dot(dp) / dpMag;
+            let damp = this.dampening * dv.dot(dp);
 
-            this.force = dpUnit.mult(-this.stiffness * dxMag - damp);
+            this.force = dp.mult(-this.stiffness * dxMag - damp);
 
             const a1 = this.force.mult(1 / this.c1.mass);
-            let x1 = a1.mult(timeStep * timeStep);
+            a1.multTo(timeStep * timeStep);
 
-            this.c1.pos = this.c1.pos.add(x1);
+            this.c1.pos = this.c1.pos.add(a1);
 
         }
     }
@@ -60,6 +60,14 @@ class ForcePivotConstraint extends Constraint {
      */    
 	vertices() {
         return [this.pos, this.c1.pos];
+    }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
     }
 
 }

@@ -1,3 +1,5 @@
+const Vector2D = require("../src/utils/Vector2D");
+
 /** START instantiation tests */
 console.time("Vector instantiation test");
 for (let i = 0; i < 10000000; i++) {
@@ -41,3 +43,12 @@ for (let i = 0; i < 1000000; i++) {
 }
 console.timeEnd("modify operation test");
 /** END operation tests */
+
+let v1 = new Vector2D(0,0);
+let v2 = new Vector2D(0,0);
+let add = new Vector2D(1.1,1.1);
+for (let i = 0; i < 10000; i++) {
+    v1.addTo(add);
+    v2 = v2.add(add);
+}
+console.log(v1, v2);

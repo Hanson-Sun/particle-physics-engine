@@ -28,7 +28,7 @@ class Particle extends HashGridItem {
         this.mass = mass || 1;
         this.originalMass = mass || 1;
 		this.radius = radius || 10;
-		this.bounciness = bounciness || 1;
+		this.bounciness = bounciness;
 		this.prevPos = this.pos;
         this.color = color;
 		this.nearBehavior = [];

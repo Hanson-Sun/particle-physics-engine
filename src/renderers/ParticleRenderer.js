@@ -1,13 +1,13 @@
 class ParticleRenderer {
 
-    constructor(particles, context) {
-        this.particles = particles;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
     }
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let p of this.particles) {
+        for (let p of this.solver.particleList) {
             this.draw(p);
         }
     }

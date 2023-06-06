@@ -249,21 +249,35 @@ class InputHandler {
         this.world = world;
         this.canvas = world.canvas;
 
+        this.mouseFocusElement = this.canvas;
+        this.keyFocusElement = window;
+
         this.mouseDownPosition = new Vector2D(0,0);
         this.mousePosition = new Vector2D(0,0);
         this.mouseIsDown = false;
 
-        this.keyPress = "";
+        this.keyPress = null;
 
         this.selectedParticle = null;
         this.currentlySelectedParticle = null;
         this.particleConstraint = null;
 
-        this.keyEvents = new Map();
+        this.keyEvents = [];
 
-        this.minSelectRadius = 3;
+        this.minSelectRadius = 20;
 
         this.enableMouseInteractions = enableMouseInteractions;
+
+        this.mouseDownFunction = () => {};
+        this.mouseUpFunction = () => {}
+    }
+
+    static KeyInput = class KeyInput {
+        constructor(keyCode, func, isMouseDown=false) {
+            this.keyCode = keyCode || "";
+            this.func = func || (() => {});
+            this.isMouseDown = isMouseDown;
+        }
     }
 
     getMousePos(event, handler) {
@@ -272,19 +286,28 @@ class InputHandler {
     }
 
     startMouseHandling() {
-        this.canvas.addEventListener("mousedown", (event) => {this.mousedown(event, this)});
-        this.canvas.addEventListener("mousemove", (event) => {this.mousemove(event, this)});
+        this.mouseFocusElement.addEventListener("mousedown", (event) => {this.mousedown(event, this)});
+        this.mouseFocusElement.addEventListener("mousemove", (event) => {this.mousemove(event, this)});
         window.addEventListener("mouseup", (event) => {this.mouseup(event, this)});
     }
 
+    startKeyHandling() {
+        // this is cursed as hell...
+        this.keyFocusElement.addEventListener("keydown", (event)  => {this.keyDown(event, this)});   
+        this.keyFocusElement.addEventListener("keyup", (event) => {this.keyUp(event, this)});
+    }
+
     mousedown(event, handler) {
-        handler.mousePosition, handler.mouseDownPosition = handler.getMousePos(event, handler);
+        handler.mousePosition = handler.getMousePos(event, handler);
+        handler.mouseDownPosition = handler.getMousePos(event, handler);
         handler.mouseIsDown = true;
         handler.findSelectedParticle(handler);
 
         if (handler.currentlySelectedParticle !== null && handler.enableMouseInteractions) {
             handler.createConstraint(handler);
         }
+
+        handler.mouseDownFunction();
     }
 
     mousemove(event, handler) {
@@ -298,31 +321,38 @@ class InputHandler {
         handler.mouseIsDown = false;
         handler.currentlySelectedParticle = null;
         handler.removeConstraint(handler);
+        handler.mouseUpFunction();
     }
 
     findSelectedParticle(handler) {
         const zero = new Vector2D(0,0);
         const testParticle = new Particle(handler.mouseDownPosition, zero, 1, 10);
+        let min = Infinity;
+        let minParticle = null;
+
         for (let particle of handler.world.particles.findNear(testParticle)) {
-            if (particle.radius <= handler.minSelectRadius) {
-                // idk what this is
-                if (particle.pos.sub(handler.mouseDownPosition).mag() <= particle.radius * 10 * (handler.minSelectRadius + 1 - particle.radius)) {
-                    handler.selectedParticle = particle;
-                    handler.currentlySelectedParticle = particle;
-                }
-            } else if (particle.radius >= handler.minSelectRadius) {
-                if (particle.pos.sub(handler.mouseDownPosition).mag() <= particle.radius) {
-                    handler.selectedParticle = particle;
-                    handler.currentlySelectedParticle = particle;
-                }
-            }
+            const dist = particle.pos.sub(handler.mouseDownPosition).mag()
+            if (dist<= particle.radius) {
+                handler.selectedParticle = particle;
+                handler.currentlySelectedParticle = particle;
+                return;
+            }else if (dist <= handler.minSelectRadius && dist < min) {
+                min = dist;
+                minParticle = particle;
+            }   
+        }
+
+        if (minParticle !== null) {
+            handler.selectedParticle = minParticle;
+            handler.currentlySelectedParticle = minParticle;
         }
     }
 
     createConstraint(handler) {
-        let stiffness = handler.currentlySelectedParticle.mass * 50;
+        //let stiffness = handler.currentlySelectedParticle.mass * 50;
         //handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
-        handler.particleConstraint = new PositionPivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, 0.90);
+        handler.particleConstraint = new PositionPivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, 
+            0.8 / handler.world.iterationPerFrame / handler.world.iterationPerFrame);
         handler.world.addConstraint(handler.particleConstraint);
     }
 
@@ -333,27 +363,30 @@ class InputHandler {
         }
     }
 
-    startKeyHandling() {
-        // this is cursed as hell...
-        this.canvas.addEventListener("keydown", function(event) {
-            const key = e.keyCode;
-            for (let [keyEvent, eventFunction] of this.keyEvents) {
-                if(key === keyEvent) {
-                    eventFunction();
+    keyDown(event, handler) {
+        const key = event.key;
+        for (let keyInput of handler.keyEvents) {
+            if (keyInput.isMouseDown) {
+                if (key === keyInput.keyCode && handler.mouseIsDown) {
+                    handler.keyPress = key;
+                    keyInput.func();
+                }
+            } else {
+                if (key === keyInput.keyCode) {
+                    handler.keyPress = key;
+                    keyInput.func();
                 }
             }
-        })
-        
-        this.canvas.addEventListener("keyup", function(event) {
-            this.keyPress = null;
-        })
+        }
     }
 
-    addKeyEvent(keyCode, fn) {
-        this.keyEvents.set(keyCode, fn);
+    keyUp(event, handler) {
+        handler.keyPress = null
     }
 
-
+    addKeyEvent(keyInput) {
+        this.keyEvents.push(keyInput);
+    }
 }
 
 module.exports = InputHandler;
@@ -392,7 +425,7 @@ class Particle extends HashGridItem {
         this.mass = mass || 1;
         this.originalMass = mass || 1;
 		this.radius = radius || 10;
-		this.bounciness = bounciness || 1;
+		this.bounciness = bounciness;
 		this.prevPos = this.pos;
         this.color = color;
 		this.nearBehavior = [];
@@ -677,17 +710,17 @@ class ForcePivotConstraint extends Constraint {
         let dp = this.c1.pos.sub(this.pos);
         let dpMag = dp.mag();
         if(dpMag != 0) {
-            let dpUnit = dp.mult(1 / dpMag);
+            dp.multTo(1 / dpMag);
             let dxMag = dpMag - this.len;
             let dv = this.c1.vel;
-            let damp = this.dampening * dv.dot(dp) / dpMag;
+            let damp = this.dampening * dv.dot(dp);
 
-            this.force = dpUnit.mult(-this.stiffness * dxMag - damp);
+            this.force = dp.mult(-this.stiffness * dxMag - damp);
 
             const a1 = this.force.mult(1 / this.c1.mass);
-            let x1 = a1.mult(timeStep * timeStep);
+            a1.multTo(timeStep * timeStep);
 
-            this.c1.pos = this.c1.pos.add(x1);
+            this.c1.pos = this.c1.pos.add(a1);
 
         }
     }
@@ -698,6 +731,14 @@ class ForcePivotConstraint extends Constraint {
      */    
 	vertices() {
         return [this.pos, this.c1.pos];
+    }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
     }
 
 }
@@ -740,6 +781,14 @@ class Constraint {
      * @returns {Vector2D[]}
      */
     vertices() {
+        throw new Error("Method 'vertices()' must be implemented");
+    }
+
+     /**
+     * Calculates the list of particles that is involved with the constraint
+     * @returns {Particle[]}
+     */
+    particles() {
         throw new Error("Method 'vertices()' must be implemented");
     }
 }
@@ -809,22 +858,24 @@ class ForceDistanceConstraint extends Constraint {
         let dp = this.c1.pos.sub(this.c2.pos);
         let dpMag = dp.mag();
 
-        let dpUnit = dp.mult(1 / dpMag);
+        dp.multTo(1 / dpMag);
         let dxMag = dpMag - this.len;
         let dv = this.c1.vel.sub(this.c2.vel);
-        let damp = this.dampening * dv.dot(dp) / dpMag;
+        let damp = this.dampening * dv.dot(dp);
 
-        this.force = dpUnit.mult(-this.stiffness * dxMag - damp);
+        this.force = dp.mult(-this.stiffness * dxMag - damp);
 
         const a1 = this.force.mult(1 / this.c1.mass);
         const a2 = this.force.mult(-1 / this.c2.mass);
 
-        let x1 = a1.mult(timeStep * timeStep);
-        let x2 = a2.mult(timeStep * timeStep);
+        a1.multTo(timeStep * timeStep);
+        a2.multTo(timeStep * timeStep);
 
-        this.c1.pos = this.c1.pos.add(x1);
+        //this.c1.pos = this.c1.pos.add(x1);
+        this.c1.pos.addTo(a1);
         //this.c1.vel = this.c1.vel.add(a1.mult(timeStep));
-        this.c2.pos = this.c2.pos.add(x2);
+        //this.c2.pos = this.c2.pos.add(x2);
+        this.c2.pos.addTo(a2);
         //this.c2.vel = this.c2.vel.add(a2.mult(timeStep));
     }
 
@@ -834,6 +885,14 @@ class ForceDistanceConstraint extends Constraint {
      */
 	vertices() {
         return [this.c1.pos, this.c2.pos];
+    }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1, this.c2];
     }
 
 }
@@ -906,6 +965,14 @@ class PositionDistanceConstraint extends Constraint {
 	vertices() {
         return [this.c1.pos, this.c2.pos];
     }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1, this.c2];
+    }
 }
 
 module.exports = PositionDistanceConstraint;
@@ -970,6 +1037,14 @@ class PositionPivotConstraint extends Constraint {
      */	
 	vertices() {
         return [this.c1.pos, this.pos];
+    }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
     }
 }
 
@@ -1110,19 +1185,20 @@ class WallBoundary extends Wall {
             if (distance <= particle.radius && lambda < 0) {
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
                 particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance <= particle.radius && lambda > 1) {
                 let diff = pos.sub(this.p2);
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
                 particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance <= particle.radius) {
-                //particle.vel = particle.vel.reflect(this.normal).mult(bounciness);
+                let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep);
+                particle.vel = particle.vel.reflect(this.normal).mult(bounciness);
                 //let mag = particle.vel.reflect(this.normal).dot(this.normal);
                 //particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag * bounciness));
-                let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep * bounciness);
+                //let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep * bounciness);
                 particle.pos = particle.pos.add(mag);
             }
         }
@@ -1260,22 +1336,22 @@ class RectangularWorldBoundary extends Wall {
             const velY = particle.vel.y;
             
             if (posX > this.maxW - radius) {
-                //particle.vel.x = velX * -1 * bounce;
+                particle.vel.x = velX * -1 * bounce;
                 particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
             } 
 
             if (posX < this.minW + radius) {
-                //particle.vel.x = velX * -1 * bounce;
+                particle.vel.x = velX * -1 * bounce;
                 particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
             } 
 
             if (posY > this.maxH - radius) {
-                //particle.vel.y = velY * -1 * bounce;
+                particle.vel.y = velY * -1 * bounce;
                 particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
             } 
 
             if (posY < this.minH + radius) {
-                //particle.vel.y = velY * -1 * bounce;
+                particle.vel.y = velY * -1 * bounce;
                 particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
             }
         }
@@ -1318,7 +1394,7 @@ class RectangularWorldBoundary extends Wall {
     }
 
     getHashDimensions() {
-        return [this.maxW - this.minW, this.maxH - this.minH];
+        return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
     }
 
     vertices() {
@@ -1390,10 +1466,10 @@ class Solver {
         // apply correction, set forces to 0, apply velocity to get final pos.
         // there might be duplicate processes... i think i need to fix that
         this.preMove();
+        this.handleWallCollisions();
         this.update();
         this.handleBehaviors();
         this.handleConstraints();
-        this.handleWallCollisions();
         this.updateVelocity();
         this.positionCorrection();
     }
@@ -1472,6 +1548,7 @@ class Solver {
      * Correct particle positions 
      */
     positionCorrection() {
+
         for (let circ of this.particleList) {
 
             for (let sb of circ.selfBehavior) {
@@ -1482,6 +1559,7 @@ class Solver {
                 nb.applyCorrection(circ, this.particles.findNear(circ, nb.range()));
             }       
         }
+   
 
         for (let wall of this.walls) {
             wall.applyCorrection(this.particles.findNear(wall));
@@ -1717,6 +1795,7 @@ const SpatialHashGrid = __webpack_require__(20);
 const Solver = __webpack_require__(19);
 const Renderer = __webpack_require__(23);
 const Gravity = __webpack_require__(27);
+const Particle = __webpack_require__(4);
 
 /**
  * `World` the global-state instance of the physics engine that keeps track of all the objects. This provides
@@ -1768,6 +1847,26 @@ class World {
     }
 
     /**
+     * Removes a particle from the world
+     * @param {Particle} p
+     */
+    removeParticle(p) {
+        this.particles.deleteItem(p);
+        let removeCons = [];
+        for (let c of this.constraints) {
+            if (c.particles().includes(p)) {
+                removeCons.push(c) 
+            }
+        }
+
+        for (let c of removeCons) {
+            this.removeConstraint(c);
+        }
+        
+        this.updateParticleList();
+    }
+
+    /**
      * Adds a constraint to the world
      * @param {Constraint} c 
      */
@@ -1797,11 +1896,22 @@ class World {
         this.walls.push(w);
     }
 
+    removeWall(w) {
+        const index = this.walls.indexOf(w);
+		if (index > -1) {
+			this.walls.splice(index, 1);
+			return true;
+		}
+		return false;
+    }
+
     /**
-     * Clears all of the particles
+     * Clears all of the particles and constraints
      */
     clearParticles() {
         this.particles = new SpatialHashGrid(this.width, this.height, this.xGrids, this.yGrids);
+        this.solver.particles = this.particles;
+        this.clearConstraints();
         this.updateParticleList();
     }
 
@@ -1810,7 +1920,13 @@ class World {
      */
     clearConstraints() {
         this.constraints = [];
+        this.solver.constraints = this.constraints;
         this.updateParticleList();
+    }
+
+    clearWalls() {
+        this.walls = [];
+        this.solver.walls = [];
     }
 
     /**
@@ -1818,7 +1934,6 @@ class World {
      */
     updateParticleList() {
         this.particlesList = this.particles.values();
-        this.renderer.updateRendererParticles(this.particlesList);
         this.solver.updateSolverParticles();
     }
 
@@ -2054,8 +2169,8 @@ class Collision extends NearBehavior {
                 let c_radius = circ.radius;
 
 				let posDiff1 = position.sub(c_position);
-				if (posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius)) {
-					let posDiffMagSqr = posDiff1.magSqr();
+				let posDiffMagSqr = posDiff1.magSqr();
+				if (posDiffMagSqr < (radius + c_radius) * (radius + c_radius)) {
 					let massConst1 = 2 * c_mass / (mass + c_mass);
 					let vDiff1 = velocity.sub(c_velocity);
 					let dot1 = (vDiff1.dot(posDiff1)) / (posDiffMagSqr);
@@ -2064,16 +2179,20 @@ class Collision extends NearBehavior {
 					let vDiff2 = c_velocity.sub(velocity);
 					let posDiff2 = c_position.sub(position);
 					let dot2 = (vDiff2.dot(posDiff2)) / (posDiffMagSqr);
-					impulse = impulse.add(posDiff1.mult(dot1 * massConst1));
+					impulse.addTo(posDiff1.mult(dot1 * massConst1));
 					// idk why this works tbh but it just does
-					circ.vel = (c_velocity.sub(posDiff2.mult(dot2 * massConst2)));
-					circ.pos = circ.pos.sub(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
+					// circ.vel = c_velocity.sub(posDiff2.mult(dot2 * massConst2));
+					c_velocity.subTo(posDiff2.mult(dot2 * massConst2 * bounciness));
+					//circ.pos = circ.pos.sub(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
+					circ.pos.subTo(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
 				}
 			}
 		}
 
-		particle.vel = velocity.sub(impulse);
-		particle.pos = position.sub(impulse.mult(timeStep));
+		//particle.vel = velocity.sub(impulse);
+		velocity.subTo(impulse.mult(bounciness));
+		//particle.pos = position.sub(impulse.mult(timeStep));
+		position.subTo(impulse.mult(timeStep * bounciness));
 	}
 
 	/**
@@ -2093,13 +2212,14 @@ class Collision extends NearBehavior {
                 let c_radius = circ.radius;
 
 				let posDiff1 = position.sub(c_position);
-				if (posDiff1.magSqr() <= (radius + c_radius) * (radius + c_radius)) {
+				if (posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius)) {
 					let direction1 = posDiff1.normalize();
 					let overlap = radius + c_radius - posDiff1.mag();
 
-					circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
-					particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
-					
+					//circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
+					c_position.subTo(direction1.mult(overlap * mass / (mass + c_mass)));
+					//particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
+					position.addTo(direction1.mult(overlap * c_mass / (mass + c_mass)));
 				}
 			}
 		}
@@ -2145,9 +2265,9 @@ class Renderer {
         this.solver = solver;
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
-        this.constraintRenderer = new ConstraintRenderer(solver.constraints, this.context);
-        this.particleRenderer = new ParticleRenderer(solver.particles.values(), this.context);
-        this.wallRenderer = new WallRenderer(solver.walls, this.context);
+        this.constraintRenderer = new ConstraintRenderer(solver, this.context);
+        this.particleRenderer = new ParticleRenderer(solver, this.context);
+        this.wallRenderer = new WallRenderer(solver, this.context);
     }
 
     // call this anytime a new particle is added
@@ -2180,8 +2300,8 @@ module.exports = Renderer;
 
 class ConstraintRenderer {
 
-    constructor(constraints, context) {
-        this.constraints = constraints;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
         this.color = "black"
         this.context.strokeStyle = this.color;
@@ -2190,7 +2310,7 @@ class ConstraintRenderer {
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let c of this.constraints) {
+        for (let c of this.solver.constraints) {
             this.draw(c);
         }
     }
@@ -2229,14 +2349,14 @@ module.exports = ConstraintRenderer;
 
 class ParticleRenderer {
 
-    constructor(particles, context) {
-        this.particles = particles;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
     }
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let p of this.particles) {
+        for (let p of this.solver.particleList) {
             this.draw(p);
         }
     }
@@ -2260,8 +2380,8 @@ module.exports = ParticleRenderer;
 
 class WallRenderer {
 
-    constructor(walls, context) {
-        this.walls = walls;
+    constructor(solver, context) {
+        this.solver = solver;
         this.context = context;
         this.color = "black"
         this.context.strokeStyle = this.color;
@@ -2269,7 +2389,7 @@ class WallRenderer {
 
     // call this anytime a new particle is added
     renderFrame() {
-        for (let w of this.walls) {
+        for (let w of this.solver.walls) {
             this.draw(w);
         }
     }
@@ -2280,7 +2400,7 @@ class WallRenderer {
             this.context.beginPath();
             this.context.moveTo(vertices[0].x, vertices[0].y);
             vertices.pop();
-            for (let p of vertices) {
+            for (let _ of vertices) {
                 this.context.lineTo(w.p2.x, w.p2.y);
             }
             this.context.stroke();
@@ -2317,7 +2437,7 @@ class Gravity extends SelfBehavior {
      */
     applyBehavior(particle, timeStep) {
         //particle.applyAcceleration(this.acceleration, timeStep);
-        particle.pos = particle.pos.add(this.acceleration.mult(timeStep * timeStep));
+        particle.pos.addTo(this.acceleration.mult(timeStep * timeStep));
     }
 
     /**
@@ -2368,6 +2488,7 @@ class ChargeInteraction extends NearBehavior {
     constructor(radius=100000) {
         super();
         this.radius = radius;
+        this.epsilon = 0.00001;
     }
 
     /**
@@ -2377,9 +2498,9 @@ class ChargeInteraction extends NearBehavior {
      * @param {Particle[]} particles 
      */
     applyBehavior(particle, timeStep, particles) {
-        if(particle.charge !== 0){
+        if(particle.charge >= this.epsilon){
 			for (let circ of particles) {
-                if (particle !== circ && circ.charge !== 0) {
+                if (particle !== circ && circ.charge >= this.epsilon) {
                     let q1 = particle.charge;
                     let q2 = circ.charge;
                     let x1 = particle.pos;
@@ -2387,13 +2508,15 @@ class ChargeInteraction extends NearBehavior {
                     let dx = x1.sub(x2);
                     let dxmSqr = dx.magSqr();
                     if (dxmSqr > (particle.radius + circ.radius) * (particle.radius + circ.radius) && dxmSqr < this.radius * this.radius) {
-                        let dxNorm = dx.normalize();
-                        let f = dxNorm.mult(2 * q1 * q2 / dxmSqr * timeStep);
+                        dx.normalizeTo();
+                        dx.multTo(2 * q1 * q2 / dxmSqr * timeStep);
                         
                         //circ.vel = circ.vel.sub(f)
-                        circ.pos = circ.pos.sub(f.mult(timeStep / circ.mass));
+                        //circ.pos = circ.pos.sub(f.mult(timeStep / circ.mass));
+                        circ.pos.subTo(dx.mult(timeStep / circ.mass));
                         //particle.vel = particle.vel.add(f)
-                        particle.pos = particle.pos.add(f.mult(timeStep * timeStep / particle.mass));
+                        //particle.pos = particle.pos.add(f.mult(timeStep * timeStep / particle.mass));
+                        particle.pos.addTo(dx.mult(timeStep * timeStep / particle.mass));
                         
                     }
                 } 	
@@ -2455,7 +2578,8 @@ class Drag extends SelfBehavior {
 			let vNormal = vel.normalize();
 			let fDrag = vNormal.mult(vMagSqr * dragC);
 			//particle.vel = vel.sub(fDrag.mult(timeStep));
-            particle.pos = particle.pos.sub(fDrag.mult(timeStep * timeStep));
+            //particle.pos = particle.pos.sub(fDrag.mult(timeStep * timeStep));
+            particle.pos.subTo(fDrag.mult(timeStep * timeStep));
 		}
 	}
 
@@ -2496,7 +2620,8 @@ class Force extends SelfBehavior {
      */
     applyBehavior(particle, timeStep) {
         //particle.applyForce(this.force, timeStep);
-        particle.pos = particle.pos.add(this.force.mult(timeStep * timeStep / particle.mass));
+        //particle.pos = particle.pos.add(this.force.mult(timeStep * timeStep / particle.mass));
+        particle.pos.addTo(this.force.mult(timeStep * timeStep / particle.mass));
     }
     
     /**
