@@ -22,7 +22,7 @@ const c = canvas.getContext("2d");
 canvas.width = width;
 canvas.height = height;
 
-const world = new World(canvas, width, height, 20, 20, 0.05, 1, 20);
+const world = new World(canvas, width, height, 20, 20, 0.02, 1, 20);
 const handler = new InputHandler(world);
 
 handler.startMouseHandling();
