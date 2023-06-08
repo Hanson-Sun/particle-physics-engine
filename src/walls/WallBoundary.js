@@ -139,32 +139,31 @@ class WallBoundary extends Wall {
      */
     isCollide(particle) {
         let pos = particle.pos;
+        let diff = pos.sub(this.p1);
+        let segVect = this.p2.sub(this.p1);
+      
+        let dot = diff.dot(segVect);
+        let len_sq = segVect.magSqr();
 
-            let diff = pos.sub(this.p1);
-            let segVect = this.p2.sub(this.p1);
-          
-            let dot = diff.dot(segVect);
-            let len_sq = segVect.magSqr();
-    
-            let lambda = -1;
-            if (len_sq != 0) { 
-                lambda = dot / len_sq;
-            }
-    
-            let projected;
-          
-            if (lambda < 0) {
-              projected = this.p1;
-            } else if (lambda > 1) {
-              projected = this.p2;
-            } else {
-              projected = this.p1.add(segVect.mult(lambda));
-            }
+        let lambda = -1;
+        if (len_sq != 0) { 
+            lambda = dot / len_sq;
+        }
 
-            let projectedDiff = pos.sub(projected);
-            let distance = projectedDiff.mag();
+        let projected;
+      
+        if (lambda < 0) {
+          projected = this.p1;
+        } else if (lambda > 1) {
+          projected = this.p2;
+        } else {
+          projected = this.p1.add(segVect.mult(lambda));
+        }
 
-            return distance < particle.radius;
+        let projectedDiff = pos.sub(projected);
+        let distance = projectedDiff.mag();
+
+        return distance < particle.radius;
     }
 
     /**

@@ -1,8 +1,20 @@
 const Wall = require("./Wall");
 
-// stand-in until i figure out how to implement the other walls.
+/**
+ * `RectangularWorldBoundary` is a rectangular bounding box that constrains all particles *within* the boundaries.
+ * The implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. 
+ * Since the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not
+ * just particles surrounding the edge.
+ */
 class RectangularWorldBoundary extends Wall {
 
+    /**
+     * 
+     * @param {Number} minW left x position (smaller value)
+     * @param {Number} maxW right x position (larger value)
+     * @param {Number} minH top y position (smaller value)
+     * @param {Number} maxH bottom y position (larger value)
+     */
     constructor(minW, maxW, minH, maxH) {
         super();
         this.minW = minW;
@@ -11,6 +23,11 @@ class RectangularWorldBoundary extends Wall {
         this.maxH = maxH;        
     }
 
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     * @param {Number} timeStep 
+     */    
     resolveCollisions(particles, timeStep) {
         for (let particle of particles) {
             const posX = particle.pos.x;
@@ -42,6 +59,10 @@ class RectangularWorldBoundary extends Wall {
         }
     }
 
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     */
     applyCorrection(particles) {
         for (let particle of particles) {
             const radius = particle.radius;
@@ -63,6 +84,11 @@ class RectangularWorldBoundary extends Wall {
         }
     }
 
+    /**
+     * Checks if a Particle is colliding with the Wall
+     * @param {Particle} particle 
+     * @returns {Boolean} true if particle is colliding with wall
+     */
     isCollide(particle) {
         const posX = particle.pos.x;
         const posY = particle.pos.y;
@@ -74,14 +100,26 @@ class RectangularWorldBoundary extends Wall {
                 (particle.pos.y >= this.maxH - radius) || (particle.pos.y <= this.minH + radius)
     }
 
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */    
     getHashPos() {
         return [(this.maxW + this.minW) / 2, (this.maxH + this.minH) / 2];
     }
 
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
     getHashDimensions() {
         return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
     }
 
+    /**
+     * @override
+     * @returns {[Vector2D, Vector2D]} 
+     */    
     vertices() {
         return [];
     }

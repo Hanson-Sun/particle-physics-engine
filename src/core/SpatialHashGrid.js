@@ -73,14 +73,13 @@ class SpatialHashGrid {
     }
 
     /**
-     * Finds the nearest grid coordinate that the encapsulates (x, y).
+     * Finds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.
      * @param {Number} x 
      * @param {Number} y 
      * @returns {[int, int]} grid coordinates
      * @access private
      */
     #getCellIndex(x, y) {
-        // 1.1 because it will not work for xScaled=1
         const xScaled = Math.min(Math.max((x / this.width), 0.0), 1);
         const yScaled = Math.min(Math.max((y / this.height), 0.0), 1);
 
@@ -88,8 +87,6 @@ class SpatialHashGrid {
         const yIndex = Math.round((this.yGrids - 1) * yScaled);
 
         return [xIndex, yIndex];
-
-        
     }
 
     /**

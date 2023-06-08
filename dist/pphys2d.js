@@ -77,7 +77,7 @@ utils.InputHandler = __webpack_require__(3);
 /**
  * Vector2D is a light-weight 2D vector class that implements several vector operations.
  * 
- * **Note**: modifying "to" methods that do not return a new Vector2D are more efficient, but there seems to a math consistency bug with those.
+ * **Note**: modifying "to" methods that do not return a new Vector2D are more efficient.
  */
 class Vector2D {
 	/**
@@ -1274,32 +1274,31 @@ class WallBoundary extends Wall {
      */
     isCollide(particle) {
         let pos = particle.pos;
+        let diff = pos.sub(this.p1);
+        let segVect = this.p2.sub(this.p1);
+      
+        let dot = diff.dot(segVect);
+        let len_sq = segVect.magSqr();
 
-            let diff = pos.sub(this.p1);
-            let segVect = this.p2.sub(this.p1);
-          
-            let dot = diff.dot(segVect);
-            let len_sq = segVect.magSqr();
-    
-            let lambda = -1;
-            if (len_sq != 0) { 
-                lambda = dot / len_sq;
-            }
-    
-            let projected;
-          
-            if (lambda < 0) {
-              projected = this.p1;
-            } else if (lambda > 1) {
-              projected = this.p2;
-            } else {
-              projected = this.p1.add(segVect.mult(lambda));
-            }
+        let lambda = -1;
+        if (len_sq != 0) { 
+            lambda = dot / len_sq;
+        }
 
-            let projectedDiff = pos.sub(projected);
-            let distance = projectedDiff.mag();
+        let projected;
+      
+        if (lambda < 0) {
+          projected = this.p1;
+        } else if (lambda > 1) {
+          projected = this.p2;
+        } else {
+          projected = this.p1.add(segVect.mult(lambda));
+        }
 
-            return distance < particle.radius;
+        let projectedDiff = pos.sub(projected);
+        let distance = projectedDiff.mag();
+
+        return distance < particle.radius;
     }
 
     /**
@@ -1335,9 +1334,21 @@ module.exports = WallBoundary;
 
 const Wall = __webpack_require__(15);
 
-// stand-in until i figure out how to implement the other walls.
+/**
+ * `RectangularWorldBoundary` is a rectangular bounding box that constrains all particles *within* the boundaries.
+ * The implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. 
+ * Since the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not
+ * just particles surrounding the edge.
+ */
 class RectangularWorldBoundary extends Wall {
 
+    /**
+     * 
+     * @param {Number} minW left x position (smaller value)
+     * @param {Number} maxW right x position (larger value)
+     * @param {Number} minH top y position (smaller value)
+     * @param {Number} maxH bottom y position (larger value)
+     */
     constructor(minW, maxW, minH, maxH) {
         super();
         this.minW = minW;
@@ -1346,6 +1357,11 @@ class RectangularWorldBoundary extends Wall {
         this.maxH = maxH;        
     }
 
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     * @param {Number} timeStep 
+     */    
     resolveCollisions(particles, timeStep) {
         for (let particle of particles) {
             const posX = particle.pos.x;
@@ -1377,6 +1393,10 @@ class RectangularWorldBoundary extends Wall {
         }
     }
 
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     */
     applyCorrection(particles) {
         for (let particle of particles) {
             const radius = particle.radius;
@@ -1398,6 +1418,11 @@ class RectangularWorldBoundary extends Wall {
         }
     }
 
+    /**
+     * Checks if a Particle is colliding with the Wall
+     * @param {Particle} particle 
+     * @returns {Boolean} true if particle is colliding with wall
+     */
     isCollide(particle) {
         const posX = particle.pos.x;
         const posY = particle.pos.y;
@@ -1409,14 +1434,26 @@ class RectangularWorldBoundary extends Wall {
                 (particle.pos.y >= this.maxH - radius) || (particle.pos.y <= this.minH + radius)
     }
 
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */    
     getHashPos() {
         return [(this.maxW + this.minW) / 2, (this.maxH + this.minH) / 2];
     }
 
+    /**
+     * @override
+     * @returns {[Number, Number]} 
+     */
     getHashDimensions() {
         return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
     }
 
+    /**
+     * @override
+     * @returns {[Vector2D, Vector2D]} 
+     */    
     vertices() {
         return [];
     }
@@ -1684,14 +1721,13 @@ class SpatialHashGrid {
     }
 
     /**
-     * Finds the nearest grid coordinate that the encapsulates (x, y).
+     * Finds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.
      * @param {Number} x 
      * @param {Number} y 
      * @returns {[int, int]} grid coordinates
      * @access private
      */
     #getCellIndex(x, y) {
-        // 1.1 because it will not work for xScaled=1
         const xScaled = Math.min(Math.max((x / this.width), 0.0), 1);
         const yScaled = Math.min(Math.max((y / this.height), 0.0), 1);
 
@@ -1699,8 +1735,6 @@ class SpatialHashGrid {
         const yIndex = Math.round((this.yGrids - 1) * yScaled);
 
         return [xIndex, yIndex];
-
-        
     }
 
     /**

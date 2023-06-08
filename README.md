@@ -47,7 +47,7 @@ This repository also includes additional files for demo purposes
 - resolve constructor complexity by changing how the options work
 - fix mouse edge movement instability
 - test custom mouse function input
-- WHY DOES LOW BOUNCE VALUES NOT WORK...
+- fix spatial hashgrid to work with unbounded values (mod instead of clamp)
 
 - IMPROVE SPATIAL HASH ALGORITHM (make it dense) + test if its actually better  
   - after testing, i have concluded that is isnt really better for this case

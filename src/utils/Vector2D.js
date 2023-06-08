@@ -1,7 +1,7 @@
 /**
  * Vector2D is a light-weight 2D vector class that implements several vector operations.
  * 
- * **Note**: modifying "to" methods that do not return a new Vector2D are more efficient, but there seems to a math consistency bug with those.
+ * **Note**: modifying "to" methods that do not return a new Vector2D are more efficient.
  */
 class Vector2D {
 	/**
