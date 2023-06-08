@@ -16,7 +16,7 @@ class ForcePivotConstraint extends Constraint {
      * @param {Number} dampening - damping force on constraint, must be greater than 0
      * @param {Number} breakForce - force at which the constraint breaks
      */
-    constructor(pos, c1, len, stiffness, dampening = 0, breakForce = Infinity) {
+    constructor(pos, c1, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();
         if (c1 === null) {
             throw new Error("One of the particles is null!");
@@ -49,7 +49,7 @@ class ForcePivotConstraint extends Constraint {
             const a1 = this.force.mult(1 / this.c1.mass);
             a1.multTo(timeStep * timeStep);
 
-            this.c1.pos = this.c1.pos.add(a1);
+            this.c1.pos.addTo(a1);
 
         }
     }

@@ -18,7 +18,7 @@ class ForceDistanceConstraint extends Constraint {
      * @param {Number} dampening - damping force on constraint, must be greater than 0
      * @param {Number} breakForce - force at which the constraint breaks
      */
-    constructor(c1, c2, len, stiffness, dampening = 0, breakForce = Infinity) {
+    constructor(c1, c2, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();
         if (c1 === null || c2 === null) {
             throw new Error("One of the particles is null!");

@@ -229,6 +229,16 @@ class Vector2D {
 		let y = this.y - normal.y * dot2;
 		return new Vector2D(x, y);
 	}
+
+	/**
+	 * Performs the mirror reflection for `this` about a normal vector. (modifies self)
+	 * @param {Vector2D} normal 
+	 */
+	reflectTo(normal) {
+		let dot2 = 2 * (this.x * normal.x + this.y * normal.y);
+		this.x = this.x - normal.x * dot2;
+		this.y = this.y - normal.y * dot2;
+	}
 }
 
 module.exports = Vector2D;
@@ -438,7 +448,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} timeStep 
 	 */
 	applyVelocity(v, timeStep) {
-		this.pos = this.pos.add(v.mult(timeStep));
+		this.pos.addTo(v.mult(timeStep));
 	}
 
 	/**
@@ -447,7 +457,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} timeStep 
 	 */
     applyForce(f, timeStep) {
-		this.vel = this.vel.add(f.mult(timeStep / this.mass));
+		this.vel.addTo(f.mult(timeStep / this.mass));
 	}
 
 	/**
@@ -456,7 +466,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} timeStep 
 	 */
 	applyAcceleration(a, timeStep) {
-		this.vel = this.vel.add(a.mult(timeStep));
+		this.vel.addTo(a.mult(timeStep));
 	}
 
 	/**
@@ -687,7 +697,7 @@ class ForcePivotConstraint extends Constraint {
      * @param {Number} dampening - damping force on constraint, must be greater than 0
      * @param {Number} breakForce - force at which the constraint breaks
      */
-    constructor(pos, c1, len, stiffness, dampening = 0, breakForce = Infinity) {
+    constructor(pos, c1, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();
         if (c1 === null) {
             throw new Error("One of the particles is null!");
@@ -720,7 +730,7 @@ class ForcePivotConstraint extends Constraint {
             const a1 = this.force.mult(1 / this.c1.mass);
             a1.multTo(timeStep * timeStep);
 
-            this.c1.pos = this.c1.pos.add(a1);
+            this.c1.pos.addTo(a1);
 
         }
     }
@@ -836,7 +846,7 @@ class ForceDistanceConstraint extends Constraint {
      * @param {Number} dampening - damping force on constraint, must be greater than 0
      * @param {Number} breakForce - force at which the constraint breaks
      */
-    constructor(c1, c2, len, stiffness, dampening = 0, breakForce = Infinity) {
+    constructor(c1, c2, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();
         if (c1 === null || c2 === null) {
             throw new Error("One of the particles is null!");
@@ -911,7 +921,8 @@ const Vector2D = __webpack_require__(2);
  * `PositionDistanceConstraint` is a `Constraint` that constrains the distance between two particles using a purely position-based method.
  * This implementation is more energetically stable; however, it is also less energy conservative and cannot be affected by damping. 
  * The stiffness parameters are closer to a relaxation factor in [0,1]. Similar to other constraints, the stiffer this constraint, 
- * the less energy conservative it becomes.
+ * the less energy conservative it becomes. There is no "force" attached to this type of constraint, so a pseudo-force value is arbitrary
+ * calculated for any force based analysis.
  */
 class PositionDistanceConstraint extends Constraint {
 	/**
@@ -947,14 +958,16 @@ class PositionDistanceConstraint extends Constraint {
 		let dp = pos2.sub(pos1);
 		let dpMag = dp.mag();
 		let dpDiff = (dpMag - this.len) * this.stiffness;
-		let dpUnit = dp.normalize();
-		let dd = dpUnit.mult(dpDiff);
-		let disP = dd.mult(1 / (m1 + m2));
-		this.force = disP;
+		dp.normalizeTo();
+		dp.multTo(dpDiff);
+		dp.multTo(1 / (m1 + m2));
 
-		this.c1.pos = pos1.add((disP.mult(m1)));
+        // force values are made up
+		this.force = dp.mult((m1 + m2) * (m1 + m2) * 100 * this.stiffness);
+
+		pos1.addTo(dp.mult(m1));
 		//this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
-		this.c2.pos = pos2.sub((disP.mult(m2)));
+		pos2.subTo(dp.mult(m2));
 		//this.c2.vel = this.c2.vel.add(disP.mult(m2 / timeStep));
 	}
 
@@ -1022,11 +1035,11 @@ class PositionPivotConstraint extends Constraint {
 		let dpMag = dp.mag();
         if (dpMag != 0) {
             let dpDiff = (dpMag - this.len) * this.stiffness;
-            let dpUnit = dp.normalize();
-            let dd = dpUnit.mult(dpDiff);
-            this.force = dd;
+            dp.normalizeTo();
+            dp.multTo(dpDiff);
+            this.force = dp.mult(this.c1.mass * 100 * this.stiffness);
 
-            this.c1.pos = pos1.add(dd);
+            pos1.addTo(dp);
             //this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
         }
 	}
@@ -1185,21 +1198,28 @@ class WallBoundary extends Wall {
             if (distance <= particle.radius && lambda < 0) {
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
-                particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
+                velocity.subTo(diff.mult(vDot * 2));
+                velocity.multTo(bounciness);
+                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                particle.pos.addTo(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance <= particle.radius && lambda > 1) {
                 let diff = pos.sub(this.p2);
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
-                particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
+                velocity.subTo(diff.mult(vDot * 2));
+                velocity.multTo(bounciness);
+                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                particle.pos.addTo(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance <= particle.radius) {
-                let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep);
-                particle.vel = particle.vel.reflect(this.normal).mult(bounciness);
+                let mag = particle.vel.reflect(this.normal);
+                mag.subTo(particle.vel);
+                mag.multTo(timeStep);
+                particle.vel.reflectTo(this.normal);
+                particle.vel.multTo(bounciness);
                 //let mag = particle.vel.reflect(this.normal).dot(this.normal);
                 //particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag * bounciness));
                 //let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep * bounciness);
-                particle.pos = particle.pos.add(mag);
+                particle.pos.addTo(mag);
             }
         }
     }
@@ -1237,12 +1257,12 @@ class WallBoundary extends Wall {
             let distance = projectedDiff.mag();
             let overlap = distance - particle.radius;
 
-            if (distance < particle.radius && lambda < 0) {
-                particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
-            } else if (distance < particle.radius && lambda > 1) {
-                particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
-            } else if (distance < particle.radius) {
-                particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
+            if ((distance < particle.radius && lambda < 0) || 
+                (distance < particle.radius && lambda > 1) || 
+                (distance < particle.radius)) {
+                projectedDiff.normalizeTo();
+                projectedDiff.multTo(overlap);
+                particle.pos.subTo(projectedDiff);
             }
         }
     }
@@ -1487,7 +1507,7 @@ class Solver {
     preMove() {
         for (let circ of this.particleList) {
             circ.prevPos = circ.pos;
-            circ.applyVelocity(circ.vel, this.timeStep);
+            circ.pos = circ.pos.add(circ.vel.mult(this.timeStep));
         }
     }
 

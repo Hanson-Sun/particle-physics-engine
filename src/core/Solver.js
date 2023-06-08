@@ -61,7 +61,7 @@ class Solver {
     preMove() {
         for (let circ of this.particleList) {
             circ.prevPos = circ.pos;
-            circ.applyVelocity(circ.vel, this.timeStep);
+            circ.pos = circ.pos.add(circ.vel.mult(this.timeStep));
         }
     }
 

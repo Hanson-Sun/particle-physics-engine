@@ -153,6 +153,16 @@ class Vector2D {
 		let y = this.y - normal.y * dot2;
 		return new Vector2D(x, y);
 	}
+
+	/**
+	 * Performs the mirror reflection for `this` about a normal vector. (modifies self)
+	 * @param {Vector2D} normal 
+	 */
+	reflectTo(normal) {
+		let dot2 = 2 * (this.x * normal.x + this.y * normal.y);
+		this.x = this.x - normal.x * dot2;
+		this.y = this.y - normal.y * dot2;
+	}
 }
 
 module.exports = Vector2D;

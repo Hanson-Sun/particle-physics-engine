@@ -63,21 +63,28 @@ class WallBoundary extends Wall {
             if (distance <= particle.radius && lambda < 0) {
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
-                particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
+                velocity.subTo(diff.mult(vDot * 2));
+                velocity.multTo(bounciness);
+                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                particle.pos.addTo(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance <= particle.radius && lambda > 1) {
                 let diff = pos.sub(this.p2);
                 let velocity = particle.vel;
                 let vDot = - (velocity.dot(diff)) / (diff.magSqr());
-                particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
-                particle.pos = particle.pos.add(diff.mult(vDot * 2 * bounciness * timeStep));
+                velocity.subTo(diff.mult(vDot * 2));
+                velocity.multTo(bounciness);
+                //particle.vel = (velocity.sub(diff.mult(vDot * 2))).mult(bounciness);
+                particle.pos.addTo(diff.mult(vDot * 2 * bounciness * timeStep));
             } else if (distance <= particle.radius) {
-                let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep);
-                particle.vel = particle.vel.reflect(this.normal).mult(bounciness);
+                let mag = particle.vel.reflect(this.normal);
+                mag.subTo(particle.vel);
+                mag.multTo(timeStep);
+                particle.vel.reflectTo(this.normal);
+                particle.vel.multTo(bounciness);
                 //let mag = particle.vel.reflect(this.normal).dot(this.normal);
                 //particle.pos = particle.pos.add(this.normal.mult(2 * timeStep * mag * bounciness));
                 //let mag = particle.vel.reflect(this.normal).sub(particle.vel).mult(timeStep * bounciness);
-                particle.pos = particle.pos.add(mag);
+                particle.pos.addTo(mag);
             }
         }
     }
@@ -115,12 +122,12 @@ class WallBoundary extends Wall {
             let distance = projectedDiff.mag();
             let overlap = distance - particle.radius;
 
-            if (distance < particle.radius && lambda < 0) {
-                particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
-            } else if (distance < particle.radius && lambda > 1) {
-                particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
-            } else if (distance < particle.radius) {
-                particle.pos = particle.pos.sub(projectedDiff.normalize().mult(overlap));
+            if ((distance < particle.radius && lambda < 0) || 
+                (distance < particle.radius && lambda > 1) || 
+                (distance < particle.radius)) {
+                projectedDiff.normalizeTo();
+                projectedDiff.multTo(overlap);
+                particle.pos.subTo(projectedDiff);
             }
         }
     }

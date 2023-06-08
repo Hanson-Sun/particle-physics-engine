@@ -39,11 +39,11 @@ class PositionPivotConstraint extends Constraint {
 		let dpMag = dp.mag();
         if (dpMag != 0) {
             let dpDiff = (dpMag - this.len) * this.stiffness;
-            let dpUnit = dp.normalize();
-            let dd = dpUnit.mult(dpDiff);
-            this.force = dd;
+            dp.normalizeTo();
+            dp.multTo(dpDiff);
+            this.force = dp.mult(this.c1.mass * 100 * this.stiffness);
 
-            this.c1.pos = pos1.add(dd);
+            pos1.addTo(dp);
             //this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
         }
 	}

@@ -6,7 +6,8 @@ const Vector2D = require("../utils/Vector2D");
  * `PositionDistanceConstraint` is a `Constraint` that constrains the distance between two particles using a purely position-based method.
  * This implementation is more energetically stable; however, it is also less energy conservative and cannot be affected by damping. 
  * The stiffness parameters are closer to a relaxation factor in [0,1]. Similar to other constraints, the stiffer this constraint, 
- * the less energy conservative it becomes.
+ * the less energy conservative it becomes. There is no "force" attached to this type of constraint, so a pseudo-force value is arbitrary
+ * calculated for any force based analysis.
  */
 class PositionDistanceConstraint extends Constraint {
 	/**
@@ -42,14 +43,16 @@ class PositionDistanceConstraint extends Constraint {
 		let dp = pos2.sub(pos1);
 		let dpMag = dp.mag();
 		let dpDiff = (dpMag - this.len) * this.stiffness;
-		let dpUnit = dp.normalize();
-		let dd = dpUnit.mult(dpDiff);
-		let disP = dd.mult(1 / (m1 + m2));
-		this.force = disP;
+		dp.normalizeTo();
+		dp.multTo(dpDiff);
+		dp.multTo(1 / (m1 + m2));
 
-		this.c1.pos = pos1.add((disP.mult(m1)));
+        // force values are made up
+		this.force = dp.mult((m1 + m2) * (m1 + m2) * 100 * this.stiffness);
+
+		pos1.addTo(dp.mult(m1));
 		//this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
-		this.c2.pos = pos2.sub((disP.mult(m2)));
+		pos2.subTo(dp.mult(m2));
 		//this.c2.vel = this.c2.vel.add(disP.mult(m2 / timeStep));
 	}
 

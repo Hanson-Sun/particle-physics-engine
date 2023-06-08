@@ -41,7 +41,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} timeStep 
 	 */
 	applyVelocity(v, timeStep) {
-		this.pos = this.pos.add(v.mult(timeStep));
+		this.pos.addTo(v.mult(timeStep));
 	}
 
 	/**
@@ -50,7 +50,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} timeStep 
 	 */
     applyForce(f, timeStep) {
-		this.vel = this.vel.add(f.mult(timeStep / this.mass));
+		this.vel.addTo(f.mult(timeStep / this.mass));
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} timeStep 
 	 */
 	applyAcceleration(a, timeStep) {
-		this.vel = this.vel.add(a.mult(timeStep));
+		this.vel.addTo(a.mult(timeStep));
 	}
 
 	/**
