@@ -126,7 +126,7 @@ setInterval(function () {
 function softBody() {
     let dampen = 0;
     let grid = [];
-    let size = 15;
+    let size = 30;
     let w = 12;
     let stiffness = 0.01;
     let radius = 3;
