@@ -116,7 +116,7 @@ class Particle extends HashGridItem {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
 	getHashPos() {
 		return [this.pos.x, this.pos.y];
@@ -124,7 +124,7 @@ class Particle extends HashGridItem {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
 	getHashDimensions() {
 		return [this.radius * 2, this.radius * 2];

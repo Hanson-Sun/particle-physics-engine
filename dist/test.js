@@ -1,10 +1,3 @@
-
-// TODO: test collisions and add constraints
-// also constrain boundaries.
-
-// BRUH SOMETHING IS WRONG WITH GRAVITY --> implementation of addTo is kind of messed up
-// wait why... i dont get it....
-
 const Vector2D = pphys.utils.Vector2D,
       Particle = pphys.core.Particle,
       World = pphys.core.World,
@@ -17,7 +10,8 @@ const Vector2D = pphys.utils.Vector2D,
       Drag = pphys.behaviors.Drag,
       ChargeInteraction = pphys.behaviors.ChargeInteraction,
       ForcePivotConstraint = pphys.constraints.ForcePivotConstraint, 
-      PositionDistanceConstraint = pphys.constraints.PositionDistanceConstraint;
+      PositionDistanceConstraint = pphys.constraints.PositionDistanceConstraint,
+      PenaltyCollision = pphys.behaviors.PenaltyCollision;
 
 const canvas = document.getElementById("test");
 const width = 700;
@@ -26,7 +20,7 @@ const c = canvas.getContext("2d");
 canvas.width = width;
 canvas.height = height;
 
-const world = new World(canvas, width, height, 25, 25, 0.05, 1, 20);
+const world = new World(canvas, width, height, 40, 40, 0.05, 1, 20);
 const handler = new InputHandler(world);
 
 handler.startMouseHandling();
@@ -53,19 +47,20 @@ for (let i = 0; i < 0; i++) {
     let s2 = Math.random() < 0.5 ? -1 : 1;
     let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
     let p = new Vector2D((width - 50) * Math.random() + 25, (height - 50) * Math.random() + 25);
-    let part = new Particle(p, v, mass, 3, bounce, 0);
+    let part = new Particle(p, v, mass, 5, bounce, 0);
     world.addParticle(part);
 }
 
-const pt = new Particle(pos, vel, mass, 15, bounce, 0);
-const pt2 = new Particle(pos2, vel, mass * 3, 15, bounce, 0);
-const pt3 = new Particle(pos3, vel, mass, 15, bounce, 0);
+let radius = 15;
+const pt = new Particle(pos, vel, mass, radius, bounce, 0);
+const pt2 = new Particle(pos2, vel, mass * 30, radius, bounce, 0);
+const pt3 = new Particle(pos3, vel, mass, radius, bounce, 0);
 
 
 
 world.addParticle(pt);
 world.addParticle(pt2);
-world.addParticle(pt3);
+//world.addParticle(pt3);
 //world.makePivot(pt2);
 
 v = new Vector2D(0, -2);
@@ -75,16 +70,17 @@ const cons = new ForceDistanceConstraint(pt, pt2, 200, 100);
 //world.addConstraint(cons);
 
 //world.addConstraint(new ForcePivotConstraint(pos2, pt2, 0, 100));
-softBody();
+//softBody();
 
-world.enableGravity(0.5);
-world.addWall(new WallBoundary(250, 310, 600, 300));
-world.addWall(new WallBoundary(50, 690, 650, 690));
+world.enableGravity(1);
+// world.addWall(new WallBoundary(250, 310, 600, 300));
+// world.addWall(new WallBoundary(50, 690, 650, 690));
 // world.addWall(new WallBoundary(0, 0, 700, 0));
 //  world.addWall(new WallBoundary(0, 700, 700, 700));
 //  world.addWall(new WallBoundary(0, 0, 0, 700));
 //  world.addWall(new WallBoundary(700, 0, 700, 700));
-world.enableCollisions();
+//world.enableCollisions();
+ world.addGlobalNearBehavior(new PenaltyCollision(500));
 world.constrainBoundary(0, width, 0, height);
 // world.enableDrag(100);
 // world.enableChargeInteractions();

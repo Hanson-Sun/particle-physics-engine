@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\core\Particle.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: src\core\Particle.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+const HashGridItem = require(&quot;./HashGridItem&quot;);
+const Vector2D = require(&quot;../utils/Vector2D&quot;);
+const SelfBehavior = require(&quot;../behaviors/SelfBehavior&quot;);
+const NearBehavior = require(&quot;../behaviors/NearBehavior&quot;);
+
+/**
+ * &#x60;Particle&#x60; is the main object of this physics engine. It is a 2D circle that is treated like a point mass at the center
+ * and does **not** rotate. &#x60;Particle&#x60; is also a &#x60;HashGridItem&#x60; so it can be added to a &#x60;SpatialHashGrid&#x60;.
+ */
+
+class Particle extends HashGridItem {
+	/**
+	 * Instantiates new &#x60;Particle&#x60;
+	 * @param {Vector2D} pos cartesian coordinates of the particle
+	 * @param {Vector2D} vel velocity of the particle
+	 * @param {Number} mass 
+	 * @param {Number} radius 
+	 * @param {Number} bounciness a value in [0,1] that represents the amount of energy retained after collision
+	 * @param {Number} charge similar to real physical charge
+	 * @param {String} color currently only supports HTML canvas colors format
+	 */
+	constructor(pos, vel, mass, radius, bounciness = 1, charge = 0, color=&quot;black&quot;) {
+        super();
+		this.charge = charge || 0;
+		this.pos = pos;
+		this.vel = vel || new Vector2D(0,0);
+        this.force = new Vector2D(0, 0);
+        this.mass = mass || 1;
+        this.originalMass = mass || 1;
+		this.radius = radius || 10;
+		this.bounciness = bounciness;
+		this.prevPos = this.pos;
+        this.color = color;
+		this.nearBehavior = [];
+		this.selfBehavior = [];
+	}
+
+	/**
+	 * Increments the position by velocity &#x60;v&#x60;
+	 * @param {Vector2D} v 
+	 * @param {Number} timeStep 
+	 */
+	applyVelocity(v, timeStep) {
+		this.pos.addTo(v.mult(timeStep));
+	}
+
+	/**
+	 * Applies force &#x60;f&#x60; to the velocity
+	 * @param {Vector2D} f 
+	 * @param {Number} timeStep 
+	 */
+    applyForce(f, timeStep) {
+		this.vel.addTo(f.mult(timeStep / this.mass));
+	}
+
+	/**
+	 * Increments the velocity by an acceleration &#x60;a&#x60;
+	 * @param {Vector2D} a 
+	 * @param {Number} timeStep 
+	 */
+	applyAcceleration(a, timeStep) {
+		this.vel.addTo(a.mult(timeStep));
+	}
+
+	/**
+	 * Adds a &#x60;SelfBehavior&#x60; to the particle
+	 * @param {SelfBehavior} b 
+	 */
+	addSelfBehavior(b) {
+		this.selfBehavior.push(b);
+	}
+
+	/**
+	 * Adds a &#x60;NearBehavior&#x60; to the particle
+	 * @param {NearBehavior} b 
+	 */
+	addNearBehavior(b) {
+		this.nearBehavior.push(b);
+	}
+
+	/**
+	 * Removes &#x60;NearBehavior&#x60; &#x60;b&#x60; if the particle has &#x60;b&#x60;  
+	 * @param {NearBehavior} b 
+	 * @returns {Boolean} true if the action is successful
+	 */
+	removeNearBehavior(b) {
+		const index = this.nearBehavior.indexOf(b);
+		if (index &gt; -1) {
+			this.nearBehavior.splice(index, 1);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Removes &#x60;SelfBehavior&#x60; &#x60;b&#x60; if the particle has &#x60;b&#x60;  
+	 * @param {SelfBehavior} b 
+	 * @returns {Boolean} true if the action is successful
+	 */
+	removeSelfBehavior(b) {
+		const index = this.selfBehavior.indexOf(b);
+		if (index &gt; -1) {
+			this.selfBehavior.splice(index, 1);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Clears all behaviors of the particle
+	 */
+	clearBehaviors() {
+		this.nearBehavior = [];
+		this.selfBehavior = [];
+	}
+
+    /**
+     * @override
+     * @returns {Number[]} 
+     */
+	getHashPos() {
+		return [this.pos.x, this.pos.y];
+	}
+
+    /**
+     * @override
+     * @returns {Number[]} 
+     */
+	getHashDimensions() {
+		return [this.radius * 2, this.radius * 2];
+	}
+}
+
+module.exports = Particle;
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

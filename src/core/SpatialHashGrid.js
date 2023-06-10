@@ -76,7 +76,7 @@ class SpatialHashGrid {
      * Finds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.
      * @param {Number} x 
      * @param {Number} y 
-     * @returns {[int, int]} grid coordinates
+     * @returns {number[]} integer grid coordinates in [x, y]
      * @access private
      */
     #getCellIndex(x, y) {
@@ -92,7 +92,7 @@ class SpatialHashGrid {
     /**
      * Finds the nearby items for a given item, and updates the queryId.
      * @param {HashGridItem} item 
-     * @param {[Number, Number]} range - optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.
+     * @param {Number[]} range - optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.
      * @returns {HashGridItem[]}
      * @access public
      */

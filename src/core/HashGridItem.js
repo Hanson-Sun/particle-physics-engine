@@ -20,7 +20,7 @@ class HashGridItem {
     /**
      * Computes the coordinate position for the item within the `HashGrid`, expects center position.
      * @abstract
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashPos() {
         throw new Error("Method 'getHashPos()' must be implemented.");
@@ -29,7 +29,7 @@ class HashGridItem {
     /**
      * Computes the dimensions of the item for the `HashGrid`.
      * @abstract
-     * @returns {[Number, Number]} rectangular dimensions in [width, height]
+     * @returns {Number[]} rectangular dimensions in [width, height]
      */
     getHashDimensions() {
         throw new Error("Method 'getHashDimensions()' must be implemented.");

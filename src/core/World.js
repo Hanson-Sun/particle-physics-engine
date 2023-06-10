@@ -150,7 +150,7 @@ class World {
      * Adds a SelfBehavior to all the particles
      * @param {SelfBehavior} b 
      */
-    addGlobalBehavior(b) {
+    addGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
             p.addSelfBehavior(b);
         }
@@ -160,7 +160,7 @@ class World {
      * Removes a SelfBehavior from all the particles
      * @param {SelfBehavior} b 
      */
-    removeGlobalBehavior(b) {
+    removeGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
             p.removeSelfBehavior(b);
         }
@@ -196,7 +196,7 @@ class World {
             this.disableGravity();
         }
         this.gravity = new Gravity(new Vector2D(0, num));
-        this.addGlobalBehavior(this.gravity);
+        this.addGlobalSelfBehavior(this.gravity);
     }
 
     /**
@@ -205,7 +205,7 @@ class World {
      */
     disableGravity() {
         if (this.gravity) {
-            this.removeGlobalBehavior(this.gravity);
+            this.removeGlobalSelfBehavior(this.gravity);
             return true;
         }
         return false;
@@ -248,12 +248,12 @@ class World {
             this.disableDrag();
         }
         this.dragBehavior = new Drag(viscosity);
-        this.addGlobalBehavior(this.dragBehavior);
+        this.addGlobalSelfBehavior(this.dragBehavior);
     }
 
     disableDrag() {
         if (this.dragBehavior) {
-            this.removeGlobalBehavior(this.dragBehavior);
+            this.removeGlobalSelfBehavior(this.dragBehavior);
             return true;
         }
         return false;
@@ -269,7 +269,7 @@ class World {
 
     disableChargeInteractions() {
         if (this.chargeBehavior) {
-            this.removeGlobalBehavior(this.chargeBehavior);
+            this.removeGlobalSelfBehavior(this.chargeBehavior);
             return true;
         }
         return false;

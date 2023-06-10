@@ -15,32 +15,14 @@ class Collision extends NearBehavior {
         super();
     }
 
-    /**
-     * @override
-     * @param {Particle} particle 
-     * @param {Number} timeStep 
-     * @param {Particle[]} particles 
-     */
-    applyBehavior(particle, timeStep, particles) {
-        this.collide(particle, particles, timeStep);
-    }
-
-    /**
-     * @override
-     * @param {Particle} particle 
-     * @param {Particle[]} particles 
-     */
-	applyCorrection(particle, particles) {
-        this.collideCorrection(particle, particles);
-    }
-
 	/**
 	 * Perform the collision update of a `Particle` by calculating impulse based velocity and position changes. 
+	 * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 * @param {Number} timeStep 
 	 */
-	collide(particle, particles, timeStep) {
+	applyBehavior(particle, timeStep, particles) {
 		let impulse = new Vector2D(0,0);
 		let position = particle.pos;
 		let mass = particle.mass;
@@ -84,10 +66,11 @@ class Collision extends NearBehavior {
 
 	/**
 	 * Performs the position-based correction after impulse collision. This ensures that particles are not stuck within each other.
+	 * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 */
-	collideCorrection(particle, particles) {
+	applyCorrection(particle, particles) {
 		for (let circ of particles) {
 			if (circ != particle) {
                 let position = particle.pos;

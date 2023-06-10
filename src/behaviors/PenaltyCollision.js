@@ -1,14 +1,15 @@
 const NearBehavior = require("./NearBehavior");
 
 /**
- * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.
- * Collisions operate on impulse-based dynamics and are quite stiff. There are some potential issues with collision instability
- * when too much force / number of collisions stack.
+ * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles using softer penalty forces.
+ * Collisions are basically spring constraints between particles when they collide. High stiffness values can lead to energy inconsistency, whereas 
+ * lower stiffness can cause poor colliding behavior between particles. Overall, this method is more stable in high density stacking simulations, 
+ * but performs worse in more dynamic scenarios.
  */
 class PenaltyCollision extends NearBehavior {
 
 	/**
-	 * Instantiates new Collision behavior object
+	 * Instantiates new PenaltyCollision behavior object
 	 * @constructor
 	 */
     constructor(stiffness) {
@@ -16,32 +17,14 @@ class PenaltyCollision extends NearBehavior {
         this.stiffness = stiffness;
     }
 
-    /**
-     * @override
-     * @param {Particle} particle 
-     * @param {Number} timeStep 
-     * @param {Particle[]} particles 
-     */
-    applyBehavior(particle, timeStep, particles) {
-        this.collide(particle, particles, timeStep);
-    }
-
-    /**
-     * @override
-     * @param {Particle} particle 
-     * @param {Particle[]} particles 
-     */
-	applyCorrection(particle, particles) {
-        this.collideCorrection(particle, particles);
-    }
-
 	/**
 	 * Perform the collision update of a `Particle` by calculating impulse based velocity and position changes. 
+     * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 * @param {Number} timeStep 
 	 */
-	collide(particle, particles, timeStep) {
+	applyBehavior(particle, timeStep, particles) {
 		let impulse = new Vector2D(0,0);
 		let position = particle.pos;
 		let mass = particle.mass;
@@ -56,61 +39,37 @@ class PenaltyCollision extends NearBehavior {
                 let c_velocity = circ.vel;
                 let c_radius = circ.radius;
 
-				let posDiff1 = position.sub(c_position);
-				let posDiffMagSqr = posDiff1.magSqr();
+				let dp = position.sub(c_position);
+				let posDiffMagSqr = dp.magSqr();
 				if (posDiffMagSqr < (radius + c_radius) * (radius + c_radius)) {
-					let massConst1 = 2 * c_mass / (mass + c_mass);
-					let vDiff1 = velocity.sub(c_velocity);
-					let dot1 = (vDiff1.dot(posDiff1)) / (posDiffMagSqr);
+                    let dpMag = dp.mag();
+                    dp.multTo(1 / dpMag);
+                    let dxMag = radius + c_radius - dpMag;
+                    let force = dp.mult(-this.stiffness * dxMag);
+            
+                    const a1 = force.mult(1 / c_mass);
+                    const a2 = force.mult(1 / mass);
+            
+                    a1.multTo(timeStep * timeStep);
+                    a2.multTo(timeStep * timeStep);
 
-					let massConst2 = 2 * mass / (mass + c_mass);
-					let vDiff2 = c_velocity.sub(velocity);
-					let posDiff2 = c_position.sub(position);
-					let dot2 = (vDiff2.dot(posDiff2)) / (posDiffMagSqr);
-					impulse.addTo(posDiff1.mult(dot1 * massConst1));
-					// idk why this works tbh but it just does
-					// circ.vel = c_velocity.sub(posDiff2.mult(dot2 * massConst2));
-					c_velocity.subTo(posDiff2.mult(dot2 * massConst2 * bounciness));
-					//circ.pos = circ.pos.sub(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
-					circ.pos.subTo(posDiff2.mult(dot2 * massConst2 * bounciness * timeStep));
+					impulse.addTo(a2);
+					circ.pos.addTo(a1);
 				}
 			}
 		}
-
-		//particle.vel = velocity.sub(impulse);
-		velocity.subTo(impulse.mult(bounciness));
-		//particle.pos = position.sub(impulse.mult(timeStep));
-		position.subTo(impulse.mult(timeStep * bounciness));
+		//velocity.subTo(impulse.mult(bounciness));
+		position.subTo(impulse.mult(bounciness));
 	}
 
 	/**
-	 * Performs the position-based correction after impulse collision. This ensures that particles are not stuck within each other.
+	 * Does not do anything
+     * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 */
-	collideCorrection(particle, particles) {
-		for (let circ of particles) {
-			if (circ != particle) {
-                let position = particle.pos;
-                let mass = particle.mass;
-                let radius = particle.radius;
-
-                let c_position = circ.pos;
-                let c_mass = circ.mass;
-                let c_radius = circ.radius;
-
-				let posDiff1 = position.sub(c_position);
-				if (posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius)) {
-					let direction1 = posDiff1.normalize();
-					let overlap = radius + c_radius - posDiff1.mag();
-
-					//circ.pos = circ.pos.sub(direction1.mult(overlap * mass / (mass + c_mass)));
-					c_position.subTo(direction1.mult(overlap * mass / (mass + c_mass)));
-					//particle.pos = position.add(direction1.mult(overlap * c_mass / (mass + c_mass)));
-					position.addTo(direction1.mult(overlap * c_mass / (mass + c_mass)));
-				}
-			}
-		}
+	applyCorrection(particle, particles) {
+        return;
 	}
 
    	/**
@@ -138,4 +97,4 @@ class PenaltyCollision extends NearBehavior {
 	}
 }
 
-module.exports = Collision;
+module.exports = PenaltyCollision;

@@ -6,6 +6,7 @@ const behaviors = module.exports;
 
 behaviors.ChargeInteraction = require("./ChargeInteraction");
 behaviors.Collision = require("./Collision");
+behaviors.PenaltyCollision = require("./PenaltyCollision");
 behaviors.Drag = require("./Drag");
 behaviors.Force = require("./Force");
 behaviors.Gravity = require("./Gravity");

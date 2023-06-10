@@ -1,6 +1,6 @@
 /*!
  * pphys2d 1.0.0 by @hanson-sun
- *   i need to make this
+ *   https://github.com/Hanson-Sun/particle-physics-engine
  *   License MIT
  *
  * The MIT License (MIT)
@@ -51,7 +51,7 @@ pphys.constraints = __webpack_require__(10);
 pphys.walls = __webpack_require__(14);
 pphys.core = __webpack_require__(18);
 pphys.behaviors = __webpack_require__(28);
-pphys.renderers = __webpack_require__(33);
+pphys.renderers = __webpack_require__(34);
 
 
 
@@ -1995,7 +1995,7 @@ class World {
      * Adds a SelfBehavior to all the particles
      * @param {SelfBehavior} b 
      */
-    addGlobalBehavior(b) {
+    addGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
             p.addSelfBehavior(b);
         }
@@ -2005,7 +2005,7 @@ class World {
      * Removes a SelfBehavior from all the particles
      * @param {SelfBehavior} b 
      */
-    removeGlobalBehavior(b) {
+    removeGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
             p.removeSelfBehavior(b);
         }
@@ -2041,7 +2041,7 @@ class World {
             this.disableGravity();
         }
         this.gravity = new Gravity(new Vector2D(0, num));
-        this.addGlobalBehavior(this.gravity);
+        this.addGlobalSelfBehavior(this.gravity);
     }
 
     /**
@@ -2050,7 +2050,7 @@ class World {
      */
     disableGravity() {
         if (this.gravity) {
-            this.removeGlobalBehavior(this.gravity);
+            this.removeGlobalSelfBehavior(this.gravity);
             return true;
         }
         return false;
@@ -2093,12 +2093,12 @@ class World {
             this.disableDrag();
         }
         this.dragBehavior = new Drag(viscosity);
-        this.addGlobalBehavior(this.dragBehavior);
+        this.addGlobalSelfBehavior(this.dragBehavior);
     }
 
     disableDrag() {
         if (this.dragBehavior) {
-            this.removeGlobalBehavior(this.dragBehavior);
+            this.removeGlobalSelfBehavior(this.dragBehavior);
             return true;
         }
         return false;
@@ -2114,7 +2114,7 @@ class World {
 
     disableChargeInteractions() {
         if (this.chargeBehavior) {
-            this.removeGlobalBehavior(this.chargeBehavior);
+            this.removeGlobalSelfBehavior(this.chargeBehavior);
             return true;
         }
         return false;
@@ -2182,32 +2182,14 @@ class Collision extends NearBehavior {
         super();
     }
 
-    /**
-     * @override
-     * @param {Particle} particle 
-     * @param {Number} timeStep 
-     * @param {Particle[]} particles 
-     */
-    applyBehavior(particle, timeStep, particles) {
-        this.collide(particle, particles, timeStep);
-    }
-
-    /**
-     * @override
-     * @param {Particle} particle 
-     * @param {Particle[]} particles 
-     */
-	applyCorrection(particle, particles) {
-        this.collideCorrection(particle, particles);
-    }
-
 	/**
 	 * Perform the collision update of a `Particle` by calculating impulse based velocity and position changes. 
+	 * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 * @param {Number} timeStep 
 	 */
-	collide(particle, particles, timeStep) {
+	applyBehavior(particle, timeStep, particles) {
 		let impulse = new Vector2D(0,0);
 		let position = particle.pos;
 		let mass = particle.mass;
@@ -2251,10 +2233,11 @@ class Collision extends NearBehavior {
 
 	/**
 	 * Performs the position-based correction after impulse collision. This ensures that particles are not stuck within each other.
+	 * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
 	 */
-	collideCorrection(particle, particles) {
+	applyCorrection(particle, particles) {
 		for (let circ of particles) {
 			if (circ != particle) {
                 let position = particle.pos;
@@ -2517,10 +2500,11 @@ const behaviors = module.exports;
 
 behaviors.ChargeInteraction = __webpack_require__(29);
 behaviors.Collision = __webpack_require__(22);
-behaviors.Drag = __webpack_require__(30);
-behaviors.Force = __webpack_require__(31);
+behaviors.PenaltyCollision = __webpack_require__(30);
+behaviors.Drag = __webpack_require__(31);
+behaviors.Force = __webpack_require__(32);
 behaviors.Gravity = __webpack_require__(27);
-behaviors.PositionLock = __webpack_require__(32);
+behaviors.PositionLock = __webpack_require__(33);
 behaviors.NearBehavior = __webpack_require__(7);
 behaviors.SelfBehavior = __webpack_require__(6);
 
@@ -2602,6 +2586,111 @@ module.exports = ChargeInteraction;
 /* 30 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const NearBehavior = __webpack_require__(7);
+
+/**
+ * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles using softer penalty forces.
+ * Collisions are basically spring constraints between particles when they collide. High stiffness values can lead to energy inconsistency, whereas 
+ * lower stiffness can cause poor colliding behavior between particles. Overall, this method is more stable in high density stacking simulations, 
+ * but performs worse in more dynamic scenarios.
+ */
+class PenaltyCollision extends NearBehavior {
+
+	/**
+	 * Instantiates new PenaltyCollision behavior object
+	 * @constructor
+	 */
+    constructor(stiffness) {
+        super();
+        this.stiffness = stiffness;
+    }
+
+	/**
+	 * Perform the collision update of a `Particle` by calculating impulse based velocity and position changes. 
+     * @override
+	 * @param {Particle} particle - particle with collision check
+	 * @param {Particle[]} particles - nearby particles that interact with `particle`
+	 * @param {Number} timeStep 
+	 */
+	applyBehavior(particle, timeStep, particles) {
+		let impulse = new Vector2D(0,0);
+		let position = particle.pos;
+		let mass = particle.mass;
+		let velocity = particle.vel;
+		let bounciness = particle.bounciness;
+		let radius = particle.radius;
+
+		for (let circ of particles) {
+			if (circ != particle) {
+                let c_position = circ.pos;
+                let c_mass = circ.mass;
+                let c_velocity = circ.vel;
+                let c_radius = circ.radius;
+
+				let dp = position.sub(c_position);
+				let posDiffMagSqr = dp.magSqr();
+				if (posDiffMagSqr < (radius + c_radius) * (radius + c_radius)) {
+                    let dpMag = dp.mag();
+                    dp.multTo(1 / dpMag);
+                    let dxMag = radius + c_radius - dpMag;
+                    let force = dp.mult(-this.stiffness * dxMag);
+            
+                    const a1 = force.mult(1 / c_mass);
+                    const a2 = force.mult(1 / mass);
+            
+                    a1.multTo(timeStep * timeStep);
+                    a2.multTo(timeStep * timeStep);
+
+					impulse.addTo(a2);
+					circ.pos.addTo(a1);
+				}
+			}
+		}
+		//velocity.subTo(impulse.mult(bounciness));
+		position.subTo(impulse.mult(bounciness));
+	}
+
+	/**
+	 * Does not do anything
+     * @override
+	 * @param {Particle} particle - particle with collision check
+	 * @param {Particle[]} particles - nearby particles that interact with `particle`
+	 */
+	applyCorrection(particle, particles) {
+        return;
+	}
+
+   	/**
+     * @override
+     * @returns {null}
+     */
+    range() {
+        return null;
+    }
+
+	/**
+	 * A static method that checks whether two particles are colliding
+	 * @param {Particle} p1 
+	 * @param {Particle} p2 
+	 * @returns boolean
+	 * @static
+	 */
+	static isCollide(p1, p2) {
+		let position = p1.pos;
+		let radius = p1.radius;
+		let c_position = p2.pos;
+		let c_radius = p2.radius;
+		let posDiff1 = position.sub(c_position);
+		return posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius);
+	}
+}
+
+module.exports = PenaltyCollision;
+
+/***/ }),
+/* 31 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
 const SelfBehavior = __webpack_require__(6);
 
 /**
@@ -2649,7 +2738,7 @@ class Drag extends SelfBehavior {
 module.exports = Drag;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(6);
@@ -2691,7 +2780,7 @@ class Force extends SelfBehavior {
 module.exports = Force;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(6);
@@ -2730,7 +2819,7 @@ class PositionLock extends SelfBehavior {
 module.exports = PositionLock;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**

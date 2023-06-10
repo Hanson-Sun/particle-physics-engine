@@ -1,0 +1,3529 @@
+{
+    "project": {},
+    "files": {
+        "src\\behaviors\\ChargeInteraction.js": {
+            "name": "src\\behaviors\\ChargeInteraction.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\Collision.js": {
+            "name": "src\\behaviors\\Collision.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\DeprecatedCollision.js": {
+            "name": "src\\behaviors\\DeprecatedCollision.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\Drag.js": {
+            "name": "src\\behaviors\\Drag.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\Force.js": {
+            "name": "src\\behaviors\\Force.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\Gravity.js": {
+            "name": "src\\behaviors\\Gravity.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\NearBehavior.js": {
+            "name": "src\\behaviors\\NearBehavior.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\PenaltyCollision.js": {
+            "name": "src\\behaviors\\PenaltyCollision.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\PositionLock.js": {
+            "name": "src\\behaviors\\PositionLock.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\SelfBehavior.js": {
+            "name": "src\\behaviors\\SelfBehavior.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\behaviors\\behaviors.js": {
+            "name": "src\\behaviors\\behaviors.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\constraints\\Constraint.js": {
+            "name": "src\\constraints\\Constraint.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\constraints\\ForceDistanceConstraint.js": {
+            "name": "src\\constraints\\ForceDistanceConstraint.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\constraints\\ForcePivotConstraint.js": {
+            "name": "src\\constraints\\ForcePivotConstraint.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\constraints\\PositionDistanceConstraint.js": {
+            "name": "src\\constraints\\PositionDistanceConstraint.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\constraints\\PositionPivotConstraint.js": {
+            "name": "src\\constraints\\PositionPivotConstraint.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\constraints\\constraints.js": {
+            "name": "src\\constraints\\constraints.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\core\\HashGridItem.js": {
+            "name": "src\\core\\HashGridItem.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\core\\Particle.js": {
+            "name": "src\\core\\Particle.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\core\\Solver.js": {
+            "name": "src\\core\\Solver.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\core\\SpatialHashGrid.js": {
+            "name": "src\\core\\SpatialHashGrid.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\core\\World.js": {
+            "name": "src\\core\\World.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\core\\core.js": {
+            "name": "src\\core\\core.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\module\\lisence.js": {
+            "name": "src\\module\\lisence.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\module\\module.js": {
+            "name": "src\\module\\module.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\renderers\\renderers.js": {
+            "name": "src\\renderers\\renderers.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\utils\\InputHandler.js": {
+            "name": "src\\utils\\InputHandler.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\utils\\Vector2D.js": {
+            "name": "src\\utils\\Vector2D.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\utils\\utils.js": {
+            "name": "src\\utils\\utils.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\walls\\RectangularWorldBoundary.js": {
+            "name": "src\\walls\\RectangularWorldBoundary.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\walls\\Wall.js": {
+            "name": "src\\walls\\Wall.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\walls\\WallBoundary.js": {
+            "name": "src\\walls\\WallBoundary.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src\\walls\\walls.js": {
+            "name": "src\\walls\\walls.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {},
+    "elements": {},
+    "classitems": [
+        {
+            "file": "src\\behaviors\\ChargeInteraction.js",
+            "line": 3,
+            "description": "`ChargeInteraction` is a NearBehavior that calculates the charge repulsion/attraction forces between \"nearby\" particles.\nIt follows Coulomb's law with `k=2`, which is arbitrarily chosen. Although charge interactions have infinite range, the default\neffective radius for this behavior is set to 100000 pixels. Many charge interactions can lead to instability.",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\ChargeInteraction.js",
+            "line": 9,
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\ChargeInteraction.js",
+            "line": 18,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\ChargeInteraction.js",
+            "line": 51,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "[Number, Number]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\ChargeInteraction.js",
+            "line": 59,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Collision.js",
+            "line": 3,
+            "description": "`Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.\nCollisions operate on impulse-based dynamics and are quite stiff. There are some potential issues with collision instability\nwhen too much force / number of collisions stack.",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Collision.js",
+            "line": 10,
+            "description": "Instantiates new Collision behavior object",
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Collision.js",
+            "line": 18,
+            "description": "Perform the collision update of a `Particle` by calculating impulse based velocity and position changes.",
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "- particle with collision check",
+                    "type": "Particle"
+                },
+                {
+                    "name": "particles",
+                    "description": "- nearby particles that interact with `particle`",
+                    "type": "Particle[]"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Collision.js",
+            "line": 67,
+            "description": "Performs the position-based correction after impulse collision. This ensures that particles are not stuck within each other.",
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "- particle with collision check",
+                    "type": "Particle"
+                },
+                {
+                    "name": "particles",
+                    "description": "- nearby particles that interact with `particle`",
+                    "type": "Particle[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Collision.js",
+            "line": 98,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Null"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Collision.js",
+            "line": 106,
+            "description": "A static method that checks whether two particles are colliding",
+            "params": [
+                {
+                    "name": "p1",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "p2",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "return": {
+                "description": "boolean"
+            },
+            "static": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\DeprecatedCollision.js",
+            "line": 8,
+            "params": [
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "*"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Drag.js",
+            "line": 3,
+            "description": "`Drag` is a `SelfBehavior` that applies a viscous drag force on the particle itself.\nIt generally follows the circular quadratic drag formula in turbulent fluids. Units are arbitrary and should be tuned experimentally.",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Drag.js",
+            "line": 8,
+            "description": "Instantiates new Drag behavior object",
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Drag.js",
+            "line": 18,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Drag.js",
+            "line": 36,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Force.js",
+            "line": 3,
+            "description": "`Force` is a `SelfBehavior` that applies a constant force on the particle.",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Force.js",
+            "line": 7,
+            "description": "Instantiates new Force behavior object",
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Force.js",
+            "line": 16,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Force.js",
+            "line": 27,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Gravity.js",
+            "line": 3,
+            "description": "`Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Gravity.js",
+            "line": 7,
+            "description": "Instantiates new Gravity behavior object",
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Gravity.js",
+            "line": 16,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\Gravity.js",
+            "line": 26,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\NearBehavior.js",
+            "line": 1,
+            "description": "Abstract class that represents nearby interactions. This type behavior will influence, or is dependent on a set of particles in its near proximity",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\NearBehavior.js",
+            "line": 5,
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\NearBehavior.js",
+            "line": 14,
+            "description": "Apply behavior on `particle` and/or `particles`",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "main particle",
+                    "type": "Particle"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "time step of simulation",
+                    "type": "Number"
+                },
+                {
+                    "name": "particles",
+                    "description": "surrounding particles",
+                    "type": "Particle[]"
+                }
+            ],
+            "abstract": "",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\NearBehavior.js",
+            "line": 25,
+            "description": "Returns the effective range / defines the size of the nearby range",
+            "return": {
+                "description": "pair of rectangular dimensions that represent the effective range",
+                "type": "[Number, Number]"
+            },
+            "abstract": "",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\NearBehavior.js",
+            "line": 34,
+            "description": "Apply a positional correction to `particle` and/or `particles`",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                }
+            ],
+            "abstract": "",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PenaltyCollision.js",
+            "line": 3,
+            "description": "`Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles using softer penalty forces.\nCollisions are basically spring constraints between particles when they collide. High stiffness values can lead to energy inconsistency, whereas \nlower stiffness can cause poor colliding behavior between particles. Overall, this method is more stable in high density stacking simulations, \nbut performs worse in more dynamic scenarios.",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PenaltyCollision.js",
+            "line": 11,
+            "description": "Instantiates new PenaltyCollision behavior object",
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PenaltyCollision.js",
+            "line": 20,
+            "description": "Perform the collision update of a `Particle` by calculating impulse based velocity and position changes.",
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "- particle with collision check",
+                    "type": "Particle"
+                },
+                {
+                    "name": "particles",
+                    "description": "- nearby particles that interact with `particle`",
+                    "type": "Particle[]"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PenaltyCollision.js",
+            "line": 65,
+            "description": "Does not do anything",
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "- particle with collision check",
+                    "type": "Particle"
+                },
+                {
+                    "name": "particles",
+                    "description": "- nearby particles that interact with `particle`",
+                    "type": "Particle[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PenaltyCollision.js",
+            "line": 75,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Null"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PenaltyCollision.js",
+            "line": 83,
+            "description": "A static method that checks whether two particles are colliding",
+            "params": [
+                {
+                    "name": "p1",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "p2",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "return": {
+                "description": "boolean"
+            },
+            "static": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PositionLock.js",
+            "line": 3,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PositionLock.js",
+            "line": 7,
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PositionLock.js",
+            "line": 15,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\PositionLock.js",
+            "line": 24,
+            "override": "",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\SelfBehavior.js",
+            "line": 1,
+            "description": "Abstract class that represents self interactions. These behaviors are only dependent on the singular particle it is attached to.",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\SelfBehavior.js",
+            "line": 5,
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\SelfBehavior.js",
+            "line": 14,
+            "description": "Apply behavior on `particle`",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "abstract": "",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\SelfBehavior.js",
+            "line": 24,
+            "description": "Apply a positional correction to `particle`",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "abstract": "",
+            "class": ""
+        },
+        {
+            "file": "src\\behaviors\\behaviors.js",
+            "line": 1,
+            "description": "Node module export for the the behaviors directory.",
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\Constraint.js",
+            "line": 3,
+            "description": "Interface for all Constraints",
+            "interface": "",
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\Constraint.js",
+            "line": 8,
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\Constraint.js",
+            "line": 20,
+            "description": "Updates the constraint.",
+            "params": [
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\Constraint.js",
+            "line": 28,
+            "description": "Calculates the list of vertices that will be used in the rendering process",
+            "return": {
+                "description": "",
+                "type": "Vector2D[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\Constraint.js",
+            "line": 36,
+            "description": "Calculates the list of particles that is involved with the constraint",
+            "return": {
+                "description": "",
+                "type": "Particle[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForceDistanceConstraint.js",
+            "line": 5,
+            "description": "`ForceDistanceConstraint` is a `Constraint` that constrains the distance between two particles.\nIt uses a force-based implementation and can be thought of as a spring between two particles.\nIn general, energy conservation is better at lower stiffness, and it can behave unstable or \nenergetically inconsistent at higher stiffness.",
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForceDistanceConstraint.js",
+            "line": 12,
+            "description": "Instantiates new `ForceDistanceConstraint`",
+            "params": [
+                {
+                    "name": "c1",
+                    "description": "- particle 1",
+                    "type": "Particle"
+                },
+                {
+                    "name": "c2",
+                    "description": "- particle 2",
+                    "type": "Particle"
+                },
+                {
+                    "name": "len",
+                    "description": "- constrained length",
+                    "type": "Number"
+                },
+                {
+                    "name": "stiffness",
+                    "description": "- the \"spring constant\", higher values are more stiff",
+                    "type": "Number"
+                },
+                {
+                    "name": "dampening",
+                    "description": "- damping force on constraint, must be greater than 0",
+                    "type": "Number"
+                },
+                {
+                    "name": "breakForce",
+                    "description": "- force at which the constraint breaks",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForceDistanceConstraint.js",
+            "line": 35,
+            "override": "",
+            "params": [
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForceDistanceConstraint.js",
+            "line": 64,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Vector2D[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForceDistanceConstraint.js",
+            "line": 72,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Particle[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForcePivotConstraint.js",
+            "line": 5,
+            "description": "`ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a \npoint in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.",
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForcePivotConstraint.js",
+            "line": 10,
+            "description": "Instantiates new `ForcePivotConstraint`",
+            "params": [
+                {
+                    "name": "pos",
+                    "description": "- position of pivot",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "c1",
+                    "description": "- constrained particle",
+                    "type": "Particle"
+                },
+                {
+                    "name": "len",
+                    "description": "- constrained length",
+                    "type": "Number"
+                },
+                {
+                    "name": "stiffness",
+                    "description": "- the \"spring constant\", higher values are more stiff",
+                    "type": "Number"
+                },
+                {
+                    "name": "dampening",
+                    "description": "- damping force on constraint, must be greater than 0",
+                    "type": "Number"
+                },
+                {
+                    "name": "breakForce",
+                    "description": "- force at which the constraint breaks",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForcePivotConstraint.js",
+            "line": 34,
+            "override": "",
+            "params": [
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForcePivotConstraint.js",
+            "line": 57,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Vector2D[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\ForcePivotConstraint.js",
+            "line": 65,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Particle[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionDistanceConstraint.js",
+            "line": 5,
+            "description": "`PositionDistanceConstraint` is a `Constraint` that constrains the distance between two particles using a purely position-based method.\nThis implementation is more energetically stable; however, it is also less energy conservative and cannot be affected by damping. \nThe stiffness parameters are closer to a relaxation factor in [0,1]. Similar to other constraints, the stiffer this constraint, \nthe less energy conservative it becomes. There is no \"force\" attached to this type of constraint, so a pseudo-force value is arbitrary\ncalculated for any force based analysis.",
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionDistanceConstraint.js",
+            "line": 13,
+            "description": "Instantiates new `PositionDistanceConstraint`",
+            "params": [
+                {
+                    "name": "c1",
+                    "description": "- particle 1",
+                    "type": "Particle"
+                },
+                {
+                    "name": "c2",
+                    "description": "- particle 2",
+                    "type": "Particle"
+                },
+                {
+                    "name": "len",
+                    "description": "- constrained length",
+                    "type": "Number"
+                },
+                {
+                    "name": "stiffness",
+                    "description": "- a relaxation parameter that is stable between [0,1] (higher is more stiff)",
+                    "type": "Number"
+                },
+                {
+                    "name": "breakForce",
+                    "description": "- force at which the constraint breaks",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionDistanceConstraint.js",
+            "line": 33,
+            "override": "",
+            "params": [
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionDistanceConstraint.js",
+            "line": 59,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Vector2D[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionDistanceConstraint.js",
+            "line": 67,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Particle[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionPivotConstraint.js",
+            "line": 5,
+            "description": "`PositionPivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a \npoint in space. The implementation of this constraint is position-based like that of `PositionDistanceConstraint`.",
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionPivotConstraint.js",
+            "line": 10,
+            "description": "Instantiates new `PositionPivotConstraint`",
+            "params": [
+                {
+                    "name": "pos",
+                    "description": "- position of pivot",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "c1",
+                    "description": "- constrained particle",
+                    "type": "Particle"
+                },
+                {
+                    "name": "len",
+                    "description": "- constrained length",
+                    "type": "Number"
+                },
+                {
+                    "name": "stiffness",
+                    "description": "- a relaxation parameter that is stable between [0,1] (higher is more stiff)",
+                    "type": "Number"
+                },
+                {
+                    "name": "breakForce",
+                    "description": "- force at which the constraint breaks",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionPivotConstraint.js",
+            "line": 30,
+            "override": "",
+            "params": [
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionPivotConstraint.js",
+            "line": 51,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Vector2D[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\PositionPivotConstraint.js",
+            "line": 59,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Particle[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\constraints\\constraints.js",
+            "line": 1,
+            "description": "Node module exports for the constraints directory",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\HashGridItem.js",
+            "line": 1,
+            "description": "Interface for all items that can be used with a `HashGrid`.",
+            "interface": "",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\HashGridItem.js",
+            "line": 11,
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "src\\core\\HashGridItem.js",
+            "line": 20,
+            "description": "Computes the coordinate position for the item within the `HashGrid`, expects center position.",
+            "abstract": "",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\HashGridItem.js",
+            "line": 29,
+            "description": "Computes the dimensions of the item for the `HashGrid`.",
+            "abstract": "",
+            "return": {
+                "description": "rectangular dimensions in [width, height]",
+                "type": "Number[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 6,
+            "description": "`Particle` is the main object of this physics engine. It is a 2D circle that is treated like a point mass at the center\nand does **not** rotate. `Particle` is also a `HashGridItem` so it can be added to a `SpatialHashGrid`.",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 12,
+            "description": "Instantiates new `Particle`",
+            "params": [
+                {
+                    "name": "pos",
+                    "description": "cartesian coordinates of the particle",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "vel",
+                    "description": "velocity of the particle",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "mass",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "radius",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "bounciness",
+                    "description": "a value in [0,1] that represents the amount of energy retained after collision",
+                    "type": "Number"
+                },
+                {
+                    "name": "charge",
+                    "description": "similar to real physical charge",
+                    "type": "Number"
+                },
+                {
+                    "name": "color",
+                    "description": "currently only supports HTML canvas colors format",
+                    "type": "String"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 38,
+            "description": "Increments the position by velocity `v`",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 47,
+            "description": "Applies force `f` to the velocity",
+            "params": [
+                {
+                    "name": "f",
+                    "description": "",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 56,
+            "description": "Increments the velocity by an acceleration `a`",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 65,
+            "description": "Adds a `SelfBehavior` to the particle",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "SelfBehavior"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 73,
+            "description": "Adds a `NearBehavior` to the particle",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "NearBehavior"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 81,
+            "description": "Removes `NearBehavior` `b` if the particle has `b`",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "NearBehavior"
+                }
+            ],
+            "return": {
+                "description": "true if the action is successful",
+                "type": "Boolean"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 95,
+            "description": "Removes `SelfBehavior` `b` if the particle has `b`",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "SelfBehavior"
+                }
+            ],
+            "return": {
+                "description": "true if the action is successful",
+                "type": "Boolean"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 109,
+            "description": "Clears all behaviors of the particle",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 117,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Particle.js",
+            "line": 125,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "Number[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 6,
+            "description": "`Solver` is the discrete solver algorithm that calculates the movement of the physics world. It uses a modified \npredictive-corrective semi-implicit Euler implementation. Because this is a local iterative solver, there may be \ndivergence issues at higher timeSteps and convergence can be tuned with the iterationPerFrame.",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 12,
+            "description": "Instantiates new `Solver`",
+            "params": [
+                {
+                    "name": "timeStep",
+                    "description": "the change in time per frame (smaller is more accurate)",
+                    "type": "Number"
+                },
+                {
+                    "name": "iterationPerFrame",
+                    "description": "the amount of time the solver is called per frame (**not** substepping, timeStep remains constant)",
+                    "type": "Number"
+                },
+                {
+                    "name": "constraintIteration",
+                    "description": "the amount of times the constraints are solved per frame",
+                    "type": "Number"
+                },
+                {
+                    "name": "particles",
+                    "description": "SpatialHashGrid of particles",
+                    "type": "SpatialHashGrid"
+                },
+                {
+                    "name": "constraints",
+                    "description": "list of constraints",
+                    "type": "Constraint[]"
+                },
+                {
+                    "name": "walls",
+                    "description": "list of walls",
+                    "type": "Wall[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 33,
+            "description": "Solves one iteration of the current physics world",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 51,
+            "description": "Optional function that can be defined to exhibit certain behavior in the solve loop.",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 58,
+            "description": "Move particle positions forward to the \"future-position\"",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 68,
+            "description": "Solve physics interactions from Behaviors",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 84,
+            "description": "Solve physics interactions from Constraints",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 102,
+            "description": "Solve collision interactions with Walls",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 111,
+            "description": "Update final particle velocities",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 121,
+            "description": "Correct particle positions",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 143,
+            "description": "Computes next frame or \"world-state\"",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\Solver.js",
+            "line": 152,
+            "description": "Update the particle positions in the SpatialHashGrid",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 1,
+            "description": "The `SpatialHashGrid` is is a data structure that stores and sorts items into distinct \"2D grids\".\nIt allows for the quick access of nearby items without brute force iteration.\nThis data structure can increase performance by ~100x for sufficiently large collision interactions in close proximity. \nNote that this data structure is not directly iterable.\n \n**Important:** Only items that implement the `HashGridItem` interface are compatible with the `SpatialHashGrid`.",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 13,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "width",
+                    "description": "width of HashGrid",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "height of HashGrid",
+                    "type": "Number"
+                },
+                {
+                    "name": "xGrids",
+                    "description": "number of grid separations on the x-axis",
+                    "type": "Int"
+                },
+                {
+                    "name": "yGrids",
+                    "description": "optional param number of grid separations on the y-axis, defaults to same as xGrids",
+                    "type": "Int",
+                    "optional": true,
+                    "optdefault": "null"
+                }
+            ],
+            "access": "public",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 31,
+            "description": "Adds an item to the HashGrid.",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "",
+                    "type": "HashGridItem"
+                }
+            ],
+            "access": "public",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 40,
+            "description": "Private method that initializes 2D grid.",
+            "access": "private",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 54,
+            "description": "Private method that inserts the item into its corresponding grid cell",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "",
+                    "type": "HashGridItem"
+                }
+            ],
+            "access": "private",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 75,
+            "description": "Finds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "grid coordinates",
+                "type": "[int, int]"
+            },
+            "access": "private",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 92,
+            "description": "Finds the nearby items for a given item, and updates the queryId.",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "",
+                    "type": "HashGridItem"
+                },
+                {
+                    "name": "range",
+                    "description": "- optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.",
+                    "type": "[Number, Number]"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "HashGridItem[]"
+            },
+            "access": "public",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 125,
+            "description": "Updates the grid positions of the item within the HashGrid. This function **MUST** be called after any position change.",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "",
+                    "type": "HashGridItem"
+                }
+            ],
+            "access": "public",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 150,
+            "description": "Delete item from HashGrid.",
+            "modifies": "this",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "",
+                    "type": "HashGridItem"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\SpatialHashGrid.js",
+            "line": 165,
+            "description": "Returns a unique list of all HashGridItems the HashGrid.",
+            "modifies": "this",
+            "return": {
+                "description": "",
+                "type": "HashGridItem[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 9,
+            "description": "`World` the global-state instance of the physics engine that keeps track of all the objects. This provides\na higher level of abstraction from the user but may be limiting in some ways. It is a good idea to extend and \noverride this class for any specific properties. With the current SpatialHashing algorithm, the world should have\nfinite bounds.",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 16,
+            "description": "Instantiates new `World` instance",
+            "params": [
+                {
+                    "name": "canvas",
+                    "description": "HTML canvas where the elements are displayed",
+                    "type": "HTMLCanvasElement"
+                },
+                {
+                    "name": "width",
+                    "description": "width of world",
+                    "type": "Number"
+                },
+                {
+                    "name": "height",
+                    "description": "height of world",
+                    "type": "Number"
+                },
+                {
+                    "name": "xGrids",
+                    "description": "integer number of grid separations in the x direction",
+                    "type": "Number"
+                },
+                {
+                    "name": "yGrids",
+                    "description": "integer number of grid separations in the y direction",
+                    "type": "Number"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "change in time per solve iteration",
+                    "type": "Number"
+                },
+                {
+                    "name": "iterationPerFrame",
+                    "description": "number of solve iterations per frame",
+                    "type": "Number"
+                },
+                {
+                    "name": "constraintIteration",
+                    "description": "number of times constraints are solved per iteration",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 49,
+            "description": "Adds a particle to the world",
+            "params": [
+                {
+                    "name": "p",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 58,
+            "description": "Removes a particle from the world",
+            "params": [
+                {
+                    "name": "p",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 78,
+            "description": "Adds a constraint to the world",
+            "params": [
+                {
+                    "name": "c",
+                    "description": "",
+                    "type": "Constraint"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 86,
+            "description": "Removes a constraint from the world",
+            "params": [
+                {
+                    "name": "c",
+                    "description": "",
+                    "type": "Constraint"
+                }
+            ],
+            "return": {
+                "description": "true if the constraint is removed",
+                "type": "Boolean"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 100,
+            "description": "Adds a wall to the world",
+            "params": [
+                {
+                    "name": "w",
+                    "description": "",
+                    "type": "Wall"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 117,
+            "description": "Clears all of the particles and constraints",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 127,
+            "description": "Clears all of the constraints",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 141,
+            "description": "Update the list of particles. Must be called every time the number of particles change.",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 149,
+            "description": "Adds a SelfBehavior to all the particles",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "SelfBehavior"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 159,
+            "description": "Removes a SelfBehavior from all the particles",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "SelfBehavior"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 169,
+            "description": "Adds a NearBehavior to all the particles",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "NearBehavior"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 179,
+            "description": "Removes a NearBehavior to all the particles",
+            "params": [
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "NearBehavior"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 189,
+            "description": "Disables gravity and adds a new global gravity behavior to all the particles, while updating \nthe gravity pointer",
+            "params": [
+                {
+                    "name": "num",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 202,
+            "description": "Removes the global gravity behavior",
+            "return": {
+                "description": "true if gravity is successfully disabled",
+                "type": "Boolean"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 214,
+            "description": "Progresses world to next area",
+            "class": ""
+        },
+        {
+            "file": "src\\core\\World.js",
+            "line": 306,
+            "params": [
+                {
+                    "name": "update",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\core\\core.js",
+            "line": 1,
+            "description": "Node module exports for the core directory",
+            "class": ""
+        },
+        {
+            "file": "src\\module\\lisence.js",
+            "line": 1,
+            "description": "The MIT License (MIT)\n\nCopyright (c) Hanson Sun.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.",
+            "class": ""
+        },
+        {
+            "file": "src\\module\\module.js",
+            "line": 1,
+            "description": "Node module encapsulation and export for entire physics engine",
+            "class": ""
+        },
+        {
+            "file": "src\\renderers\\renderers.js",
+            "line": 1,
+            "description": "Node module exports for the renderers directory",
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\InputHandler.js",
+            "line": 5,
+            "description": "Will only work inside a website --> Node version wont work.",
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 1,
+            "description": "Vector2D is a light-weight 2D vector class that implements several vector operations.\n\n**Note**: modifying \"to\" methods that do not return a new Vector2D are more efficient.",
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 7,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 17,
+            "description": "returns a new added vector denoted by `this + v`.",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "vector to be added",
+                    "type": "Vector2D"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Vector2D"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 26,
+            "description": "adds a vector to the current vector (`this = this + v`).",
+            "modifies": "this",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "Vector2D"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 36,
+            "description": "returns a new subtracted vector denoted by `this - v`.",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "vector to be added",
+                    "type": "Vector2D"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Vector2D"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 45,
+            "description": "subtracts a vector to the current vector (`this = this - v`).",
+            "modifies": "this",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "Vector2D"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 55,
+            "description": "returns a new scalar-multiplied vector denoted by `this * a`.",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "scalar multiple",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Vector2D"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 64,
+            "description": "multiplies a scalar to the current vector (`this = this * a`).",
+            "modifies": "this",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 74,
+            "description": "returns the dot product of two vectors (`this` and `v`).",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "Vector2D"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 83,
+            "description": "returns the \"cross-product\" of two vectors (`this` and `v`). Since these are 2D vectors, this is the \nz-coordinate of the 3D counter parts of these 2D vectors. It returns a scalar.",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "Vector2D"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 93,
+            "description": "returns the magnitude of the vector.",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 102,
+            "description": "returns the magnitude squared of the vector.",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 110,
+            "description": "returns a new normalized Vector2D.",
+            "return": {
+                "description": "",
+                "type": "Vector2D"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 119,
+            "description": "normalizes the `this` Vector2D.",
+            "modifies": "this",
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 129,
+            "description": "return the angle between `this` and v.",
+            "params": [
+                {
+                    "name": "v",
+                    "description": "",
+                    "type": "Vector2D"
+                },
+                {
+                    "name": "type",
+                    "description": "default set to `true` to return radians. Setting to false will return `degrees`.",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 145,
+            "description": "Performs the mirror reflection for `this` about a normal vector.",
+            "params": [
+                {
+                    "name": "normal",
+                    "description": "",
+                    "type": "Vector2D"
+                }
+            ],
+            "return": {
+                "description": "Vector2D"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\Vector2D.js",
+            "line": 157,
+            "description": "Performs the mirror reflection for `this` about a normal vector. (modifies self)",
+            "params": [
+                {
+                    "name": "normal",
+                    "description": "",
+                    "type": "Vector2D"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\utils\\utils.js",
+            "line": 1,
+            "description": "Node module exports for the utils directory (i think ill add more later...)",
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 3,
+            "description": "`RectangularWorldBoundary` is a rectangular bounding box that constrains all particles *within* the boundaries.\nThe implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. \nSince the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not\njust particles surrounding the edge.",
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 11,
+            "params": [
+                {
+                    "name": "minW",
+                    "description": "left x position (smaller value)",
+                    "type": "Number"
+                },
+                {
+                    "name": "maxW",
+                    "description": "right x position (larger value)",
+                    "type": "Number"
+                },
+                {
+                    "name": "minH",
+                    "description": "top y position (smaller value)",
+                    "type": "Number"
+                },
+                {
+                    "name": "maxH",
+                    "description": "bottom y position (larger value)",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 26,
+            "override": "",
+            "params": [
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 62,
+            "override": "",
+            "params": [
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 87,
+            "description": "Checks if a Particle is colliding with the Wall",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "return": {
+                "description": "true if particle is colliding with wall",
+                "type": "Boolean"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 103,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "[Number, Number]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 111,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "[Number, Number]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\RectangularWorldBoundary.js",
+            "line": 119,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "[Vector2D, Vector2D]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\Wall.js",
+            "line": 3,
+            "description": "`Wall` is an Interface for any wall objects. Walls are `HashGridItems`; however, it only uses the SpatialHashGrid methods\nthat calculate the particles in its close proximity and **cannot** be added to the grid itself. Wall objects\nare also stationary and are not influenced by any external factors.",
+            "interface": "",
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\Wall.js",
+            "line": 10,
+            "description": "Instantiates new `Wall`",
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\Wall.js",
+            "line": 20,
+            "description": "Resolve the collisions between the surrounding particles and the Wall itself.",
+            "params": [
+                {
+                    "name": "particles",
+                    "description": "surrounding particles that interact with the wall",
+                    "type": "Particle[]"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\Wall.js",
+            "line": 29,
+            "description": "Applies positional corrections on particles (walls do not move)",
+            "params": [
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\Wall.js",
+            "line": 37,
+            "description": "Calculates the vertices of the wall",
+            "return": {
+                "description": "",
+                "type": "Vector2D[]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 4,
+            "description": "`WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions\nare generally meant to be immutable since the normal vector is calculated upon instantiation. However, wall position\ncan be modified with some care.",
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 11,
+            "description": "Instantiates new `WallBoundary`",
+            "params": [
+                {
+                    "name": "x1",
+                    "description": "x-position of first vertex",
+                    "type": "*"
+                },
+                {
+                    "name": "y1",
+                    "description": "y-position of first vertex",
+                    "type": "*"
+                },
+                {
+                    "name": "x2",
+                    "description": "x-position of second vertex",
+                    "type": "*"
+                },
+                {
+                    "name": "y2",
+                    "description": "y-position of second vertex",
+                    "type": "*"
+                },
+                {
+                    "name": "width",
+                    "description": "rendered line width of wall (does not effect physics)",
+                    "type": "*"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 29,
+            "override": "",
+            "params": [
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                },
+                {
+                    "name": "timeStep",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 92,
+            "override": "",
+            "params": [
+                {
+                    "name": "particles",
+                    "description": "",
+                    "type": "Particle[]"
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 135,
+            "description": "Checks if a Particle is colliding with the Wall",
+            "params": [
+                {
+                    "name": "particle",
+                    "description": "",
+                    "type": "Particle"
+                }
+            ],
+            "return": {
+                "description": "true if particle is colliding with wall",
+                "type": "Boolean"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 169,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "[Number, Number]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 177,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "[Number, Number]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\WallBoundary.js",
+            "line": 185,
+            "override": "",
+            "return": {
+                "description": "",
+                "type": "[Vector2D, Vector2D]"
+            },
+            "class": ""
+        },
+        {
+            "file": "src\\walls\\walls.js",
+            "line": 1,
+            "description": "Node module exports for the walls directory",
+            "class": ""
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\ChargeInteraction.js:18"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\ChargeInteraction.js:51"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\behaviors\\ChargeInteraction.js:51"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\ChargeInteraction.js:59"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Collision.js:18"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Collision.js:67"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Collision.js:98"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\behaviors\\Collision.js:98"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\behaviors\\Collision.js:106"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Drag.js:18"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Drag.js:36"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Force.js:16"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Force.js:27"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Gravity.js:16"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\Gravity.js:26"
+        },
+        {
+            "message": "unknown tag: abstract",
+            "line": " src\\behaviors\\NearBehavior.js:14"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\behaviors\\NearBehavior.js:25"
+        },
+        {
+            "message": "unknown tag: abstract",
+            "line": " src\\behaviors\\NearBehavior.js:25"
+        },
+        {
+            "message": "unknown tag: abstract",
+            "line": " src\\behaviors\\NearBehavior.js:34"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\PenaltyCollision.js:20"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\PenaltyCollision.js:65"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\PenaltyCollision.js:75"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\behaviors\\PenaltyCollision.js:75"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\behaviors\\PenaltyCollision.js:83"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\PositionLock.js:15"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\behaviors\\PositionLock.js:24"
+        },
+        {
+            "message": "unknown tag: abstract",
+            "line": " src\\behaviors\\SelfBehavior.js:14"
+        },
+        {
+            "message": "unknown tag: abstract",
+            "line": " src\\behaviors\\SelfBehavior.js:24"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\Constraint.js:28"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\Constraint.js:36"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:35"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:64"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:64"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:72"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:72"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\ForcePivotConstraint.js:34"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\ForcePivotConstraint.js:57"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\ForcePivotConstraint.js:57"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\ForcePivotConstraint.js:65"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\ForcePivotConstraint.js:65"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:33"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:59"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:59"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:67"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:67"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\PositionPivotConstraint.js:30"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\PositionPivotConstraint.js:51"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\PositionPivotConstraint.js:51"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\constraints\\PositionPivotConstraint.js:59"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\constraints\\PositionPivotConstraint.js:59"
+        },
+        {
+            "message": "unknown tag: abstract",
+            "line": " src\\core\\HashGridItem.js:20"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\HashGridItem.js:20"
+        },
+        {
+            "message": "unknown tag: abstract",
+            "line": " src\\core\\HashGridItem.js:29"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\HashGridItem.js:29"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\Particle.js:81"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\Particle.js:95"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\core\\Particle.js:117"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\Particle.js:117"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\core\\Particle.js:125"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\Particle.js:125"
+        },
+        {
+            "message": "unknown tag: access",
+            "line": " src\\core\\SpatialHashGrid.js:13"
+        },
+        {
+            "message": "unknown tag: access",
+            "line": " src\\core\\SpatialHashGrid.js:31"
+        },
+        {
+            "message": "unknown tag: access",
+            "line": " src\\core\\SpatialHashGrid.js:40"
+        },
+        {
+            "message": "unknown tag: access",
+            "line": " src\\core\\SpatialHashGrid.js:54"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\SpatialHashGrid.js:75"
+        },
+        {
+            "message": "unknown tag: access",
+            "line": " src\\core\\SpatialHashGrid.js:75"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\SpatialHashGrid.js:92"
+        },
+        {
+            "message": "unknown tag: access",
+            "line": " src\\core\\SpatialHashGrid.js:92"
+        },
+        {
+            "message": "unknown tag: access",
+            "line": " src\\core\\SpatialHashGrid.js:125"
+        },
+        {
+            "message": "unknown tag: modifies",
+            "line": " src\\core\\SpatialHashGrid.js:150"
+        },
+        {
+            "message": "unknown tag: modifies",
+            "line": " src\\core\\SpatialHashGrid.js:165"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\SpatialHashGrid.js:165"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\World.js:86"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\core\\World.js:202"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:17"
+        },
+        {
+            "message": "unknown tag: modifies",
+            "line": " src\\utils\\Vector2D.js:26"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:36"
+        },
+        {
+            "message": "unknown tag: modifies",
+            "line": " src\\utils\\Vector2D.js:45"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:55"
+        },
+        {
+            "message": "unknown tag: modifies",
+            "line": " src\\utils\\Vector2D.js:64"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:74"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:83"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:93"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:102"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:110"
+        },
+        {
+            "message": "unknown tag: modifies",
+            "line": " src\\utils\\Vector2D.js:119"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:129"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\utils\\Vector2D.js:145"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\RectangularWorldBoundary.js:26"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\RectangularWorldBoundary.js:62"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\RectangularWorldBoundary.js:87"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\RectangularWorldBoundary.js:103"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\RectangularWorldBoundary.js:103"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\RectangularWorldBoundary.js:111"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\RectangularWorldBoundary.js:111"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\RectangularWorldBoundary.js:119"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\RectangularWorldBoundary.js:119"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\Wall.js:37"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\WallBoundary.js:29"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\WallBoundary.js:92"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\WallBoundary.js:135"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\WallBoundary.js:169"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\WallBoundary.js:169"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\WallBoundary.js:177"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\WallBoundary.js:177"
+        },
+        {
+            "message": "unknown tag: override",
+            "line": " src\\walls\\WallBoundary.js:185"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\walls\\WallBoundary.js:185"
+        },
+        {
+            "message": "Missing item type\n`ChargeInteraction` is a NearBehavior that calculates the charge repulsion/attraction forces between \"nearby\" particles.\nIt follows Coulomb's law with `k=2`, which is arbitrarily chosen. Although charge interactions have infinite range, the default\neffective radius for this behavior is set to 100000 pixels. Many charge interactions can lead to instability.",
+            "line": " src\\behaviors\\ChargeInteraction.js:3"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\ChargeInteraction.js:9"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\ChargeInteraction.js:18"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\ChargeInteraction.js:51"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\ChargeInteraction.js:59"
+        },
+        {
+            "message": "Missing item type\n`Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.\nCollisions operate on impulse-based dynamics and are quite stiff. There are some potential issues with collision instability\nwhen too much force / number of collisions stack.",
+            "line": " src\\behaviors\\Collision.js:3"
+        },
+        {
+            "message": "Missing item type\nInstantiates new Collision behavior object",
+            "line": " src\\behaviors\\Collision.js:10"
+        },
+        {
+            "message": "Missing item type\nPerform the collision update of a `Particle` by calculating impulse based velocity and position changes.",
+            "line": " src\\behaviors\\Collision.js:18"
+        },
+        {
+            "message": "Missing item type\nPerforms the position-based correction after impulse collision. This ensures that particles are not stuck within each other.",
+            "line": " src\\behaviors\\Collision.js:67"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\Collision.js:98"
+        },
+        {
+            "message": "Missing item type\nA static method that checks whether two particles are colliding",
+            "line": " src\\behaviors\\Collision.js:106"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\DeprecatedCollision.js:8"
+        },
+        {
+            "message": "Missing item type\n`Drag` is a `SelfBehavior` that applies a viscous drag force on the particle itself.\nIt generally follows the circular quadratic drag formula in turbulent fluids. Units are arbitrary and should be tuned experimentally.",
+            "line": " src\\behaviors\\Drag.js:3"
+        },
+        {
+            "message": "Missing item type\nInstantiates new Drag behavior object",
+            "line": " src\\behaviors\\Drag.js:8"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\Drag.js:18"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\Drag.js:36"
+        },
+        {
+            "message": "Missing item type\n`Force` is a `SelfBehavior` that applies a constant force on the particle.",
+            "line": " src\\behaviors\\Force.js:3"
+        },
+        {
+            "message": "Missing item type\nInstantiates new Force behavior object",
+            "line": " src\\behaviors\\Force.js:7"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\Force.js:16"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\Force.js:27"
+        },
+        {
+            "message": "Missing item type\n`Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.",
+            "line": " src\\behaviors\\Gravity.js:3"
+        },
+        {
+            "message": "Missing item type\nInstantiates new Gravity behavior object",
+            "line": " src\\behaviors\\Gravity.js:7"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\Gravity.js:16"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\Gravity.js:26"
+        },
+        {
+            "message": "Missing item type\nAbstract class that represents nearby interactions. This type behavior will influence, or is dependent on a set of particles in its near proximity",
+            "line": " src\\behaviors\\NearBehavior.js:1"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\NearBehavior.js:5"
+        },
+        {
+            "message": "Missing item type\nApply behavior on `particle` and/or `particles`",
+            "line": " src\\behaviors\\NearBehavior.js:14"
+        },
+        {
+            "message": "Missing item type\nReturns the effective range / defines the size of the nearby range",
+            "line": " src\\behaviors\\NearBehavior.js:25"
+        },
+        {
+            "message": "Missing item type\nApply a positional correction to `particle` and/or `particles`",
+            "line": " src\\behaviors\\NearBehavior.js:34"
+        },
+        {
+            "message": "Missing item type\n`Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles using softer penalty forces.\nCollisions are basically spring constraints between particles when they collide. High stiffness values can lead to energy inconsistency, whereas \nlower stiffness can cause poor colliding behavior between particles. Overall, this method is more stable in high density stacking simulations, \nbut performs worse in more dynamic scenarios.",
+            "line": " src\\behaviors\\PenaltyCollision.js:3"
+        },
+        {
+            "message": "Missing item type\nInstantiates new PenaltyCollision behavior object",
+            "line": " src\\behaviors\\PenaltyCollision.js:11"
+        },
+        {
+            "message": "Missing item type\nPerform the collision update of a `Particle` by calculating impulse based velocity and position changes.",
+            "line": " src\\behaviors\\PenaltyCollision.js:20"
+        },
+        {
+            "message": "Missing item type\nDoes not do anything",
+            "line": " src\\behaviors\\PenaltyCollision.js:65"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\PenaltyCollision.js:75"
+        },
+        {
+            "message": "Missing item type\nA static method that checks whether two particles are colliding",
+            "line": " src\\behaviors\\PenaltyCollision.js:83"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\PositionLock.js:3"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\PositionLock.js:7"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\PositionLock.js:15"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\PositionLock.js:24"
+        },
+        {
+            "message": "Missing item type\nAbstract class that represents self interactions. These behaviors are only dependent on the singular particle it is attached to.",
+            "line": " src\\behaviors\\SelfBehavior.js:1"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\behaviors\\SelfBehavior.js:5"
+        },
+        {
+            "message": "Missing item type\nApply behavior on `particle`",
+            "line": " src\\behaviors\\SelfBehavior.js:14"
+        },
+        {
+            "message": "Missing item type\nApply a positional correction to `particle`",
+            "line": " src\\behaviors\\SelfBehavior.js:24"
+        },
+        {
+            "message": "Missing item type\nNode module export for the the behaviors directory.",
+            "line": " src\\behaviors\\behaviors.js:1"
+        },
+        {
+            "message": "Missing item type\nInterface for all Constraints",
+            "line": " src\\constraints\\Constraint.js:3"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\Constraint.js:8"
+        },
+        {
+            "message": "Missing item type\nUpdates the constraint.",
+            "line": " src\\constraints\\Constraint.js:20"
+        },
+        {
+            "message": "Missing item type\nCalculates the list of vertices that will be used in the rendering process",
+            "line": " src\\constraints\\Constraint.js:28"
+        },
+        {
+            "message": "Missing item type\nCalculates the list of particles that is involved with the constraint",
+            "line": " src\\constraints\\Constraint.js:36"
+        },
+        {
+            "message": "Missing item type\n`ForceDistanceConstraint` is a `Constraint` that constrains the distance between two particles.\nIt uses a force-based implementation and can be thought of as a spring between two particles.\nIn general, energy conservation is better at lower stiffness, and it can behave unstable or \nenergetically inconsistent at higher stiffness.",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:5"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `ForceDistanceConstraint`",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:12"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:35"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:64"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\ForceDistanceConstraint.js:72"
+        },
+        {
+            "message": "Missing item type\n`ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a \npoint in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.",
+            "line": " src\\constraints\\ForcePivotConstraint.js:5"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `ForcePivotConstraint`",
+            "line": " src\\constraints\\ForcePivotConstraint.js:10"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\ForcePivotConstraint.js:34"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\ForcePivotConstraint.js:57"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\ForcePivotConstraint.js:65"
+        },
+        {
+            "message": "Missing item type\n`PositionDistanceConstraint` is a `Constraint` that constrains the distance between two particles using a purely position-based method.\nThis implementation is more energetically stable; however, it is also less energy conservative and cannot be affected by damping. \nThe stiffness parameters are closer to a relaxation factor in [0,1]. Similar to other constraints, the stiffer this constraint, \nthe less energy conservative it becomes. There is no \"force\" attached to this type of constraint, so a pseudo-force value is arbitrary\ncalculated for any force based analysis.",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:5"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `PositionDistanceConstraint`",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:13"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:33"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:59"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\PositionDistanceConstraint.js:67"
+        },
+        {
+            "message": "Missing item type\n`PositionPivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a \npoint in space. The implementation of this constraint is position-based like that of `PositionDistanceConstraint`.",
+            "line": " src\\constraints\\PositionPivotConstraint.js:5"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `PositionPivotConstraint`",
+            "line": " src\\constraints\\PositionPivotConstraint.js:10"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\PositionPivotConstraint.js:30"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\PositionPivotConstraint.js:51"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\constraints\\PositionPivotConstraint.js:59"
+        },
+        {
+            "message": "Missing item type\nNode module exports for the constraints directory",
+            "line": " src\\constraints\\constraints.js:1"
+        },
+        {
+            "message": "Missing item type\nInterface for all items that can be used with a `HashGrid`.",
+            "line": " src\\core\\HashGridItem.js:1"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\core\\HashGridItem.js:11"
+        },
+        {
+            "message": "Missing item type\nComputes the coordinate position for the item within the `HashGrid`, expects center position.",
+            "line": " src\\core\\HashGridItem.js:20"
+        },
+        {
+            "message": "Missing item type\nComputes the dimensions of the item for the `HashGrid`.",
+            "line": " src\\core\\HashGridItem.js:29"
+        },
+        {
+            "message": "Missing item type\n`Particle` is the main object of this physics engine. It is a 2D circle that is treated like a point mass at the center\nand does **not** rotate. `Particle` is also a `HashGridItem` so it can be added to a `SpatialHashGrid`.",
+            "line": " src\\core\\Particle.js:6"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `Particle`",
+            "line": " src\\core\\Particle.js:12"
+        },
+        {
+            "message": "Missing item type\nIncrements the position by velocity `v`",
+            "line": " src\\core\\Particle.js:38"
+        },
+        {
+            "message": "Missing item type\nApplies force `f` to the velocity",
+            "line": " src\\core\\Particle.js:47"
+        },
+        {
+            "message": "Missing item type\nIncrements the velocity by an acceleration `a`",
+            "line": " src\\core\\Particle.js:56"
+        },
+        {
+            "message": "Missing item type\nAdds a `SelfBehavior` to the particle",
+            "line": " src\\core\\Particle.js:65"
+        },
+        {
+            "message": "Missing item type\nAdds a `NearBehavior` to the particle",
+            "line": " src\\core\\Particle.js:73"
+        },
+        {
+            "message": "Missing item type\nRemoves `NearBehavior` `b` if the particle has `b`",
+            "line": " src\\core\\Particle.js:81"
+        },
+        {
+            "message": "Missing item type\nRemoves `SelfBehavior` `b` if the particle has `b`",
+            "line": " src\\core\\Particle.js:95"
+        },
+        {
+            "message": "Missing item type\nClears all behaviors of the particle",
+            "line": " src\\core\\Particle.js:109"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\core\\Particle.js:117"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\core\\Particle.js:125"
+        },
+        {
+            "message": "Missing item type\n`Solver` is the discrete solver algorithm that calculates the movement of the physics world. It uses a modified \npredictive-corrective semi-implicit Euler implementation. Because this is a local iterative solver, there may be \ndivergence issues at higher timeSteps and convergence can be tuned with the iterationPerFrame.",
+            "line": " src\\core\\Solver.js:6"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `Solver`",
+            "line": " src\\core\\Solver.js:12"
+        },
+        {
+            "message": "Missing item type\nSolves one iteration of the current physics world",
+            "line": " src\\core\\Solver.js:33"
+        },
+        {
+            "message": "Missing item type\nOptional function that can be defined to exhibit certain behavior in the solve loop.",
+            "line": " src\\core\\Solver.js:51"
+        },
+        {
+            "message": "Missing item type\nMove particle positions forward to the \"future-position\"",
+            "line": " src\\core\\Solver.js:58"
+        },
+        {
+            "message": "Missing item type\nSolve physics interactions from Behaviors",
+            "line": " src\\core\\Solver.js:68"
+        },
+        {
+            "message": "Missing item type\nSolve physics interactions from Constraints",
+            "line": " src\\core\\Solver.js:84"
+        },
+        {
+            "message": "Missing item type\nSolve collision interactions with Walls",
+            "line": " src\\core\\Solver.js:102"
+        },
+        {
+            "message": "Missing item type\nUpdate final particle velocities",
+            "line": " src\\core\\Solver.js:111"
+        },
+        {
+            "message": "Missing item type\nCorrect particle positions",
+            "line": " src\\core\\Solver.js:121"
+        },
+        {
+            "message": "Missing item type\nComputes next frame or \"world-state\"",
+            "line": " src\\core\\Solver.js:143"
+        },
+        {
+            "message": "Missing item type\nUpdate the particle positions in the SpatialHashGrid",
+            "line": " src\\core\\Solver.js:152"
+        },
+        {
+            "message": "Missing item type\nThe `SpatialHashGrid` is is a data structure that stores and sorts items into distinct \"2D grids\".\nIt allows for the quick access of nearby items without brute force iteration.\nThis data structure can increase performance by ~100x for sufficiently large collision interactions in close proximity. \nNote that this data structure is not directly iterable.\n \n**Important:** Only items that implement the `HashGridItem` interface are compatible with the `SpatialHashGrid`.",
+            "line": " src\\core\\SpatialHashGrid.js:1"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\core\\SpatialHashGrid.js:13"
+        },
+        {
+            "message": "Missing item type\nAdds an item to the HashGrid.",
+            "line": " src\\core\\SpatialHashGrid.js:31"
+        },
+        {
+            "message": "Missing item type\nPrivate method that initializes 2D grid.",
+            "line": " src\\core\\SpatialHashGrid.js:40"
+        },
+        {
+            "message": "Missing item type\nPrivate method that inserts the item into its corresponding grid cell",
+            "line": " src\\core\\SpatialHashGrid.js:54"
+        },
+        {
+            "message": "Missing item type\nFinds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.",
+            "line": " src\\core\\SpatialHashGrid.js:75"
+        },
+        {
+            "message": "Missing item type\nFinds the nearby items for a given item, and updates the queryId.",
+            "line": " src\\core\\SpatialHashGrid.js:92"
+        },
+        {
+            "message": "Missing item type\nUpdates the grid positions of the item within the HashGrid. This function **MUST** be called after any position change.",
+            "line": " src\\core\\SpatialHashGrid.js:125"
+        },
+        {
+            "message": "Missing item type\nDelete item from HashGrid.",
+            "line": " src\\core\\SpatialHashGrid.js:150"
+        },
+        {
+            "message": "Missing item type\nReturns a unique list of all HashGridItems the HashGrid.",
+            "line": " src\\core\\SpatialHashGrid.js:165"
+        },
+        {
+            "message": "Missing item type\n`World` the global-state instance of the physics engine that keeps track of all the objects. This provides\na higher level of abstraction from the user but may be limiting in some ways. It is a good idea to extend and \noverride this class for any specific properties. With the current SpatialHashing algorithm, the world should have\nfinite bounds.",
+            "line": " src\\core\\World.js:9"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `World` instance",
+            "line": " src\\core\\World.js:16"
+        },
+        {
+            "message": "Missing item type\nAdds a particle to the world",
+            "line": " src\\core\\World.js:49"
+        },
+        {
+            "message": "Missing item type\nRemoves a particle from the world",
+            "line": " src\\core\\World.js:58"
+        },
+        {
+            "message": "Missing item type\nAdds a constraint to the world",
+            "line": " src\\core\\World.js:78"
+        },
+        {
+            "message": "Missing item type\nRemoves a constraint from the world",
+            "line": " src\\core\\World.js:86"
+        },
+        {
+            "message": "Missing item type\nAdds a wall to the world",
+            "line": " src\\core\\World.js:100"
+        },
+        {
+            "message": "Missing item type\nClears all of the particles and constraints",
+            "line": " src\\core\\World.js:117"
+        },
+        {
+            "message": "Missing item type\nClears all of the constraints",
+            "line": " src\\core\\World.js:127"
+        },
+        {
+            "message": "Missing item type\nUpdate the list of particles. Must be called every time the number of particles change.",
+            "line": " src\\core\\World.js:141"
+        },
+        {
+            "message": "Missing item type\nAdds a SelfBehavior to all the particles",
+            "line": " src\\core\\World.js:149"
+        },
+        {
+            "message": "Missing item type\nRemoves a SelfBehavior from all the particles",
+            "line": " src\\core\\World.js:159"
+        },
+        {
+            "message": "Missing item type\nAdds a NearBehavior to all the particles",
+            "line": " src\\core\\World.js:169"
+        },
+        {
+            "message": "Missing item type\nRemoves a NearBehavior to all the particles",
+            "line": " src\\core\\World.js:179"
+        },
+        {
+            "message": "Missing item type\nDisables gravity and adds a new global gravity behavior to all the particles, while updating \nthe gravity pointer",
+            "line": " src\\core\\World.js:189"
+        },
+        {
+            "message": "Missing item type\nRemoves the global gravity behavior",
+            "line": " src\\core\\World.js:202"
+        },
+        {
+            "message": "Missing item type\nProgresses world to next area",
+            "line": " src\\core\\World.js:214"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\core\\World.js:306"
+        },
+        {
+            "message": "Missing item type\nNode module exports for the core directory",
+            "line": " src\\core\\core.js:1"
+        },
+        {
+            "message": "Missing item type\nThe MIT License (MIT)\n\nCopyright (c) Hanson Sun.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.",
+            "line": " src\\module\\lisence.js:1"
+        },
+        {
+            "message": "Missing item type\nNode module encapsulation and export for entire physics engine",
+            "line": " src\\module\\module.js:1"
+        },
+        {
+            "message": "Missing item type\nNode module exports for the renderers directory",
+            "line": " src\\renderers\\renderers.js:1"
+        },
+        {
+            "message": "Missing item type\nWill only work inside a website --> Node version wont work.",
+            "line": " src\\utils\\InputHandler.js:5"
+        },
+        {
+            "message": "Missing item type\nVector2D is a light-weight 2D vector class that implements several vector operations.\n\n**Note**: modifying \"to\" methods that do not return a new Vector2D are more efficient.",
+            "line": " src\\utils\\Vector2D.js:1"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\utils\\Vector2D.js:7"
+        },
+        {
+            "message": "Missing item type\nreturns a new added vector denoted by `this + v`.",
+            "line": " src\\utils\\Vector2D.js:17"
+        },
+        {
+            "message": "Missing item type\nadds a vector to the current vector (`this = this + v`).",
+            "line": " src\\utils\\Vector2D.js:26"
+        },
+        {
+            "message": "Missing item type\nreturns a new subtracted vector denoted by `this - v`.",
+            "line": " src\\utils\\Vector2D.js:36"
+        },
+        {
+            "message": "Missing item type\nsubtracts a vector to the current vector (`this = this - v`).",
+            "line": " src\\utils\\Vector2D.js:45"
+        },
+        {
+            "message": "Missing item type\nreturns a new scalar-multiplied vector denoted by `this * a`.",
+            "line": " src\\utils\\Vector2D.js:55"
+        },
+        {
+            "message": "Missing item type\nmultiplies a scalar to the current vector (`this = this * a`).",
+            "line": " src\\utils\\Vector2D.js:64"
+        },
+        {
+            "message": "Missing item type\nreturns the dot product of two vectors (`this` and `v`).",
+            "line": " src\\utils\\Vector2D.js:74"
+        },
+        {
+            "message": "Missing item type\nreturns the \"cross-product\" of two vectors (`this` and `v`). Since these are 2D vectors, this is the \nz-coordinate of the 3D counter parts of these 2D vectors. It returns a scalar.",
+            "line": " src\\utils\\Vector2D.js:83"
+        },
+        {
+            "message": "Missing item type\nreturns the magnitude of the vector.",
+            "line": " src\\utils\\Vector2D.js:93"
+        },
+        {
+            "message": "Missing item type\nreturns the magnitude squared of the vector.",
+            "line": " src\\utils\\Vector2D.js:102"
+        },
+        {
+            "message": "Missing item type\nreturns a new normalized Vector2D.",
+            "line": " src\\utils\\Vector2D.js:110"
+        },
+        {
+            "message": "Missing item type\nnormalizes the `this` Vector2D.",
+            "line": " src\\utils\\Vector2D.js:119"
+        },
+        {
+            "message": "Missing item type\nreturn the angle between `this` and v.",
+            "line": " src\\utils\\Vector2D.js:129"
+        },
+        {
+            "message": "Missing item type\nPerforms the mirror reflection for `this` about a normal vector.",
+            "line": " src\\utils\\Vector2D.js:145"
+        },
+        {
+            "message": "Missing item type\nPerforms the mirror reflection for `this` about a normal vector. (modifies self)",
+            "line": " src\\utils\\Vector2D.js:157"
+        },
+        {
+            "message": "Missing item type\nNode module exports for the utils directory (i think ill add more later...)",
+            "line": " src\\utils\\utils.js:1"
+        },
+        {
+            "message": "Missing item type\n`RectangularWorldBoundary` is a rectangular bounding box that constrains all particles *within* the boundaries.\nThe implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. \nSince the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not\njust particles surrounding the edge.",
+            "line": " src\\walls\\RectangularWorldBoundary.js:3"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\RectangularWorldBoundary.js:11"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\RectangularWorldBoundary.js:26"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\RectangularWorldBoundary.js:62"
+        },
+        {
+            "message": "Missing item type\nChecks if a Particle is colliding with the Wall",
+            "line": " src\\walls\\RectangularWorldBoundary.js:87"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\RectangularWorldBoundary.js:103"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\RectangularWorldBoundary.js:111"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\RectangularWorldBoundary.js:119"
+        },
+        {
+            "message": "Missing item type\n`Wall` is an Interface for any wall objects. Walls are `HashGridItems`; however, it only uses the SpatialHashGrid methods\nthat calculate the particles in its close proximity and **cannot** be added to the grid itself. Wall objects\nare also stationary and are not influenced by any external factors.",
+            "line": " src\\walls\\Wall.js:3"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `Wall`",
+            "line": " src\\walls\\Wall.js:10"
+        },
+        {
+            "message": "Missing item type\nResolve the collisions between the surrounding particles and the Wall itself.",
+            "line": " src\\walls\\Wall.js:20"
+        },
+        {
+            "message": "Missing item type\nApplies positional corrections on particles (walls do not move)",
+            "line": " src\\walls\\Wall.js:29"
+        },
+        {
+            "message": "Missing item type\nCalculates the vertices of the wall",
+            "line": " src\\walls\\Wall.js:37"
+        },
+        {
+            "message": "Missing item type\n`WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions\nare generally meant to be immutable since the normal vector is calculated upon instantiation. However, wall position\ncan be modified with some care.",
+            "line": " src\\walls\\WallBoundary.js:4"
+        },
+        {
+            "message": "Missing item type\nInstantiates new `WallBoundary`",
+            "line": " src\\walls\\WallBoundary.js:11"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\WallBoundary.js:29"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\WallBoundary.js:92"
+        },
+        {
+            "message": "Missing item type\nChecks if a Particle is colliding with the Wall",
+            "line": " src\\walls\\WallBoundary.js:135"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\WallBoundary.js:169"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\WallBoundary.js:177"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src\\walls\\WallBoundary.js:185"
+        },
+        {
+            "message": "Missing item type\nNode module exports for the walls directory",
+            "line": " src\\walls\\walls.js:1"
+        }
+    ]
+}
