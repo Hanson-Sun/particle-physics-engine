@@ -1,68 +1,114 @@
-# Particle-based Physics Engine (with constraints)
+# Particle Physics Simulation 2D (PPhys2D)
 
-Currently in development: I'm working on several optimizations and major refactorizations of the code!
+`PPhys2D` is a lightweight 2D particle physics library written in vanilla JavaScript intended for use with web browsers. Some of the key features we support are:
+- constrained dynamics and collisions
+- abstracted particle behaviors
+- input handling utility classes
+- particles, constraints, and static walls 
+- 2D HTML canvas rendering
+- efficient spatial interactions with spatial hashing
 
-https://hanson-sun.github.io/particle-physics-engine/
+All the source code is fully documented (in the `src` folder), and it will offer detailed explanations if something is not covered in this documentation.
 
-Some of my research about modelling constrained 2D particle-based physics systems. In my paper, I investigate the extent of which penalty and relaxed-geometric constraints can model 2D particle physics systems. The focus of this investigation leaned towards the mathematical aspect of constrained systems. However, I still provided a programmatic implementation. I would like to work on this further in the future, including adding more constraint types, as well as a more detailed section about programmatic implementation.
+## Getting Started
+### For use in browser
+link the file `pphys2d.js` or `pphys2d.min.js` in the `dist` folder with a script tag before the general script file.
 
-It took me a while to research and write everything, read the paper here https://github.com/Hanson-Sun/Math-EE/blob/main/HansonS_Math_EE.pdf (HansonS_Math_EE.pdf)
+```html
+<script src="pphys2d.js"></script>
+<script src="script.js"></script>
+```
 
-This repository also includes additional files for demo purposes
+To access the `pphys2d` modules, use the global object `pphys`
+``` js
+var gravity = new pphys.behaviors.Gravity(9.8);
+```
 
+Default pphys2d rendering interacts with the html `canvas` element, to start:
+``` html
+<canvas id="test"></canvas>  // in the html file
+``` 
+``` js
+const canvas = document.getElementById("test"); // in the js file
+...
+```
 
-### TODO
-- [ ] Refactor code
-  - [ ] Add behaviors (Maybe add more behaviors)
-    - [x] Collision 
-    - [x] Attraction
-    - [x] Drag
-    - [x] Pivots (its very scuffed tho)
-    - [ ] area constraints (low priority)
-  - [x] add walls
-    - [x] general walls/world/vertical+horizontal
-  - [x] add constraints
-    - [x] force based
-    - [x] position based
-  - [x] Fix solver, world, and others
-  - [x] Fix renderer and potentially add more features
-    - [x] constraint stress colours? 
-  - [x] Add constraint breaking
-- [ ] write docs
-- [ ] Standardize units (?) grim... i need to do physics
-- [ ] formalize package (important!!!)
-- [ ] Optimize
-- [ ] update paper... maybe
+### For use with node.js
+Download the src folder and put that in the `node_module` folder in the project directory. This is not recommended as many features is not supported in node, although using node can help generate clean code for use in a browser.
 
-### Bugs
-- some degree of instability when particles are stacked up (?) --> probably and issue with the collision stiffness and iterative update.
-  - i now think its because of the position resolver --> its not converging to what its supposed to be
-  - issue with stationary collision detection
-- unify solver behavior --> focus on position-based, velocity independent constraint and collision behavior.
-  - seems to have a tendency to lose energy when constraints are used.
-  - semi-fixed
-- Vector2D modify methods are inconsistent for some reason --> test this
-- **Fix iteration per frame to use sub-stepping** --> current implementation does not use explicit substepping  
-  - fix time inconsistencies for iteration # changes
-- resolve constructor complexity by changing how the options work
-- fix mouse edge movement instability
-- test custom mouse function input
-- fix spatial hashgrid to work with unbounded values (mod instead of clamp)
-
-- IMPROVE SPATIAL HASH ALGORITHM (make it dense) + test if its actually better  
-  - after testing, i have concluded that is isnt really better for this case
-  - dense structure 
-    - pros: more memory efficient, unbounded (ish, there will be hash collisions), syntactically simpler;
-    - cons: cannot be iteratively updated (deal breaker), slightly slower
-  - current sparse structure
-    - memory shouldnt be a huge issue at this point, **unbounded behavior can be simulated** with `((this % n) + n) % n`, more convoluted code in general, but should be abstracted away from the user
-
-Notes:
-i think ill leave the rendering step with more freedom to the users 
-
-theres a setSolverUpdate() function that is like unity's Update() but kind of different...
+Modules can then be imported with `requires` or `import`.
 
 
-i think ill name it `PPhys2D` for **P**article-based **P**hysics engine **2D**
+## Demos
+yeah i need to make these
 
+
+## Structure
+The key modules of `pphys2d` are
+``` js
+pphys.behaviors, pphys.constraints, pphys.core, pphys.renderers, pphys.utils, pphys.walls
+```
+Further documentation is available for each module.
+
+[UML diagram figma link](https://www.figma.com/file/RmAHDNunrpGmugKVVT1JYa/physics?type=whiteboard&node-id=0-1&t=kJgXQj8zSvmgEPtW-0)
+
+<img src = "uml.jpg" width = "700">
+
+### Explanation
+The `world` is the "scene" that pphys displays 
+- The `solver` is responsible for calculating the physics of the world
+- Optionally, default rendering can be used to visualize the physics
+
+The world consists of 3 main objects: **particles**, **constraints**, and **walls**.
+- particles are the focus of the engine
+- constraints restrict particles in some way (they do not collide)
+- and walls are static elements that particles collide with
+
+A particle has associated behaviors
+- `SelfBehaviors` that only influences the single particle it is attached to
+- `NearBehaviors` that influence the particle it is attached to, as well as any surrounding particles
+
+Other miscellaneous classes include:
+- `Vector2D` for vector operations
+- `InputHandler` for controlling user input
+- `HashItem` and `SpatialHashGrid` for efficient spatial partition
+
+## Implementation Notes
+Technical implementation details can be found [here](../pphys_paper.pdf). It should provide a decent technical overview; however, it is **not up to date**.
+
+As a general overview, `pphys2D` is an impulse-based particle physics engine that uses a predictor-corrector numerical integration model. Simply put, 
+``` js
+for particle in particles
+    // "pre-move" to future position
+    particle.prevPosition = particle.position
+    particle.position = particle.position + particle.velocity * timeStep
+
+    // using the future position apply particle behaviors:
+    for behavior in particle.behaviors:
+        applyEffect()
+
+// apply constraints
+for constraint in constraints:
+    applyEffect()
+
+// update particle positions
+for particle in particles:
+    particle.velocity = (particle.position - particle.prevPosition) / timeStep
+
+// apply final position corrections
+for particle in particles:
+    for behavior in particle.behaviors:
+        applyCorrection()
+```
+This engine does not use force-based accumulation, because changes must be immediately updated. As such, any forces are linearly-discretized and converted to a change in `position`. 
+```
+v = v + a * dt
+x = x + v * dt
+```
+
+Velocity is typically not updated in behaviors or constraints unless it is a velocity dependent behavior (like collisions).
+
+To ensure stiffness and behavior resolution, a final position correction is applied **after** velocity update. However, since pphys2d uses a local iterative solver, constraint solving and position correction can be performed multiple times per frame to enhance system convergence.
+
+This is a variation on the common **semi-implicit Euler** solver algorithm, and in comparison, should be more stable for large impulses. As such, this algorithm should also be symplectic (i think). However, large constraint/behavior impulses either lead to a huge loss in energy or system divergence. Perhaps I will perform more quantitative tests in the future ;)
 

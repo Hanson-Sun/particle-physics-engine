@@ -1,0 +1,49 @@
+{
+    "source": {
+        "include": ["src", "package.json", "README.md"],
+        "exclude":["src/module"],
+        "includePattern": ".js$",
+        "excludePattern": "(node_modules/|docs)"
+    },
+    "plugins": ["plugins/markdown"],
+    "tags": {
+        "allowUnknownTags": false,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "opts": {
+        "encoding": "utf8",
+        "readme": "./README.md",
+        "destination": "out/",
+        "recurse": true,
+        "verbose": true,
+        "template": "node_modules/clean-jsdoc-theme",
+        "theme_opts": {
+            "homepageTitle": "PPhys2D Documentation",
+            "favicon": "path/to/img",
+            "title": "PPhys2D",
+            "includeFilesListInHomepage": true,
+            "base_url": "./Users/User/Documents/GitHub/Math-EE/out/pphys2d/1.0.0",
+            "menu": [
+                {
+                  "title": "Github",
+                  "link": "https://github.com/Hanson-Sun/particle-physics-engine"
+                }
+            ],
+            "meta": [
+                {
+                    "name": "author",
+                    "content": "Hanson Sun"
+                },
+                {
+                    "name": "description",
+                    "content": "Particle Physics 2D Engine Documentation"
+                }
+            ]
+
+          }
+    },
+    "markdown": {
+        "hardwrap": false,
+        "idInHeadings": true
+    }
+}
