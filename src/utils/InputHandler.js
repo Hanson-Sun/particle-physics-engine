@@ -1,9 +1,9 @@
 const Particle = require("../core/Particle");
 const Vector2D = require("./Vector2D");
-const ForcePivotConstraint = require("../constraints/ForcePivotConstraint");
 
 /**
- * Will only work inside a website --> Node version wont work.
+ * A utility class that provides a quick user-input handling functionality. 
+ * This will only work with an HTML canvas element in the browser.
  */
 class InputHandler {
     constructor(world, enableMouseInteractions=true) {
@@ -30,15 +30,7 @@ class InputHandler {
         this.enableMouseInteractions = enableMouseInteractions;
 
         this.mouseDownFunction = () => {};
-        this.mouseUpFunction = () => {}
-    }
-
-    static KeyInput = class KeyInput {
-        constructor(keyCode, func, isMouseDown=false) {
-            this.keyCode = keyCode || "";
-            this.func = func || (() => {});
-            this.isMouseDown = isMouseDown;
-        }
+        this.mouseUpFunction = () => {};
     }
 
     getMousePos(event, handler) {
@@ -113,7 +105,7 @@ class InputHandler {
         //let stiffness = handler.currentlySelectedParticle.mass * 50;
         //handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
         handler.particleConstraint = new PositionPivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, 
-            0.8 / handler.world.iterationPerFrame / handler.world.iterationPerFrame);
+            0.3 / handler.world.iterationPerFrame / handler.world.iterationPerFrame);
         handler.world.addConstraint(handler.particleConstraint);
     }
 
@@ -147,6 +139,18 @@ class InputHandler {
 
     addKeyEvent(keyInput) {
         this.keyEvents.push(keyInput);
+    }
+}
+
+/**
+ * Static inner class for tracking key inputs.
+ * @static
+ */
+InputHandler.KeyInput = class KeyInput {
+    constructor(keyCode, func, isMouseDown=false) {
+        this.keyCode = keyCode || "";
+        this.func = func || (() => {});
+        this.isMouseDown = isMouseDown;
     }
 }
 

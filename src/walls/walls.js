@@ -4,6 +4,6 @@
 
 const walls = module.exports;
 
-walls.Wall = require("./Wall");
-walls.WallBoundary = require("./WallBoundary");
 walls.RectangularWorldBoundary = require("./RectangularWorldBoundary");
+walls.WallBoundary = require("./WallBoundary");
+walls.Wall = require("./Wall");

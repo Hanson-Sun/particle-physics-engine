@@ -1,3 +1,4 @@
+const Vector2D = require("../utils/Vector2D");
 const SelfBehavior = require("./SelfBehavior");
 
 /**
@@ -5,7 +6,8 @@ const SelfBehavior = require("./SelfBehavior");
  */
 class PositionLock extends SelfBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Instantiates new `PositionLock`
+     * @param {Vector2D} position locked position
      */
     constructor(position) {
         super();

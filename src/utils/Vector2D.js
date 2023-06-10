@@ -5,9 +5,9 @@
  */
 class Vector2D {
 	/**
-	 * @constructor instantiate a new Vector2D.
-	 * @param {number} x 
-	 * @param {number} y 
+	 * Instantiate a new `Vector2D`.
+	 * @param {Number} x 
+	 * @param {Number} y 
 	 */
 	constructor(x, y) {
 		this.x = x;
@@ -25,7 +25,6 @@ class Vector2D {
 
 	/**
 	 * adds a vector to the current vector (`this = this + v`).
-	 * @modifies this
 	 * @param {Vector2D} v 
 	 */
 	addTo(v) {
@@ -44,7 +43,6 @@ class Vector2D {
 
 	/**
 	 * subtracts a vector to the current vector (`this = this - v`).
-	 * @modifies this
 	 * @param {Vector2D} v 
 	 */
 	subTo(v) {
@@ -54,7 +52,7 @@ class Vector2D {
 
 	/**
 	 * returns a new scalar-multiplied vector denoted by `this * a`.
-	 * @param {number} a scalar multiple
+	 * @param {Number} a scalar multiple
 	 * @returns {Vector2D} 
 	 */	
 	mult(a) {
@@ -63,8 +61,7 @@ class Vector2D {
 
 	/**
 	 * multiplies a scalar to the current vector (`this = this * a`).
-	 * @modifies this
-	 * @param {number} a 
+	 * @param {Number} a 
 	 */	
 	multTo(a) {
 		this.x = this.x * a;
@@ -74,7 +71,7 @@ class Vector2D {
 	/**
 	 * returns the dot product of two vectors (`this` and `v`).
 	 * @param {Vector2D} v  
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	dot(v) {
 		return this.x * v.x + this.y * v.y;
@@ -84,7 +81,7 @@ class Vector2D {
 	 * returns the "cross-product" of two vectors (`this` and `v`). Since these are 2D vectors, this is the 
 	 * z-coordinate of the 3D counter parts of these 2D vectors. It returns a scalar.
 	 * @param {Vector2D} v 
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	cross(v) {
 		return this.x * v.y - v.x * this.y;
@@ -92,7 +89,7 @@ class Vector2D {
 
 	/**
 	 * returns the magnitude of the vector.
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	mag() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -101,7 +98,7 @@ class Vector2D {
 
 	/**
 	 * returns the magnitude squared of the vector.
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	magSqr() {
 		return this.x * this.x + this.y * this.y;
@@ -118,7 +115,6 @@ class Vector2D {
 
 	/**
 	 * normalizes the `this` Vector2D.
-	 * @modifies this
 	 */
 	normalizeTo() {
 		const mag = Math.sqrt(this.x * this.x + this.y * this.y);

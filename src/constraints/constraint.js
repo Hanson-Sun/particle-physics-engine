@@ -6,7 +6,7 @@ const Vector2D = require("../utils/Vector2D");
  */
 class Constraint {
     /**
-     * @constructor `Constraint` interface cannot be instantiated
+     * `Constraint` interface cannot be instantiated
      */
     constructor() {
         this.color = "black";

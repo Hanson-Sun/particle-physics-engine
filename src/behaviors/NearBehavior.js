@@ -1,9 +1,10 @@
 /**
  * Abstract class that represents nearby interactions. This type behavior will influence, or is dependent on a set of particles in its near proximity
+ * @interface
  */
 class NearBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Interface cannot be instantiated
      */
     constructor() {
         if (this.constructor == NearBehavior) {
@@ -24,7 +25,7 @@ class NearBehavior {
 
     /**
      * Returns the effective range / defines the size of the nearby range
-     * @returns {[Number, Number]} pair of rectangular dimensions that represent the effective range
+     * @returns {Number[]} pair of rectangular dimensions `[number, number]` that represent the effective range
      * @abstract
      */
     range() {

@@ -7,7 +7,8 @@ const NearBehavior = require("./NearBehavior");
  */
 class ChargeInteraction extends NearBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Instantiates new `ChargeInteraction`
+     * @param {Number} radius effective interaction radius
      */
     constructor(radius=100000) {
         super();
@@ -50,7 +51,7 @@ class ChargeInteraction extends NearBehavior {
 
     /**
      * @override
-     * @returns {[Number, Number]}
+     * @returns {Number[]}
      */
     range() {
         return [this.radius, this.radius];

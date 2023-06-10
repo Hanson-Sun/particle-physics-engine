@@ -9,7 +9,7 @@ class HashGridItem {
     wallCollide = true;
 
     /**
-     * @constructor interface cannot be instantiated
+     * Interface cannot be instantiated
      */
     constructor() {
         if (this.constructor == HashGridItem) {

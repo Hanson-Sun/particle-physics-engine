@@ -1,9 +1,10 @@
 /**
  * Abstract class that represents self interactions. These behaviors are only dependent on the singular particle it is attached to.
+ * @interface
  */
 class SelfBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Interface cannot be instantiated
      */
     constructor() {
         if (this.constructor == SelfBehavior) {

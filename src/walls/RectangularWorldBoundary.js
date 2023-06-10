@@ -102,7 +102,7 @@ class RectangularWorldBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */    
     getHashPos() {
         return [(this.maxW + this.minW) / 2, (this.maxH + this.minH) / 2];
@@ -110,7 +110,7 @@ class RectangularWorldBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashDimensions() {
         return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
@@ -118,7 +118,7 @@ class RectangularWorldBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Vector2D, Vector2D]} 
+     * @returns {Vector2D[]} 
      */    
     vertices() {
         return [];

@@ -47,7 +47,7 @@ return /******/ (() => { // webpackBootstrap
 const pphys = module.exports;
 
 pphys.utils = __webpack_require__(1);
-pphys.constraints = __webpack_require__(10);
+pphys.constraints = __webpack_require__(8);
 pphys.walls = __webpack_require__(14);
 pphys.core = __webpack_require__(18);
 pphys.behaviors = __webpack_require__(28);
@@ -249,10 +249,10 @@ module.exports = Vector2D;
 
 const Particle = __webpack_require__(4);
 const Vector2D = __webpack_require__(2);
-const ForcePivotConstraint = __webpack_require__(8);
 
 /**
- * Will only work inside a website --> Node version wont work.
+ * A utility class that provides a quick user-input handling functionality. 
+ * This will only work with an HTML canvas element in the browser.
  */
 class InputHandler {
     constructor(world, enableMouseInteractions=true) {
@@ -279,15 +279,7 @@ class InputHandler {
         this.enableMouseInteractions = enableMouseInteractions;
 
         this.mouseDownFunction = () => {};
-        this.mouseUpFunction = () => {}
-    }
-
-    static KeyInput = class KeyInput {
-        constructor(keyCode, func, isMouseDown=false) {
-            this.keyCode = keyCode || "";
-            this.func = func || (() => {});
-            this.isMouseDown = isMouseDown;
-        }
+        this.mouseUpFunction = () => {};
     }
 
     getMousePos(event, handler) {
@@ -362,7 +354,7 @@ class InputHandler {
         //let stiffness = handler.currentlySelectedParticle.mass * 50;
         //handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
         handler.particleConstraint = new PositionPivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, 
-            0.8 / handler.world.iterationPerFrame / handler.world.iterationPerFrame);
+            0.3 / handler.world.iterationPerFrame / handler.world.iterationPerFrame);
         handler.world.addConstraint(handler.particleConstraint);
     }
 
@@ -396,6 +388,14 @@ class InputHandler {
 
     addKeyEvent(keyInput) {
         this.keyEvents.push(keyInput);
+    }
+}
+
+InputHandler.KeyInput = class KeyInput {
+    constructor(keyCode, func, isMouseDown=false) {
+        this.keyCode = keyCode || "";
+        this.func = func || (() => {});
+        this.isMouseDown = isMouseDown;
     }
 }
 
@@ -523,7 +523,7 @@ class Particle extends HashGridItem {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
 	getHashPos() {
 		return [this.pos.x, this.pos.y];
@@ -531,7 +531,7 @@ class Particle extends HashGridItem {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
 	getHashDimensions() {
 		return [this.radius * 2, this.radius * 2];
@@ -555,7 +555,7 @@ class HashGridItem {
     wallCollide = true;
 
     /**
-     * @constructor interface cannot be instantiated
+     * Interface cannot be instantiated
      */
     constructor() {
         if (this.constructor == HashGridItem) {
@@ -566,7 +566,7 @@ class HashGridItem {
     /**
      * Computes the coordinate position for the item within the `HashGrid`, expects center position.
      * @abstract
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashPos() {
         throw new Error("Method 'getHashPos()' must be implemented.");
@@ -575,7 +575,7 @@ class HashGridItem {
     /**
      * Computes the dimensions of the item for the `HashGrid`.
      * @abstract
-     * @returns {[Number, Number]} rectangular dimensions in [width, height]
+     * @returns {Number[]} rectangular dimensions in [width, height]
      */
     getHashDimensions() {
         throw new Error("Method 'getHashDimensions()' must be implemented.");
@@ -655,7 +655,7 @@ class NearBehavior {
 
     /**
      * Returns the effective range / defines the size of the nearby range
-     * @returns {[Number, Number]} pair of rectangular dimensions that represent the effective range
+     * @returns {Number[]} pair of rectangular dimensions `[number, number]` that represent the effective range
      * @abstract
      */
     range() {
@@ -679,81 +679,18 @@ module.exports = NearBehavior;
 /* 8 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Constraint = __webpack_require__(9);
-const Particle = __webpack_require__(4);
-const Vector2D = __webpack_require__(2);
-
 /**
- * `ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
- * point in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.
+ * Node module exports for the constraints directory
  */
-class ForcePivotConstraint extends Constraint {
-    /**
-     * Instantiates new `ForcePivotConstraint`
-     * @param {Vector2D} pos - position of pivot
-     * @param {Particle} c1 - constrained particle
-     * @param {Number} len - constrained length
-     * @param {Number} stiffness - the "spring constant", higher values are more stiff
-     * @param {Number} dampening - damping force on constraint, must be greater than 0
-     * @param {Number} breakForce - force at which the constraint breaks
-     */
-    constructor(pos, c1, len, stiffness, breakForce = Infinity, dampening = 0) {
-        super();
-        if (c1 === null) {
-            throw new Error("One of the particles is null!");
-        }
-		this.pos = pos;
-		this.c1 = c1;
-		this.breakForce = breakForce;
-		this.dampening = dampening;
-        this.stiffness = stiffness;
-		this.len = len;
-        this.color = "black";
-		this.force = new Vector2D(0,0);	
-	}
 
-    /**
-     * @override
-     * @param {Number} timeStep 
-     */
-    update(timeStep) {
-        let dp = this.c1.pos.sub(this.pos);
-        let dpMag = dp.mag();
-        if(dpMag != 0) {
-            dp.multTo(1 / dpMag);
-            let dxMag = dpMag - this.len;
-            let dv = this.c1.vel;
-            let damp = this.dampening * dv.dot(dp);
+const constraints =  module.exports;
 
-            this.force = dp.mult(-this.stiffness * dxMag - damp);
+constraints.Constraint = __webpack_require__(9);
+constraints.ForceDistanceConstraint = __webpack_require__(10);
+constraints.ForcePivotConstraint = __webpack_require__(11);
+constraints.PositionDistanceConstraint = __webpack_require__(12);
+constraints.PositionPivotConstraint = __webpack_require__(13);
 
-            const a1 = this.force.mult(1 / this.c1.mass);
-            a1.multTo(timeStep * timeStep);
-
-            this.c1.pos.addTo(a1);
-
-        }
-    }
-
-    /**
-     * @override
-     * @returns {Vector2D[]}
-     */    
-	vertices() {
-        return [this.pos, this.c1.pos];
-    }
-
-    /**
-     * @override
-     * @returns {Particle[]}
-     */
-    particles() {
-        return [this.c1];
-    }
-
-}
-
-module.exports = ForcePivotConstraint;
 
 /***/ }),
 /* 9 */
@@ -807,23 +744,6 @@ module.exports = Constraint;
 
 /***/ }),
 /* 10 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-/**
- * Node module exports for the constraints directory
- */
-
-const constraints =  module.exports;
-
-constraints.Constraint = __webpack_require__(9);
-constraints.ForceDistanceConstraint = __webpack_require__(11);
-constraints.ForcePivotConstraint = __webpack_require__(8);
-constraints.PositionDistanceConstraint = __webpack_require__(12);
-constraints.PositionPivotConstraint = __webpack_require__(13);
-
-
-/***/ }),
-/* 11 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(9);
@@ -908,6 +828,86 @@ class ForceDistanceConstraint extends Constraint {
 }
 
 module.exports = ForceDistanceConstraint;
+
+/***/ }),
+/* 11 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const Constraint = __webpack_require__(9);
+const Particle = __webpack_require__(4);
+const Vector2D = __webpack_require__(2);
+
+/**
+ * `ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
+ * point in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.
+ */
+class ForcePivotConstraint extends Constraint {
+    /**
+     * Instantiates new `ForcePivotConstraint`
+     * @param {Vector2D} pos - position of pivot
+     * @param {Particle} c1 - constrained particle
+     * @param {Number} len - constrained length
+     * @param {Number} stiffness - the "spring constant", higher values are more stiff
+     * @param {Number} dampening - damping force on constraint, must be greater than 0
+     * @param {Number} breakForce - force at which the constraint breaks
+     */
+    constructor(pos, c1, len, stiffness, breakForce = Infinity, dampening = 0) {
+        super();
+        if (c1 === null) {
+            throw new Error("One of the particles is null!");
+        }
+		this.pos = pos;
+		this.c1 = c1;
+		this.breakForce = breakForce;
+		this.dampening = dampening;
+        this.stiffness = stiffness;
+		this.len = len;
+        this.color = "black";
+		this.force = new Vector2D(0,0);	
+	}
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    update(timeStep) {
+        let dp = this.c1.pos.sub(this.pos);
+        let dpMag = dp.mag();
+        if(dpMag != 0) {
+            dp.multTo(1 / dpMag);
+            let dxMag = dpMag - this.len;
+            let dv = this.c1.vel;
+            let damp = this.dampening * dv.dot(dp);
+
+            this.force = dp.mult(-this.stiffness * dxMag - damp);
+
+            const a1 = this.force.mult(1 / this.c1.mass);
+            a1.multTo(timeStep * timeStep);
+
+            this.c1.pos.addTo(a1);
+
+        }
+    }
+
+    /**
+     * @override
+     * @returns {Vector2D[]}
+     */    
+	vertices() {
+        return [this.pos, this.c1.pos];
+    }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
+    }
+
+}
+
+module.exports = ForcePivotConstraint;
 
 /***/ }),
 /* 12 */
@@ -1303,7 +1303,7 @@ class WallBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashPos() {
         return [(this.p2.x + this.p1.x) / 2, (this.p2.y + this.p1.y) / 2];
@@ -1311,7 +1311,7 @@ class WallBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashDimensions() {
         return [Math.abs(this.p2.x - this.p1.x), Math.abs(this.p2.y - this.p1.y)];
@@ -1319,7 +1319,7 @@ class WallBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Vector2D, Vector2D]} 
+     * @returns {Vector2D[]} 
      */
     vertices() {
         return [this.p1, this.p2];
@@ -1436,7 +1436,7 @@ class RectangularWorldBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */    
     getHashPos() {
         return [(this.maxW + this.minW) / 2, (this.maxH + this.minH) / 2];
@@ -1444,7 +1444,7 @@ class RectangularWorldBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashDimensions() {
         return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
@@ -1452,7 +1452,7 @@ class RectangularWorldBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Vector2D, Vector2D]} 
+     * @returns {Vector2D[]} 
      */    
     vertices() {
         return [];
@@ -1659,7 +1659,6 @@ class SpatialHashGrid {
     #cells;
 
     /**
-     * @constructor instantiates new SpatialHashGrid
      * @param {Number} width width of HashGrid
      * @param {Number} height height of HashGrid
      * @param {int} xGrids number of grid separations on the x-axis
@@ -1724,7 +1723,7 @@ class SpatialHashGrid {
      * Finds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.
      * @param {Number} x 
      * @param {Number} y 
-     * @returns {[int, int]} grid coordinates
+     * @returns {number[]} integer grid coordinates in [x, y]
      * @access private
      */
     #getCellIndex(x, y) {
@@ -1740,7 +1739,7 @@ class SpatialHashGrid {
     /**
      * Finds the nearby items for a given item, and updates the queryId.
      * @param {HashGridItem} item 
-     * @param {[Number, Number]} range - optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.
+     * @param {Number[]} range - optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.
      * @returns {HashGridItem[]}
      * @access public
      */
@@ -2564,7 +2563,7 @@ class ChargeInteraction extends NearBehavior {
 
     /**
      * @override
-     * @returns {[Number, Number]}
+     * @returns {Number[]}
      */
     range() {
         return [this.radius, this.radius];

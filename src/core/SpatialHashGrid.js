@@ -11,7 +11,6 @@ class SpatialHashGrid {
     #cells;
 
     /**
-     * @constructor instantiates new SpatialHashGrid
      * @param {Number} width width of HashGrid
      * @param {Number} height height of HashGrid
      * @param {int} xGrids number of grid separations on the x-axis
@@ -76,7 +75,7 @@ class SpatialHashGrid {
      * Finds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.
      * @param {Number} x 
      * @param {Number} y 
-     * @returns {number[]} integer grid coordinates in [x, y]
+     * @returns {Number[]} integer grid coordinates in [x, y]
      * @access private
      */
     #getCellIndex(x, y) {
@@ -149,7 +148,6 @@ class SpatialHashGrid {
     
     /**
      * Delete item from HashGrid.
-     * @modifies this
      * @param {HashGridItem} item
      */
     deleteItem(item) {
@@ -164,7 +162,6 @@ class SpatialHashGrid {
 
     /**
      * Returns a unique list of all HashGridItems the HashGrid. 
-     * @modifies this
      * @returns {HashGridItem[]}
      */
     values() {

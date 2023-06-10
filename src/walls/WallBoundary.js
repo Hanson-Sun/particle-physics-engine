@@ -168,7 +168,7 @@ class WallBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashPos() {
         return [(this.p2.x + this.p1.x) / 2, (this.p2.y + this.p1.y) / 2];
@@ -176,7 +176,7 @@ class WallBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Number, Number]} 
+     * @returns {Number[]} 
      */
     getHashDimensions() {
         return [Math.abs(this.p2.x - this.p1.x), Math.abs(this.p2.y - this.p1.y)];
@@ -184,7 +184,7 @@ class WallBoundary extends Wall {
 
     /**
      * @override
-     * @returns {[Vector2D, Vector2D]} 
+     * @returns {Vector2D[]} 
      */
     vertices() {
         return [this.p1, this.p2];
