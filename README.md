@@ -1,4 +1,4 @@
-# Particle Physics Simulation 2D (PPhys2D)
+# Particle Physics Engine 2D (PPhys2D)
 
 `PPhys2D` is a lightweight 2D particle physics library written in vanilla JavaScript intended for use with web browsers. Some of the key features we support are:
 - constrained dynamics and collisions
@@ -74,7 +74,7 @@ Other miscellaneous classes include:
 - `HashItem` and `SpatialHashGrid` for efficient spatial partition
 
 ## Implementation Notes
-Technical implementation details can be found [here](../pphys_paper.pdf). It should provide a decent technical overview; however, it is **not up to date**.
+Technical implementation details can be found [here](./pphys_paper.pdf). It should provide a decent technical overview; however, it is **not up to date**.
 
 As a general overview, `pphys2D` is an impulse-based particle physics engine that uses a predictor-corrector numerical integration model. Simply put, 
 ``` js
