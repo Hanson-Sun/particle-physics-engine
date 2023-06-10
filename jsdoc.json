@@ -13,7 +13,7 @@
     "opts": {
         "encoding": "utf8",
         "readme": "./README.md",
-        "destination": "out/",
+        "destination": "./docs/",
         "recurse": true,
         "verbose": true,
         "template": "node_modules/clean-jsdoc-theme",
@@ -22,7 +22,7 @@
             "favicon": "path/to/img",
             "title": "PPhys2D",
             "includeFilesListInHomepage": true,
-            "base_url": "./Users/User/Documents/GitHub/Math-EE/out/pphys2d/1.0.0",
+            "base_url": "https://hanson-sun.github.io/particle-physics-engine/",
             "menu": [
                 {
                   "title": "Github",
