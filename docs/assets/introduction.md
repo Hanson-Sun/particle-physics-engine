@@ -52,7 +52,7 @@ Further documentation is available for each module.
 
 [UML diagram figma link](https://www.figma.com/file/RmAHDNunrpGmugKVVT1JYa/physics?type=whiteboard&node-id=0-1&t=kJgXQj8zSvmgEPtW-0)
 
-<img src = "assets/uml.jpg" width = "700">
+<img src = "uml.jpg" width = "700">
 
 ### Explanation
 The `world` is the "scene" that pphys displays 

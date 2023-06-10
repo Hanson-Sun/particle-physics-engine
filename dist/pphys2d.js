@@ -81,9 +81,9 @@ utils.InputHandler = __webpack_require__(3);
  */
 class Vector2D {
 	/**
-	 * @constructor instantiate a new Vector2D.
-	 * @param {number} x 
-	 * @param {number} y 
+	 * Instantiate a new `Vector2D`.
+	 * @param {Number} x 
+	 * @param {Number} y 
 	 */
 	constructor(x, y) {
 		this.x = x;
@@ -101,7 +101,6 @@ class Vector2D {
 
 	/**
 	 * adds a vector to the current vector (`this = this + v`).
-	 * @modifies this
 	 * @param {Vector2D} v 
 	 */
 	addTo(v) {
@@ -120,7 +119,6 @@ class Vector2D {
 
 	/**
 	 * subtracts a vector to the current vector (`this = this - v`).
-	 * @modifies this
 	 * @param {Vector2D} v 
 	 */
 	subTo(v) {
@@ -130,7 +128,7 @@ class Vector2D {
 
 	/**
 	 * returns a new scalar-multiplied vector denoted by `this * a`.
-	 * @param {number} a scalar multiple
+	 * @param {Number} a scalar multiple
 	 * @returns {Vector2D} 
 	 */	
 	mult(a) {
@@ -139,8 +137,7 @@ class Vector2D {
 
 	/**
 	 * multiplies a scalar to the current vector (`this = this * a`).
-	 * @modifies this
-	 * @param {number} a 
+	 * @param {Number} a 
 	 */	
 	multTo(a) {
 		this.x = this.x * a;
@@ -150,7 +147,7 @@ class Vector2D {
 	/**
 	 * returns the dot product of two vectors (`this` and `v`).
 	 * @param {Vector2D} v  
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	dot(v) {
 		return this.x * v.x + this.y * v.y;
@@ -160,7 +157,7 @@ class Vector2D {
 	 * returns the "cross-product" of two vectors (`this` and `v`). Since these are 2D vectors, this is the 
 	 * z-coordinate of the 3D counter parts of these 2D vectors. It returns a scalar.
 	 * @param {Vector2D} v 
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	cross(v) {
 		return this.x * v.y - v.x * this.y;
@@ -168,7 +165,7 @@ class Vector2D {
 
 	/**
 	 * returns the magnitude of the vector.
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	mag() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -177,7 +174,7 @@ class Vector2D {
 
 	/**
 	 * returns the magnitude squared of the vector.
-	 * @returns {number}
+	 * @returns {Number}
 	 */
 	magSqr() {
 		return this.x * this.x + this.y * this.y;
@@ -194,7 +191,6 @@ class Vector2D {
 
 	/**
 	 * normalizes the `this` Vector2D.
-	 * @modifies this
 	 */
 	normalizeTo() {
 		const mag = Math.sqrt(this.x * this.x + this.y * this.y);
@@ -391,6 +387,10 @@ class InputHandler {
     }
 }
 
+/**
+ * Static inner class for tracking key inputs.
+ * @static
+ */
 InputHandler.KeyInput = class KeyInput {
     constructor(keyCode, func, isMouseDown=false) {
         this.keyCode = keyCode || "";
@@ -591,10 +591,11 @@ module.exports = HashGridItem;
 
 /**
  * Abstract class that represents self interactions. These behaviors are only dependent on the singular particle it is attached to.
+ * @interface
  */
 class SelfBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Interface cannot be instantiated
      */
     constructor() {
         if (this.constructor == SelfBehavior) {
@@ -631,10 +632,11 @@ module.exports = SelfBehavior;
 
 /**
  * Abstract class that represents nearby interactions. This type behavior will influence, or is dependent on a set of particles in its near proximity
+ * @interface
  */
 class NearBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Interface cannot be instantiated
      */
     constructor() {
         if (this.constructor == NearBehavior) {
@@ -704,7 +706,7 @@ const Vector2D = __webpack_require__(2);
  */
 class Constraint {
     /**
-     * @constructor `Constraint` interface cannot be instantiated
+     * `Constraint` interface cannot be instantiated
      */
     constructor() {
         this.color = "black";
@@ -1073,13 +1075,146 @@ module.exports = PositionPivotConstraint;
 
 const walls = module.exports;
 
-walls.Wall = __webpack_require__(15);
-walls.WallBoundary = __webpack_require__(16);
-walls.RectangularWorldBoundary = __webpack_require__(17);
+walls.RectangularWorldBoundary = __webpack_require__(15);
+walls.WallBoundary = __webpack_require__(17);
+walls.Wall = __webpack_require__(16);
 
 
 /***/ }),
 /* 15 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const Wall = __webpack_require__(16);
+
+/**
+ * `RectangularWorldBoundary` is a rectangular bounding box that constrains all particles *within* the boundaries.
+ * The implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. 
+ * Since the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not
+ * just particles surrounding the edge.
+ */
+class RectangularWorldBoundary extends Wall {
+
+    /**
+     * 
+     * @param {Number} minW left x position (smaller value)
+     * @param {Number} maxW right x position (larger value)
+     * @param {Number} minH top y position (smaller value)
+     * @param {Number} maxH bottom y position (larger value)
+     */
+    constructor(minW, maxW, minH, maxH) {
+        super();
+        this.minW = minW;
+        this.maxW = maxW;
+        this.minH = minH;
+        this.maxH = maxH;        
+    }
+
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     * @param {Number} timeStep 
+     */    
+    resolveCollisions(particles, timeStep) {
+        for (let particle of particles) {
+            const posX = particle.pos.x;
+            const posY = particle.pos.y;
+            const radius = particle.radius;
+            const bounce = particle.bounciness;
+            const velX = particle.vel.x;
+            const velY = particle.vel.y;
+            
+            if (posX > this.maxW - radius) {
+                particle.vel.x = velX * -1 * bounce;
+                particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
+            } 
+
+            if (posX < this.minW + radius) {
+                particle.vel.x = velX * -1 * bounce;
+                particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
+            } 
+
+            if (posY > this.maxH - radius) {
+                particle.vel.y = velY * -1 * bounce;
+                particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
+            } 
+
+            if (posY < this.minH + radius) {
+                particle.vel.y = velY * -1 * bounce;
+                particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
+            }
+        }
+    }
+
+    /**
+     * @override
+     * @param {Particle[]} particles 
+     */
+    applyCorrection(particles) {
+        for (let particle of particles) {
+            const radius = particle.radius;
+            if (particle.pos.x > this.maxW - radius) {
+                particle.pos.x = this.maxW - radius;
+            }
+
+            if (particle.pos.x < this.minW + radius) {
+                particle.pos.x = this.minW + radius;
+            }
+
+            if (particle.pos.y > this.maxH - radius) {
+                particle.pos.y = this.maxH - radius;
+            }
+
+            if (particle.pos.y < this.minH + radius) {
+                particle.pos.y = this.minH + radius;
+            }
+        }
+    }
+
+    /**
+     * Checks if a Particle is colliding with the Wall
+     * @param {Particle} particle 
+     * @returns {Boolean} true if particle is colliding with wall
+     */
+    isCollide(particle) {
+        const posX = particle.pos.x;
+        const posY = particle.pos.y;
+        const radius = particle.radius;
+        
+        return  (posX >= this.maxW - radius) || (posX <= this.minW + radius) || 
+                (posY >= this.maxH - radius) || (posY <= this.minH + radius) || 
+                (particle.pos.x >= this.maxW - radius) || (particle.pos.x <= this.minW + radius) || 
+                (particle.pos.y >= this.maxH - radius) || (particle.pos.y <= this.minH + radius)
+    }
+
+    /**
+     * @override
+     * @returns {Number[]} 
+     */    
+    getHashPos() {
+        return [(this.maxW + this.minW) / 2, (this.maxH + this.minH) / 2];
+    }
+
+    /**
+     * @override
+     * @returns {Number[]} 
+     */
+    getHashDimensions() {
+        return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
+    }
+
+    /**
+     * @override
+     * @returns {Vector2D[]} 
+     */    
+    vertices() {
+        return [];
+    }
+}
+
+module.exports = RectangularWorldBoundary;
+
+/***/ }),
+/* 16 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const HashGridItem = __webpack_require__(5);
@@ -1130,11 +1265,11 @@ class Wall extends HashGridItem {
 module.exports = Wall;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Vector2D = __webpack_require__(2);
-const Wall = __webpack_require__(15);
+const Wall = __webpack_require__(16);
 
 /**
  * `WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions
@@ -1329,139 +1464,6 @@ class WallBoundary extends Wall {
 module.exports = WallBoundary;
 
 /***/ }),
-/* 17 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const Wall = __webpack_require__(15);
-
-/**
- * `RectangularWorldBoundary` is a rectangular bounding box that constrains all particles *within* the boundaries.
- * The implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. 
- * Since the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not
- * just particles surrounding the edge.
- */
-class RectangularWorldBoundary extends Wall {
-
-    /**
-     * 
-     * @param {Number} minW left x position (smaller value)
-     * @param {Number} maxW right x position (larger value)
-     * @param {Number} minH top y position (smaller value)
-     * @param {Number} maxH bottom y position (larger value)
-     */
-    constructor(minW, maxW, minH, maxH) {
-        super();
-        this.minW = minW;
-        this.maxW = maxW;
-        this.minH = minH;
-        this.maxH = maxH;        
-    }
-
-    /**
-     * @override
-     * @param {Particle[]} particles 
-     * @param {Number} timeStep 
-     */    
-    resolveCollisions(particles, timeStep) {
-        for (let particle of particles) {
-            const posX = particle.pos.x;
-            const posY = particle.pos.y;
-            const radius = particle.radius;
-            const bounce = particle.bounciness;
-            const velX = particle.vel.x;
-            const velY = particle.vel.y;
-            
-            if (posX > this.maxW - radius) {
-                particle.vel.x = velX * -1 * bounce;
-                particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
-            } 
-
-            if (posX < this.minW + radius) {
-                particle.vel.x = velX * -1 * bounce;
-                particle.pos.x = posX +  2 * velX * -1 * bounce * timeStep;
-            } 
-
-            if (posY > this.maxH - radius) {
-                particle.vel.y = velY * -1 * bounce;
-                particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
-            } 
-
-            if (posY < this.minH + radius) {
-                particle.vel.y = velY * -1 * bounce;
-                particle.pos.y = posY + 2 * velY * -1 * bounce * timeStep;
-            }
-        }
-    }
-
-    /**
-     * @override
-     * @param {Particle[]} particles 
-     */
-    applyCorrection(particles) {
-        for (let particle of particles) {
-            const radius = particle.radius;
-            if (particle.pos.x > this.maxW - radius) {
-                particle.pos.x = this.maxW - radius;
-            }
-
-            if (particle.pos.x < this.minW + radius) {
-                particle.pos.x = this.minW + radius;
-            }
-
-            if (particle.pos.y > this.maxH - radius) {
-                particle.pos.y = this.maxH - radius;
-            }
-
-            if (particle.pos.y < this.minH + radius) {
-                particle.pos.y = this.minH + radius;
-            }
-        }
-    }
-
-    /**
-     * Checks if a Particle is colliding with the Wall
-     * @param {Particle} particle 
-     * @returns {Boolean} true if particle is colliding with wall
-     */
-    isCollide(particle) {
-        const posX = particle.pos.x;
-        const posY = particle.pos.y;
-        const radius = particle.radius;
-        
-        return  (posX >= this.maxW - radius) || (posX <= this.minW + radius) || 
-                (posY >= this.maxH - radius) || (posY <= this.minH + radius) || 
-                (particle.pos.x >= this.maxW - radius) || (particle.pos.x <= this.minW + radius) || 
-                (particle.pos.y >= this.maxH - radius) || (particle.pos.y <= this.minH + radius)
-    }
-
-    /**
-     * @override
-     * @returns {Number[]} 
-     */    
-    getHashPos() {
-        return [(this.maxW + this.minW) / 2, (this.maxH + this.minH) / 2];
-    }
-
-    /**
-     * @override
-     * @returns {Number[]} 
-     */
-    getHashDimensions() {
-        return [this.maxW - this.minW + 1, this.maxH - this.minH + 1];
-    }
-
-    /**
-     * @override
-     * @returns {Vector2D[]} 
-     */    
-    vertices() {
-        return [];
-    }
-}
-
-module.exports = RectangularWorldBoundary;
-
-/***/ }),
 /* 18 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -1482,7 +1484,7 @@ core.World = __webpack_require__(21);
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(9);
-const Wall = __webpack_require__(15);
+const Wall = __webpack_require__(16);
 const Particle = __webpack_require__(4);
 const SpatialHashGrid = __webpack_require__(20);
 
@@ -1723,7 +1725,7 @@ class SpatialHashGrid {
      * Finds the nearest grid coordinate that the encapsulates (x, y). Cycles the grid coordinates if input is out of range.
      * @param {Number} x 
      * @param {Number} y 
-     * @returns {number[]} integer grid coordinates in [x, y]
+     * @returns {Number[]} integer grid coordinates in [x, y]
      * @access private
      */
     #getCellIndex(x, y) {
@@ -1796,7 +1798,6 @@ class SpatialHashGrid {
     
     /**
      * Delete item from HashGrid.
-     * @modifies this
      * @param {HashGridItem} item
      */
     deleteItem(item) {
@@ -1811,7 +1812,6 @@ class SpatialHashGrid {
 
     /**
      * Returns a unique list of all HashGridItems the HashGrid. 
-     * @modifies this
      * @returns {HashGridItem[]}
      */
     values() {
@@ -1842,7 +1842,7 @@ module.exports = SpatialHashGrid;
 /* 21 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const RectangularWorldBoundary = __webpack_require__(17);
+const RectangularWorldBoundary = __webpack_require__(15);
 const Collision = __webpack_require__(22);
 const SpatialHashGrid = __webpack_require__(20);
 const Solver = __webpack_require__(19);
@@ -2520,7 +2520,8 @@ const NearBehavior = __webpack_require__(7);
  */
 class ChargeInteraction extends NearBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Instantiates new `ChargeInteraction`
+     * @param {Number} radius effective interaction radius
      */
     constructor(radius=100000) {
         super();
@@ -2782,6 +2783,7 @@ module.exports = Force;
 /* 33 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const Vector2D = __webpack_require__(2);
 const SelfBehavior = __webpack_require__(6);
 
 /**
@@ -2789,7 +2791,8 @@ const SelfBehavior = __webpack_require__(6);
  */
 class PositionLock extends SelfBehavior {
     /**
-     * @constructor abstract class cannot be instantiated
+     * Instantiates new `PositionLock`
+     * @param {Vector2D} position locked position
      */
     constructor(position) {
         super();
