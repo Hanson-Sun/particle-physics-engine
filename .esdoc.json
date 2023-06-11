@@ -1,5 +1,5 @@
 {
-    "source": "./src/constraints",
+    "source": "./src",
     "destination": "./out",
     "plugins": [
         {"name": "esdoc-ecmascript-proposal-plugin", "option": {"all": true}}

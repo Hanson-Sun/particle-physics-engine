@@ -13,11 +13,13 @@ class ParticleRenderer {
     }
 
 	draw(p) {
-		this.context.beginPath();
-		this.context.arc(p.pos.x, p.pos.y, p.radius, 0, Math.PI * 2, false);
-		this.context.strokeStyle = p.color;
-		this.context.fillStyle = p.color;
-		this.context.stroke();
+        if (p.radius > 0.5) {
+            this.context.beginPath();
+            this.context.arc(p.pos.x, p.pos.y, p.radius, 0, Math.PI * 2, false);
+            this.context.strokeStyle = p.color;
+            this.context.fillStyle = p.color;
+            this.context.stroke();
+        }
         
 	}
 

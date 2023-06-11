@@ -15,8 +15,8 @@ class ForceDistanceConstraint extends Constraint {
      * @param {Particle} c2 - particle 2
      * @param {Number} len - constrained length
      * @param {Number} stiffness - the "spring constant", higher values are more stiff
-     * @param {Number} dampening - damping force on constraint, must be greater than 0
      * @param {Number} breakForce - force at which the constraint breaks
+     * @param {Number} dampening - damping force on constraint, must be greater than 0
      */
     constructor(c1, c2, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();

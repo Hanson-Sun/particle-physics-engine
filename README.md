@@ -42,6 +42,10 @@ Modules can then be imported with `requires` or `import`.
 ## Demos
 yeah i need to make these
 
+[Newton's Cradle](./demos/newtons-cradle/index.html)
+
+[String Strands](./demos/strands/index.html)
+
 
 ## Structure
 The key modules of `pphys2d` are

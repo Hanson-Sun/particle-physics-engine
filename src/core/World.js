@@ -4,6 +4,7 @@ const SpatialHashGrid = require("../core/SpatialHashGrid");
 const Solver = require("../core/Solver");
 const Renderer = require("../renderers/Renderer");
 const Gravity = require("../behaviors/Gravity");
+const PositionLock = require("../behaviors/PositionLock");
 const Particle = require("./Particle");
 
 /**
