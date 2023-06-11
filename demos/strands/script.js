@@ -21,7 +21,7 @@ const c = canvas.getContext("2d");
 canvas.width = width;
 canvas.height = height;
 
-const world = new World(canvas, width, height, 40, 40, 0.05, 1, 20);
+const world = new World(canvas, width, height, 10, 10, 0.05, 1, 20);
 world.constrainBoundary(0, width, 0, height);
 const handler = new InputHandler(world);
 
