@@ -1,7 +1,8 @@
 {
-    "source": "./src",
+    "source": "./demos",
     "destination": "./out",
     "plugins": [
+        {"name": "esdoc-standard-plugin"},
         {"name": "esdoc-ecmascript-proposal-plugin", "option": {"all": true}}
     ]
   }

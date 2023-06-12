@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      .node {
+        cursor: pointer;
+      }
+      .node circle, .node rect {
+        stroke-width: 1.5px;
+        stroke: #4169e1;
+        fill: #fff;
+      }
+      .node text {
+        font: 11px sans-serif;
+      }
+      .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 1.5px;
+      }
+      .node .root {
+        stroke: #4169e1;
+        fill: #35a6ff;
+        r: 7;
+      }
+      .node .class {
+        stroke: #4169e1;
+        fill: #7cbbff;
+      }
+      .node .function{
+        stroke: #a0522d;
+        fill: #deb887;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- copied from http://bl.ocks.org/d3noob/8329404 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+    <script>
+      /**
+ * jsdoc2diagram
+ *
+ * copied from http://bl.ocks.org/d3noob/8329404
+ */
+
+/*global d3*/
+
+'use strict';
+
+var treeData = {};
+var margin = {top: 20, right: 120, bottom: 20, left: 120};
+var width;
+var height;
+var duration = 0;
+var tree = d3.layout.tree();
+
+var diagonal = d3.svg.diagonal()
+  .projection(function(d) {
+    return [d.y, d.x];
+  });
+
+var svg = d3.select('body').append('svg')
+  .attr('id', 'diagram')
+  .append('g')
+  .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+function update(source) {
+  // Compute the new tree layout.
+  var i = 0;
+  var nodes = tree.nodes(treeData).reverse();
+  var links = tree.links(nodes);
+
+  // Normalize for fixed-depth.
+  nodes.forEach(function(d) {
+    d.y = d.depth * 180;
+  });
+
+  // Update the nodes…
+  var node = svg.selectAll('g.node')
+    .data(nodes, function(d) {
+      return d.id || (d.id = ++i);
+    });
+
+  // Enter any new nodes at the parent's previous position.
+  var nodeEnter = node.enter().append('g')
+    .attr('class', 'node')
+    .attr('transform', function(d) {
+      return 'translate(' + source.y0 + ',' + source.x0 + ')';
+    })
+    .on('click', click);
+
+  nodeEnter.append('text')
+    .text(function(d) {
+      return d.shortName + (d.type === 'function' ? '()' : '');
+    })
+    .attr('x', function(d) {
+      return d.children || d._children ? -10 : 10;
+    })
+    .attr('dy', '.35em')
+    .attr('text-anchor', function(d) {
+      return d.children || d._children ? 'end' : 'start';
+    })
+    .style('fill-opacity', 1e-6);
+
+  // Transition nodes to their new position.
+  var nodeUpdate = node.transition()
+    .duration(duration)
+    .attr('transform', function(d) {
+      return 'translate(' + d.y + ',' + d.x + ')';
+    });
+
+  nodeUpdate.select('circle')
+    .attr('r', 4.5);
+
+  var allTextNodes = nodeEnter.select('text');
+  allTextNodes.each(function(d, index) {
+    var textNodeParent = d3.select(allTextNodes[0][index].parentNode);
+    if (d.type.match(/(root|class|function)/)) {
+      textNodeParent.append('circle')
+        .attr('r', 5)
+        .attr('class', d.type);
+    } else {
+      textNodeParent.append('rect')
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('x', -5)
+        .attr('y', -5)
+        .attr('class', d.type);
+    }
+  });
+
+  nodeUpdate.select('text')
+    .style('fill-opacity', 1);
+
+  // Transition exiting nodes to the parent's new position.
+  var nodeExit = node.exit().transition()
+    .duration(duration)
+    .attr('transform', function(d) {
+      return 'translate(' + source.y + ',' + source.x + ')';
+    })
+    .remove();
+
+  nodeExit.select('circle')
+    .attr('r', 1e-6);
+
+  nodeExit.select('text')
+    .style('fill-opacity', 1e-6);
+
+  // Update the links…
+  var link = svg.selectAll('path.link')
+    .data(links, function(d) {
+      return d.target.id;
+    });
+
+  // Enter any new links at the parent's previous position.
+  link.enter().insert('path', 'g')
+    .attr('class', 'link')
+    .attr('d', function(d) {
+      var o = {x: source.x0, y: source.y0};
+      return diagonal({source: o, target: o});
+    });
+
+  // Transition links to their new position.
+  link.transition()
+    .duration(duration)
+    .attr('d', diagonal);
+
+  // Transition exiting nodes to the parent's new position.
+  link.exit().transition()
+    .duration(duration)
+    .attr('d', function(d) {
+      var o = {x: source.x, y: source.y};
+      return diagonal({source: o, target: o});
+    })
+    .remove();
+
+  // Stash the old positions for transition.
+  nodes.forEach(function(d) {
+    d.x0 = d.x;
+    d.y0 = d.y;
+  });
+
+  // adjust the width/height
+  setTimeout(function() {
+    var d = d3.select('#diagram');
+    var w = svg[0][0].getBBox().width;
+    var h = svg[0][0].getBBox().height;
+    d[0][0].style.width = (w + 100);
+    d[0][0].style.height = (h + 100);
+  }, 100);
+}
+
+function init(data) {
+
+  var nodes = tree.nodes(data).reverse();
+  var map = {};
+  svg.selectAll('g.node')
+    .data(nodes, function(d) {
+      var maxRows = d.parent ? d.parent.children.length : 1;
+      var preMax = map[d.depth] || 1;
+      map[d.depth] = Math.max(preMax, maxRows);
+      return d.shortName;
+    });
+
+  var maxRow = 1;
+  var maxCols = 1;
+  // get max rows
+  for (var key in map) {
+    maxRow = Math.max(maxRow, map[key]);
+    maxCols++;
+  }
+
+  width = (maxCols * 200) - margin.right - margin.left;
+  height = (maxRow * 30) - margin.top - margin.bottom;
+  tree = d3.layout.tree().size([height, width]);
+
+  d3.select('#diagram')
+    .attr('width', width + margin.right + margin.left)
+    .attr('height', height + margin.top + margin.bottom);
+
+  data.x0 = height / 2;
+  data.y0 = 0;
+  treeData = data;
+  update(data);
+}
+
+// Toggle children on click.
+function click(d) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+  update(d);
+}
+
+
+      init({"shortName":"root","type":"root","children":[{"name":"behaviors","shortName":"behaviors","parent":"","type":"constant"},{"name":"ChargeInteraction","shortName":"ChargeInteraction","parent":"","type":"class","children":[{"name":"ChargeInteraction.applyBehavior","shortName":"applyBehavior","parent":"ChargeInteraction","type":"function"},{"name":"ChargeInteraction.range","shortName":"range","parent":"ChargeInteraction","type":"function"},{"name":"ChargeInteraction.applyCorrection","shortName":"applyCorrection","parent":"ChargeInteraction","type":"function"}]},{"name":"Collision","shortName":"Collision","parent":"","type":"class","children":[{"name":"Collision.applyBehavior","shortName":"applyBehavior","parent":"Collision","type":"function"},{"name":"Collision.applyCorrection","shortName":"applyCorrection","parent":"Collision","type":"function"},{"name":"Collision.range","shortName":"range","parent":"Collision","type":"function"},{"name":"Collision.isCollide","shortName":"isCollide","parent":"Collision","type":"function"},{"name":"Collision.applyBehavior","shortName":"applyBehavior","parent":"Collision","type":"function"}]},{"name":"Drag","shortName":"Drag","parent":"","type":"class","children":[{"name":"Drag.applyBehavior","shortName":"applyBehavior","parent":"Drag","type":"function"},{"name":"Drag.applyCorrection","shortName":"applyCorrection","parent":"Drag","type":"function"}]},{"name":"Force","shortName":"Force","parent":"","type":"class","children":[{"name":"Force.applyBehavior","shortName":"applyBehavior","parent":"Force","type":"function"},{"name":"Force.applyCorrection","shortName":"applyCorrection","parent":"Force","type":"function"}]},{"name":"Gravity","shortName":"Gravity","parent":"","type":"class","children":[{"name":"Gravity.applyBehavior","shortName":"applyBehavior","parent":"Gravity","type":"function"},{"name":"Gravity.applyCorrection","shortName":"applyCorrection","parent":"Gravity","type":"function"}]},{"name":"NearBehavior","shortName":"NearBehavior","parent":"","type":"interface","children":[{"name":"NearBehavior.applyBehavior","shortName":"applyBehavior","parent":"NearBehavior","type":"function"},{"name":"NearBehavior.range","shortName":"range","parent":"NearBehavior","type":"function"},{"name":"NearBehavior.applyCorrection","shortName":"applyCorrection","parent":"NearBehavior","type":"function"}]},{"name":"PenaltyCollision","shortName":"PenaltyCollision","parent":"","type":"class","children":[{"name":"PenaltyCollision.applyBehavior","shortName":"applyBehavior","parent":"PenaltyCollision","type":"function"},{"name":"PenaltyCollision.applyCorrection","shortName":"applyCorrection","parent":"PenaltyCollision","type":"function"},{"name":"PenaltyCollision.range","shortName":"range","parent":"PenaltyCollision","type":"function"},{"name":"PenaltyCollision.isCollide","shortName":"isCollide","parent":"PenaltyCollision","type":"function"}]},{"name":"PositionLock","shortName":"PositionLock","parent":"","type":"class","children":[{"name":"PositionLock.applyBehavior","shortName":"applyBehavior","parent":"PositionLock","type":"function"},{"name":"PositionLock.applyCorrection","shortName":"applyCorrection","parent":"PositionLock","type":"function"}]},{"name":"SelfBehavior","shortName":"SelfBehavior","parent":"","type":"interface","children":[{"name":"SelfBehavior.applyBehavior","shortName":"applyBehavior","parent":"SelfBehavior","type":"function"},{"name":"SelfBehavior.applyCorrection","shortName":"applyCorrection","parent":"SelfBehavior","type":"function"}]},{"name":"Constraint","shortName":"Constraint","parent":"","type":"interface","children":[{"name":"Constraint.update","shortName":"update","parent":"Constraint","type":"function"},{"name":"Constraint.vertices","shortName":"vertices","parent":"Constraint","type":"function"},{"name":"Constraint.particles","shortName":"particles","parent":"Constraint","type":"function"}]},{"name":"constraints","shortName":"constraints","parent":"","type":"constant"},{"name":"ForceDistanceConstraint","shortName":"ForceDistanceConstraint","parent":"","type":"class","children":[{"name":"ForceDistanceConstraint.update","shortName":"update","parent":"ForceDistanceConstraint","type":"function"},{"name":"ForceDistanceConstraint.vertices","shortName":"vertices","parent":"ForceDistanceConstraint","type":"function"},{"name":"ForceDistanceConstraint.particles","shortName":"particles","parent":"ForceDistanceConstraint","type":"function"}]},{"name":"ForcePivotConstraint","shortName":"ForcePivotConstraint","parent":"","type":"class","children":[{"name":"ForcePivotConstraint.update","shortName":"update","parent":"ForcePivotConstraint","type":"function"},{"name":"ForcePivotConstraint.vertices","shortName":"vertices","parent":"ForcePivotConstraint","type":"function"},{"name":"ForcePivotConstraint.particles","shortName":"particles","parent":"ForcePivotConstraint","type":"function"}]},{"name":"PositionDistanceConstraint","shortName":"PositionDistanceConstraint","parent":"","type":"class","children":[{"name":"PositionDistanceConstraint.update","shortName":"update","parent":"PositionDistanceConstraint","type":"function"},{"name":"PositionDistanceConstraint.vertices","shortName":"vertices","parent":"PositionDistanceConstraint","type":"function"},{"name":"PositionDistanceConstraint.particles","shortName":"particles","parent":"PositionDistanceConstraint","type":"function"}]},{"name":"PositionPivotConstraint","shortName":"PositionPivotConstraint","parent":"","type":"class","children":[{"name":"PositionPivotConstraint.update","shortName":"update","parent":"PositionPivotConstraint","type":"function"},{"name":"PositionPivotConstraint.vertices","shortName":"vertices","parent":"PositionPivotConstraint","type":"function"},{"name":"PositionPivotConstraint.particles","shortName":"particles","parent":"PositionPivotConstraint","type":"function"}]},{"name":"core","shortName":"core","parent":"","type":"constant"},{"name":"HashGridItem","shortName":"HashGridItem","parent":"","type":"interface","children":[{"name":"HashGridItem.getHashPos","shortName":"getHashPos","parent":"HashGridItem","type":"function"},{"name":"HashGridItem.getHashDimensions","shortName":"getHashDimensions","parent":"HashGridItem","type":"function"}]},{"name":"Particle","shortName":"Particle","parent":"","type":"class","children":[{"name":"Particle.applyVelocity","shortName":"applyVelocity","parent":"Particle","type":"function"},{"name":"Particle.applyForce","shortName":"applyForce","parent":"Particle","type":"function"},{"name":"Particle.applyAcceleration","shortName":"applyAcceleration","parent":"Particle","type":"function"},{"name":"Particle.addSelfBehavior","shortName":"addSelfBehavior","parent":"Particle","type":"function"},{"name":"Particle.addNearBehavior","shortName":"addNearBehavior","parent":"Particle","type":"function"},{"name":"Particle.removeNearBehavior","shortName":"removeNearBehavior","parent":"Particle","type":"function"},{"name":"Particle.removeSelfBehavior","shortName":"removeSelfBehavior","parent":"Particle","type":"function"},{"name":"Particle.clearBehaviors","shortName":"clearBehaviors","parent":"Particle","type":"function"},{"name":"Particle.getHashPos","shortName":"getHashPos","parent":"Particle","type":"function"},{"name":"Particle.getHashDimensions","shortName":"getHashDimensions","parent":"Particle","type":"function"}]},{"name":"Solver","shortName":"Solver","parent":"","type":"class","children":[{"name":"Solver.solve","shortName":"solve","parent":"Solver","type":"function"},{"name":"Solver.update","shortName":"update","parent":"Solver","type":"function"},{"name":"Solver.preMove","shortName":"preMove","parent":"Solver","type":"function"},{"name":"Solver.handleBehaviors","shortName":"handleBehaviors","parent":"Solver","type":"function"},{"name":"Solver.handleConstraints","shortName":"handleConstraints","parent":"Solver","type":"function"},{"name":"Solver.handleWallCollisions","shortName":"handleWallCollisions","parent":"Solver","type":"function"},{"name":"Solver.updateVelocity","shortName":"updateVelocity","parent":"Solver","type":"function"},{"name":"Solver.positionCorrection","shortName":"positionCorrection","parent":"Solver","type":"function"},{"name":"Solver.nextFrame","shortName":"nextFrame","parent":"Solver","type":"function"},{"name":"Solver.updateSolverParticles","shortName":"updateSolverParticles","parent":"Solver","type":"function"}]},{"name":"SpatialHashGrid","shortName":"SpatialHashGrid","parent":"","type":"class","children":[{"name":"SpatialHashGrid.add","shortName":"add","parent":"SpatialHashGrid","type":"function"},{"name":"SpatialHashGrid.findNear","shortName":"findNear","parent":"SpatialHashGrid","type":"function"},{"name":"SpatialHashGrid.updateItem","shortName":"updateItem","parent":"SpatialHashGrid","type":"function"},{"name":"SpatialHashGrid.deleteItem","shortName":"deleteItem","parent":"SpatialHashGrid","type":"function"},{"name":"SpatialHashGrid.values","shortName":"values","parent":"SpatialHashGrid","type":"function"}]},{"name":"World","shortName":"World","parent":"","type":"class","children":[{"name":"World.addParticle","shortName":"addParticle","parent":"World","type":"function"},{"name":"World.removeParticle","shortName":"removeParticle","parent":"World","type":"function"},{"name":"World.addConstraint","shortName":"addConstraint","parent":"World","type":"function"},{"name":"World.removeConstraint","shortName":"removeConstraint","parent":"World","type":"function"},{"name":"World.addWall","shortName":"addWall","parent":"World","type":"function"},{"name":"World.clearParticles","shortName":"clearParticles","parent":"World","type":"function"},{"name":"World.clearConstraints","shortName":"clearConstraints","parent":"World","type":"function"},{"name":"World.updateParticleList","shortName":"updateParticleList","parent":"World","type":"function"},{"name":"World.addGlobalSelfBehavior","shortName":"addGlobalSelfBehavior","parent":"World","type":"function"},{"name":"World.removeGlobalSelfBehavior","shortName":"removeGlobalSelfBehavior","parent":"World","type":"function"},{"name":"World.addGlobalNearBehavior","shortName":"addGlobalNearBehavior","parent":"World","type":"function"},{"name":"World.removeGlobalNearBehavior","shortName":"removeGlobalNearBehavior","parent":"World","type":"function"},{"name":"World.enableGravity","shortName":"enableGravity","parent":"World","type":"function"},{"name":"World.disableGravity","shortName":"disableGravity","parent":"World","type":"function"},{"name":"World.nextFrame","shortName":"nextFrame","parent":"World","type":"function"},{"name":"World.setSolverUpdate","shortName":"setSolverUpdate","parent":"World","type":"function"}]},{"name":"renderers","shortName":"renderers","parent":"","type":"constant"},{"name":"InputHandler","shortName":"InputHandler","parent":"","type":"class","children":[{"name":"InputHandler.KeyInput","shortName":"KeyInput","parent":"InputHandler","type":"class"}]},{"name":"utils","shortName":"utils","parent":"","type":"constant"},{"name":"Vector2D","shortName":"Vector2D","parent":"","type":"class","children":[{"name":"Vector2D.add","shortName":"add","parent":"Vector2D","type":"function"},{"name":"Vector2D.addTo","shortName":"addTo","parent":"Vector2D","type":"function"},{"name":"Vector2D.sub","shortName":"sub","parent":"Vector2D","type":"function"},{"name":"Vector2D.subTo","shortName":"subTo","parent":"Vector2D","type":"function"},{"name":"Vector2D.mult","shortName":"mult","parent":"Vector2D","type":"function"},{"name":"Vector2D.multTo","shortName":"multTo","parent":"Vector2D","type":"function"},{"name":"Vector2D.dot","shortName":"dot","parent":"Vector2D","type":"function"},{"name":"Vector2D.cross","shortName":"cross","parent":"Vector2D","type":"function"},{"name":"Vector2D.mag","shortName":"mag","parent":"Vector2D","type":"function"},{"name":"Vector2D.magSqr","shortName":"magSqr","parent":"Vector2D","type":"function"},{"name":"Vector2D.normalize","shortName":"normalize","parent":"Vector2D","type":"function"},{"name":"Vector2D.normalizeTo","shortName":"normalizeTo","parent":"Vector2D","type":"function"},{"name":"Vector2D.angleBetween","shortName":"angleBetween","parent":"Vector2D","type":"function"},{"name":"Vector2D.reflect","shortName":"reflect","parent":"Vector2D","type":"function"},{"name":"Vector2D.reflectTo","shortName":"reflectTo","parent":"Vector2D","type":"function"}]},{"name":"RectangularWorldBoundary","shortName":"RectangularWorldBoundary","parent":"","type":"class","children":[{"name":"RectangularWorldBoundary.resolveCollisions","shortName":"resolveCollisions","parent":"RectangularWorldBoundary","type":"function"},{"name":"RectangularWorldBoundary.applyCorrection","shortName":"applyCorrection","parent":"RectangularWorldBoundary","type":"function"},{"name":"RectangularWorldBoundary.isCollide","shortName":"isCollide","parent":"RectangularWorldBoundary","type":"function"},{"name":"RectangularWorldBoundary.getHashPos","shortName":"getHashPos","parent":"RectangularWorldBoundary","type":"function"},{"name":"RectangularWorldBoundary.getHashDimensions","shortName":"getHashDimensions","parent":"RectangularWorldBoundary","type":"function"},{"name":"RectangularWorldBoundary.vertices","shortName":"vertices","parent":"RectangularWorldBoundary","type":"function"}]},{"name":"Wall","shortName":"Wall","parent":"","type":"interface","children":[{"name":"Wall.resolveCollisions","shortName":"resolveCollisions","parent":"Wall","type":"function"},{"name":"Wall.applyCorrection","shortName":"applyCorrection","parent":"Wall","type":"function"},{"name":"Wall.vertices","shortName":"vertices","parent":"Wall","type":"function"}]},{"name":"WallBoundary","shortName":"WallBoundary","parent":"","type":"class","children":[{"name":"WallBoundary.resolveCollisions","shortName":"resolveCollisions","parent":"WallBoundary","type":"function"},{"name":"WallBoundary.applyCorrection","shortName":"applyCorrection","parent":"WallBoundary","type":"function"},{"name":"WallBoundary.isCollide","shortName":"isCollide","parent":"WallBoundary","type":"function"},{"name":"WallBoundary.getHashPos","shortName":"getHashPos","parent":"WallBoundary","type":"function"},{"name":"WallBoundary.getHashDimensions","shortName":"getHashDimensions","parent":"WallBoundary","type":"function"},{"name":"WallBoundary.vertices","shortName":"vertices","parent":"WallBoundary","type":"function"}]},{"name":"walls","shortName":"walls","parent":"","type":"constant"}]});
+    </script>
+
+  </body>
+</html>

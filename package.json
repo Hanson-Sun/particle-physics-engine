@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Hanson-Sun/particle-physics-engine",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "build-docs": "jsdoc --package '' --configure jsdoc.json --verbose --destination ./docs",
+    "build-docs": "jsdoc -t ./node_modules/jsdoc2diagram --package '' --configure jsdoc.json --verbose --destination ./docs",
     "docs-coverage": "inchjs suggest ./src/**/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,6 +16,9 @@
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.7",
     "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "jsdoc": "^4.0.2",
+    "jsdoc2diagram": "^0.0.6",
     "tui-jsdoc-template": "^1.2.2",
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1"
@@ -28,7 +31,6 @@
   "dependencies": {
     "doc-coverage": "^1.1.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
-    "esdoc-standard-plugin": "^1.0.0",
     "inchjs": "^0.4.1"
   }
 }
