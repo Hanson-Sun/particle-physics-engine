@@ -1,11 +1,12 @@
 /**
- * 
+ * `ParticleRenderer` is a simple renderer that renders `Particle`s of a `Solver`. Each particle is represented by a circle with a thin outline. 
+ * This is a basic renderer intended for quick visualization.
  */
 class ParticleRenderer {
     /**
-     * 
-     * @param {*} solver 
-     * @param {*} context 
+     * @param {Solver} solver 
+     * @param {context} context 
+     * @constructor
      */
     constructor(solver, context) {
         this.solver = solver;
@@ -13,7 +14,8 @@ class ParticleRenderer {
     }
 
     /**
-     * 
+     * Renders the particles per frame
+     * @public 
      */
     renderFrame() {
         for (let p of this.solver.particleList) {
@@ -22,8 +24,9 @@ class ParticleRenderer {
     }
 
     /**
-     * 
-     * @param {*} p 
+     * Renders a single particle
+     * @param {Particle} p 
+     * @public
      */
 	draw(p) {
         if (p.radius > 0.5) {

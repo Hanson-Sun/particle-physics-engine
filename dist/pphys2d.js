@@ -2538,7 +2538,8 @@ const ParticleRenderer = __webpack_require__(25);
 const WallRenderer = __webpack_require__(26);
 
 /**
- * 
+ * `Renderer` is the general renderer class that renders `Particle`s, `Constraint`s and `Wall`s. Overall, this is a simplistic renderer
+ * intended for quick visualization. It is encouraged to write a custom renderer for more complex/efficient scenes.
  */
 class Renderer {
     constructor(solver, canvas) {
@@ -2550,26 +2551,28 @@ class Renderer {
         this.wallRenderer = new WallRenderer(solver, this.context);
     }
 
-    // call this anytime a new particle is added
     /**
-     * 
-     * @param {*} list 
+     * Updates the particles in the `particleRenderer`. Must be called every time the list of particles is reassigned.
+     * @param {Particle[]} list 
+     * @public
      */
     updateRendererParticles(list) {
         this.particleRenderer.particles = list;
     }
 
     /**
-     * 
-     * @param {*} context 
+     * Updates the HTMLCanvas context of each sub-renderer
+     * @param {context} context 
      */
     updateContext(context) {
         this.constraintRenderer.context = context;
         this.particleRenderer.context = context;
+        this.WallRenderer.context = context;
     }
 
     /**
-     * 
+     * Renders a single frame of the solver
+     * @public
      */
     renderFrame() {
         this.clear();
@@ -2579,7 +2582,8 @@ class Renderer {
     }
 
     /**
-     * 
+     * Clears the frame
+     * @public
      */
     clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -2593,7 +2597,7 @@ module.exports = Renderer;
 /***/ ((module) => {
 
 /**
- * `ConstraintRenderer` is a class responsible for rendering constraints in a `Solver`. Constraints are represented with simple lines.
+ * `ConstraintRenderer` is a simple renderer for `Constraint`s in a `Solver`. Constraints are represented with simple lines.
  * This renderer only provides a simple and quick way to visualize constraints in a HTMLCanvas element. 
  */
 class ConstraintRenderer {
@@ -2668,13 +2672,14 @@ module.exports = ConstraintRenderer;
 /***/ ((module) => {
 
 /**
- * 
+ * `ParticleRenderer` is a simple renderer that renders `Particle`s of a `Solver`. Each particle is represented by a circle with a thin outline. 
+ * This is a basic renderer intended for quick visualization.
  */
 class ParticleRenderer {
     /**
-     * 
-     * @param {*} solver 
-     * @param {*} context 
+     * @param {Solver} solver 
+     * @param {context} context 
+     * @constructor
      */
     constructor(solver, context) {
         this.solver = solver;
@@ -2682,7 +2687,8 @@ class ParticleRenderer {
     }
 
     /**
-     * 
+     * Renders the particles per frame
+     * @public 
      */
     renderFrame() {
         for (let p of this.solver.particleList) {
@@ -2691,8 +2697,9 @@ class ParticleRenderer {
     }
 
     /**
-     * 
-     * @param {*} p 
+     * Renders a single particle
+     * @param {Particle} p 
+     * @public
      */
 	draw(p) {
         if (p.radius > 0.5) {
@@ -2713,14 +2720,16 @@ module.exports = ParticleRenderer;
 /* 26 */
 /***/ ((module) => {
 
+
 /**
- * 
+ * `WallRenderer` is a simple renderer that renders `Wall`s. Walls are represented by a thin line segment. 
+ * This is a basic renderer intended for quick visualization of walls.
  */
 class WallRenderer {
     /**
-     * 
-     * @param {*} solver 
-     * @param {*} context 
+     * @param {Solver} solver 
+     * @param {context} context 
+     * @constructor
      */
     constructor(solver, context) {
         this.solver = solver;
@@ -2730,7 +2739,8 @@ class WallRenderer {
     }
 
     /**
-     * 
+     * Renders the walls per frame
+     * @public
      */
     renderFrame() {
         for (let w of this.solver.walls) {
@@ -2739,8 +2749,9 @@ class WallRenderer {
     }
 
     /**
-     * 
-     * @param {*} w 
+     * Renders a single wall
+     * @param {Wall} w 
+     * @public
      */
 	draw(w) {
         let vertices = w.vertices();

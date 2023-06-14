@@ -1,5 +1,5 @@
 /**
- * `ConstraintRenderer` is a class responsible for rendering constraints in a `Solver`. Constraints are represented with simple lines.
+ * `ConstraintRenderer` is a simple renderer for `Constraint`s in a `Solver`. Constraints are represented with simple lines.
  * This renderer only provides a simple and quick way to visualize constraints in a HTMLCanvas element. 
  */
 class ConstraintRenderer {

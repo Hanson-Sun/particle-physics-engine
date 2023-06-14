@@ -3,7 +3,8 @@ const ParticleRenderer = require("./ParticleRenderer");
 const WallRenderer = require("./WallRenderer");
 
 /**
- * 
+ * `Renderer` is the general renderer class that renders `Particle`s, `Constraint`s and `Wall`s. Overall, this is a simplistic renderer
+ * intended for quick visualization. It is encouraged to write a custom renderer for more complex/efficient scenes.
  */
 class Renderer {
     constructor(solver, canvas) {
@@ -15,26 +16,28 @@ class Renderer {
         this.wallRenderer = new WallRenderer(solver, this.context);
     }
 
-    // call this anytime a new particle is added
     /**
-     * 
-     * @param {*} list 
+     * Updates the particles in the `particleRenderer`. Must be called every time the list of particles is reassigned.
+     * @param {Particle[]} list 
+     * @public
      */
     updateRendererParticles(list) {
         this.particleRenderer.particles = list;
     }
 
     /**
-     * 
-     * @param {*} context 
+     * Updates the HTMLCanvas context of each sub-renderer
+     * @param {context} context 
      */
     updateContext(context) {
         this.constraintRenderer.context = context;
         this.particleRenderer.context = context;
+        this.WallRenderer.context = context;
     }
 
     /**
-     * 
+     * Renders a single frame of the solver
+     * @public
      */
     renderFrame() {
         this.clear();
@@ -44,7 +47,8 @@ class Renderer {
     }
 
     /**
-     * 
+     * Clears the frame
+     * @public
      */
     clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);

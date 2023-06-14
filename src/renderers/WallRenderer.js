@@ -1,11 +1,13 @@
+
 /**
- * 
+ * `WallRenderer` is a simple renderer that renders `Wall`s. Walls are represented by a thin line segment. 
+ * This is a basic renderer intended for quick visualization of walls.
  */
 class WallRenderer {
     /**
-     * 
-     * @param {*} solver 
-     * @param {*} context 
+     * @param {Solver} solver 
+     * @param {context} context 
+     * @constructor
      */
     constructor(solver, context) {
         this.solver = solver;
@@ -15,7 +17,8 @@ class WallRenderer {
     }
 
     /**
-     * 
+     * Renders the walls per frame
+     * @public
      */
     renderFrame() {
         for (let w of this.solver.walls) {
@@ -24,8 +27,9 @@ class WallRenderer {
     }
 
     /**
-     * 
-     * @param {*} w 
+     * Renders a single wall
+     * @param {Wall} w 
+     * @public
      */
 	draw(w) {
         let vertices = w.vertices();
