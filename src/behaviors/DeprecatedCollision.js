@@ -2,7 +2,7 @@
  * A deprecated collision class that does not work.
  * @deprecated
  */
-class Collision extends NearBehavior {
+class DeprecatedCollision extends NearBehavior {
 
     constructor() {
         super();
