@@ -3,6 +3,7 @@ const SelfBehavior = require("./SelfBehavior");
 /**
  * `Drag` is a `SelfBehavior` that applies a viscous drag force on the particle itself.
  * It generally follows the circular quadratic drag formula in turbulent fluids. Units are arbitrary and should be tuned experimentally.
+ * @extends {SelfBehavior}
  */
 class Drag extends SelfBehavior {
 	/**

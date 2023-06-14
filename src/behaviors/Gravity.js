@@ -2,6 +2,7 @@ const SelfBehavior = require("./SelfBehavior");
 
 /**
  * `Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.
+ *  @extends {SelfBehavior}
  */
 class Gravity extends SelfBehavior {
 	/**

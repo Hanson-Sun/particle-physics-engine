@@ -18,6 +18,7 @@ class NearBehavior {
      * @param {Number} timeStep time step of simulation
      * @param {Particle[]} particles surrounding particles
      * @abstract
+     * @public
      */
     applyBehavior(particle, timeStep, particles) {
         throw new Error("Method 'applyBehavior()' must be implemented.");
@@ -27,6 +28,7 @@ class NearBehavior {
      * Returns the effective range / defines the size of the nearby range
      * @returns {Number[]} pair of rectangular dimensions `[number, number]` that represent the effective range
      * @abstract
+     * @public
      */
     range() {
         throw new Error("Method 'range()' must be implemented.");
@@ -37,6 +39,7 @@ class NearBehavior {
      * @param {Particle} particle 
      * @param {Particle[]} particles 
      * @abstract
+     * @public
      */
     applyCorrection(particle, particles) {
         throw new Error("Method 'applyCorrection()' must be implemented.");

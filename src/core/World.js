@@ -6,6 +6,7 @@ const Renderer = require("../renderers/Renderer");
 const Gravity = require("../behaviors/Gravity");
 const PositionLock = require("../behaviors/PositionLock");
 const Particle = require("./Particle");
+const Vector2D = require("../utils/Vector2D");
 
 /**
  * `World` the global-state instance of the physics engine that keeps track of all the objects. This provides
@@ -24,6 +25,7 @@ class World {
      * @param {Number} timeStep change in time per solve iteration
      * @param {Number} iterationPerFrame number of solve iterations per frame
      * @param {Number} constraintIteration number of times constraints are solved per iteration
+     * @constructor
      */
     constructor(canvas, width, height, xGrids, yGrids = null, timeStep = 1, iterationPerFrame = 1, constraintIteration = 1) {
         this.timeStep = timeStep;
@@ -50,6 +52,7 @@ class World {
     /**
      * Adds a particle to the world
      * @param {Particle} p 
+     * @public
      */
     addParticle(p) {
         this.particles.add(p);
@@ -59,6 +62,7 @@ class World {
     /**
      * Removes a particle from the world
      * @param {Particle} p
+     * @public
      */
     removeParticle(p) {
         this.particles.deleteItem(p);
@@ -79,6 +83,7 @@ class World {
     /**
      * Adds a constraint to the world
      * @param {Constraint} c 
+     * @public
      */
     addConstraint(c) {
         this.constraints.push(c);
@@ -88,6 +93,7 @@ class World {
      * Removes a constraint from the world
      * @param {Constraint} c 
      * @returns {Boolean} true if the constraint is removed
+     * @public
      */
     removeConstraint(c) {
         const index = this.constraints.indexOf(c);
@@ -101,11 +107,18 @@ class World {
     /**
      * Adds a wall to the world
      * @param {Wall} w 
+     * @public
      */
     addWall(w) {
         this.walls.push(w);
     }
 
+    /**
+     * Removes a wall from the world
+     * @param {Wall} w 
+     * @returns {boolean} true if the wall is removed 
+     * @public
+     */
     removeWall(w) {
         const index = this.walls.indexOf(w);
 		if (index > -1) {
@@ -116,7 +129,8 @@ class World {
     }
 
     /**
-     * Clears all of the particles and constraints
+     * Clears all of the particles and any associated constraints
+     * @public
      */
     clearParticles() {
         this.particles = new SpatialHashGrid(this.width, this.height, this.xGrids, this.yGrids);
@@ -127,6 +141,7 @@ class World {
 
     /**
      * Clears all of the constraints
+     * @public
      */
     clearConstraints() {
         this.constraints = [];
@@ -134,6 +149,10 @@ class World {
         this.updateParticleList();
     }
 
+    /**
+     * Clears all of the walls
+     * @public 
+     */
     clearWalls() {
         this.walls = [];
         this.solver.walls = [];
@@ -141,6 +160,7 @@ class World {
 
     /**
      * Update the list of particles. Must be called every time the number of particles change.
+     * @public
      */
     updateParticleList() {
         this.particlesList = this.particles.values();
@@ -148,8 +168,9 @@ class World {
     }
 
     /**
-     * Adds a SelfBehavior to all the particles
+     * Adds a SelfBehavior to **all** the particles in the world
      * @param {SelfBehavior} b 
+     * @public
      */
     addGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
@@ -158,8 +179,9 @@ class World {
     }
 
     /**
-     * Removes a SelfBehavior from all the particles
+     * Removes a SelfBehavior from **all** the particles in the world
      * @param {SelfBehavior} b 
+     * @public
      */
     removeGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
@@ -168,8 +190,9 @@ class World {
     }
 
     /**
-     * Adds a NearBehavior to all the particles
+     * Adds a NearBehavior to **all** the particles in the world
      * @param {NearBehavior} b 
+     * @public
      */
     addGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
@@ -178,8 +201,9 @@ class World {
     }
 
     /**
-     * Removes a NearBehavior to all the particles
+     * Removes a NearBehavior to **all** the particles in the world
      * @param {NearBehavior} b 
+     * @public
      */
     removeGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
@@ -188,9 +212,10 @@ class World {
     }
 
     /**
-     * Disables gravity and adds a new global gravity behavior to all the particles, while updating 
-     * the gravity pointer
+     * Removes existing gravity and adds a new global gravity behavior to all the particles, while updating 
+     * `this.gravity`
      * @param {Number} num 
+     * @public
      */
     enableGravity(num) {
         if (this.gravity) {
@@ -201,19 +226,22 @@ class World {
     }
 
     /**
-     * Removes the global gravity behavior
+     * Removes the global gravity behavior and sets `this.gravity` to `null`
      * @returns {Boolean} true if gravity is successfully disabled
+     * @public
      */
     disableGravity() {
         if (this.gravity) {
             this.removeGlobalSelfBehavior(this.gravity);
+            this.gravity = null
             return true;
         }
         return false;
     }
 
     /**
-     * Progresses world to next area
+     * Progresses world to next state
+     * @public
      */
     nextFrame() {
         this.solver.nextFrame();
@@ -222,6 +250,11 @@ class World {
         }
     }
 
+    /**
+     * Removes existing collision behavior and adds a new global collision behavior to all the particles, while updating 
+     * `this.collision`
+     * @public
+     */
     enableCollisions() {
         if (this.collision) {
             this.disableCollisions();
@@ -230,20 +263,39 @@ class World {
         this.addGlobalNearBehavior(this.collision);
     }
 
+    /**
+     * Removes the global gravity behavior and sets `this.collision` to `null`
+     * @returns {Boolean} true if collision is successfully disabled
+     * @public
+     */
     disableCollisions() {
         if (this.collision) {
             this.removeGlobalNearBehavior(this.collision);
+            this.collision = null;
             return true;
         }
         return false;
     }
 
-    // TODO: implement rayCasting for line obstacle support
+    /**
+     * Creates a `RectangularWorldBoundary` that confines the boundary of the world with rigid collisions. Also sets `this.worldConstraint`.
+     * @param {Number} x1 x value of top-left coordinate (smaller)
+     * @param {Number} x2 larger x value of bottom-right coordinate (larger)
+     * @param {Number} y1 y value of top-left coordinate (smaller)
+     * @param {Number} y2 y value of bottom-right coordinate (larger)
+     * @public
+     */
     constrainBoundary(x1= -Infinity, x2= Infinity, y1= -Infinity, y2= Infinity) {
         this.worldConstraint = new RectangularWorldBoundary(x1, x2, y1, y2);
         this.walls.push(this.worldConstraint);
     }
 
+    /**
+     * Removes existing drag behavior and adds a new global drag behavior  with a given viscosity to all the particles, while updating 
+     * `this.drag`
+     * @param {Number} viscosity 
+     * @public
+     */
     enableDrag(viscosity) {
         if (this.dragBehavior) {
             this.disableDrag();
@@ -252,6 +304,11 @@ class World {
         this.addGlobalSelfBehavior(this.dragBehavior);
     }
 
+    /**
+     * Removes existing drag behavior and sets `this.drag` to `null`
+     * @returns {Boolean} true if drag is successfully disabled 
+     * @public
+     */
     disableDrag() {
         if (this.dragBehavior) {
             this.removeGlobalSelfBehavior(this.dragBehavior);
@@ -260,6 +317,11 @@ class World {
         return false;
     }
 
+    /**
+     * Removes existing ChargeInteraction behavior and adds a new global ChargeInteraction behavior to all the particles, while updating 
+     * `this.chargeBehavior`
+     * @public
+     */
     enableChargeInteractions() {
         if(this.chargeBehavior) {
            this.disableChargeInteractions();
@@ -268,6 +330,11 @@ class World {
         this.addGlobalNearBehavior(this.chargeBehavior);
     }
 
+    /**
+     * Removes the global ChargeInteraction behavior and sets `this.chargeBehavior` to `null`
+     * @returns {Boolean} true if charge behavior is successfully disabled
+     * @public
+     */
     disableChargeInteractions() {
         if (this.chargeBehavior) {
             this.removeGlobalSelfBehavior(this.chargeBehavior);
@@ -276,6 +343,14 @@ class World {
         return false;
     }
 
+    /**
+     * Make a particle a "mass-pivot" by adding a `PositionLock` behavior and setting the adds `Number.MAX_SAFE_INTEGER / 10` to the particle mass. This is a **work around**
+     * and may cause some other physics to break. This particle pivot will not work with position constraints.
+     * @param {Particle} p 
+     * @param {Vector2D} pos 
+     * @returns {Boolean} true if particle is successfully converted to a "mass-pivot".
+     * @public
+     */
     makePivot(p, pos=null) {
         // this is incredibly scuffed, but this is what i could think of without introducing high cohesion
         for (let b of p.selfBehavior) {
@@ -293,6 +368,13 @@ class World {
         return true;
     }
 
+    /**
+     * Frees a particle from being a "mass-pivot". This attempts to correct the mass increase from the `makePivot()` method. 
+     * Once again, it may not work properly :skull:.
+     * @param {Particle} p 
+     * @returns true if particle is successfully freed from a "mass-pivot".
+     * @public
+     */
     freePivot(p) {
         for (let b of p.selfBehavior) {
             if(b instanceof PositionLock) {
@@ -305,8 +387,9 @@ class World {
     }
 
     /**
-     * 
+     * Sets the optional `update()` function for the solver. 
      * @param {Function} update 
+     * @public
      */
     setSolverUpdate(update) {
         this.solver.update = update;

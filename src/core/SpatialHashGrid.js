@@ -15,7 +15,7 @@ class SpatialHashGrid {
      * @param {Number} height height of HashGrid
      * @param {int} xGrids number of grid separations on the x-axis
      * @param {int} [yGrids=null] optional param number of grid separations on the y-axis, defaults to same as xGrids
-     * @access public
+     * @public
      */
     constructor(width, height, xGrids, yGrids=null) {
         this.width = width;
@@ -30,7 +30,7 @@ class SpatialHashGrid {
     /**
      * Adds an item to the HashGrid.
      * @param {HashGridItem} item 
-     * @access public
+     * @public
      */
     add(item) {
         this.#insert(item);
@@ -38,7 +38,7 @@ class SpatialHashGrid {
 
     /**
      * Private method that initializes 2D grid.
-     * @access private
+     * @private
      */
     #initialize() {
         for (let x = 0; x < this.xGrids; x++) {
@@ -53,7 +53,7 @@ class SpatialHashGrid {
     /**
      * Private method that inserts the item into its corresponding grid cell
      * @param {HashGridItem} item 
-     * @access private
+     * @private
      */
     #insert(item) {
         const [x, y] = item.getHashPos();
@@ -76,7 +76,7 @@ class SpatialHashGrid {
      * @param {Number} x 
      * @param {Number} y 
      * @returns {Number[]} integer grid coordinates in [x, y]
-     * @access private
+     * @private
      */
     #getCellIndex(x, y) {
         const xScaled = Math.min(Math.max((x / this.width), 0.0), 1);
@@ -93,7 +93,7 @@ class SpatialHashGrid {
      * @param {HashGridItem} item 
      * @param {Number[]} range - optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.
      * @returns {HashGridItem[]}
-     * @access public
+     * @public
      */
     findNear(item, range = null) {
         const [x, y] = item.getHashPos();
@@ -124,7 +124,7 @@ class SpatialHashGrid {
     /**
      * Updates the grid positions of the item within the HashGrid. This function **MUST** be called after any position change.
      * @param {HashGridItem} item 
-     * @access public
+     * @public
      */
     updateItem(item) {
         const [x, y] = item.getHashPos();
@@ -149,6 +149,7 @@ class SpatialHashGrid {
     /**
      * Delete item from HashGrid.
      * @param {HashGridItem} item
+     * @public
      */
     deleteItem(item) {
         const [i1, i2] = item._gridIndex;
@@ -163,6 +164,7 @@ class SpatialHashGrid {
     /**
      * Returns a unique list of all HashGridItems the HashGrid. 
      * @returns {HashGridItem[]}
+     * @public
      */
     values() {
         const iterable = [];

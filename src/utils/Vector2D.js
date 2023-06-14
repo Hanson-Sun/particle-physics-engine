@@ -8,6 +8,7 @@ class Vector2D {
 	 * Instantiate a new `Vector2D`.
 	 * @param {Number} x 
 	 * @param {Number} y 
+	 * @constructor
 	 */
 	constructor(x, y) {
 		this.x = x;
@@ -18,6 +19,7 @@ class Vector2D {
 	 * returns a new added vector denoted by `this + v`.
 	 * @param {Vector2D} v vector to be added
 	 * @returns {Vector2D} 
+	 * @public
 	 */
 	add(v) {
 		return new Vector2D(this.x + v.x, this.y + v.y);
@@ -26,6 +28,7 @@ class Vector2D {
 	/**
 	 * adds a vector to the current vector (`this = this + v`).
 	 * @param {Vector2D} v 
+	 * @public
 	 */
 	addTo(v) {
 		this.x = this.x + v.x;
@@ -36,6 +39,7 @@ class Vector2D {
 	 * returns a new subtracted vector denoted by `this - v`.
 	 * @param {Vector2D} v vector to be added
 	 * @returns {Vector2D} 
+	 * @public
 	 */
 	sub(v) {
 		return new Vector2D(this.x - v.x, this.y - v.y);
@@ -44,6 +48,7 @@ class Vector2D {
 	/**
 	 * subtracts a vector to the current vector (`this = this - v`).
 	 * @param {Vector2D} v 
+	 * @public
 	 */
 	subTo(v) {
 		this.x = this.x - v.x;
@@ -54,6 +59,7 @@ class Vector2D {
 	 * returns a new scalar-multiplied vector denoted by `this * a`.
 	 * @param {Number} a scalar multiple
 	 * @returns {Vector2D} 
+	 * @public
 	 */	
 	mult(a) {
 		return new Vector2D(this.x * a, this.y * a);
@@ -62,6 +68,7 @@ class Vector2D {
 	/**
 	 * multiplies a scalar to the current vector (`this = this * a`).
 	 * @param {Number} a 
+	 * @public
 	 */	
 	multTo(a) {
 		this.x = this.x * a;
@@ -72,6 +79,7 @@ class Vector2D {
 	 * returns the dot product of two vectors (`this` and `v`).
 	 * @param {Vector2D} v  
 	 * @returns {Number}
+	 * @public
 	 */
 	dot(v) {
 		return this.x * v.x + this.y * v.y;
@@ -82,6 +90,7 @@ class Vector2D {
 	 * z-coordinate of the 3D counter parts of these 2D vectors. It returns a scalar.
 	 * @param {Vector2D} v 
 	 * @returns {Number}
+	 * @public
 	 */
 	cross(v) {
 		return this.x * v.y - v.x * this.y;
@@ -90,6 +99,7 @@ class Vector2D {
 	/**
 	 * returns the magnitude of the vector.
 	 * @returns {Number}
+	 * @public
 	 */
 	mag() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -99,6 +109,7 @@ class Vector2D {
 	/**
 	 * returns the magnitude squared of the vector.
 	 * @returns {Number}
+	 * @public
 	 */
 	magSqr() {
 		return this.x * this.x + this.y * this.y;
@@ -107,6 +118,7 @@ class Vector2D {
 	/**
 	 * returns a new normalized Vector2D.
 	 * @returns {Vector2D}
+	 * @public
 	 */
 	normalize() {
 		const mag = Math.sqrt(this.x * this.x + this.y * this.y);
@@ -115,6 +127,7 @@ class Vector2D {
 
 	/**
 	 * normalizes the `this` Vector2D.
+	 * @public
 	 */
 	normalizeTo() {
 		const mag = Math.sqrt(this.x * this.x + this.y * this.y);
@@ -127,6 +140,7 @@ class Vector2D {
 	 * @param {Vector2D} v 
 	 * @param {boolean} type  default set to `true` to return radians. Setting to false will return `degrees`.
 	 * @returns {number}
+	 * @public
 	 */
 	angleBetween(v, type = true) {
 		const dot = this.x * v.x + this.y * v.y;
@@ -142,6 +156,7 @@ class Vector2D {
 	 * Performs the mirror reflection for `this` about a normal vector.
 	 * @param {Vector2D} normal 
 	 * @returns Vector2D
+	 * @public
 	 */
 	reflect(normal) {
 		let dot2 = 2 * (this.x * normal.x + this.y * normal.y);
@@ -153,6 +168,7 @@ class Vector2D {
 	/**
 	 * Performs the mirror reflection for `this` about a normal vector. (modifies self)
 	 * @param {Vector2D} normal 
+	 * @public
 	 */
 	reflectTo(normal) {
 		let dot2 = 2 * (this.x * normal.x + this.y * normal.y);

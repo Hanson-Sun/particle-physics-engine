@@ -5,6 +5,7 @@ const NearBehavior = require("./NearBehavior");
  * Collisions are basically spring constraints between particles when they collide. High stiffness values can lead to energy inconsistency, whereas 
  * lower stiffness can cause poor colliding behavior between particles. Overall, this method is more stable in high density stacking simulations, 
  * but performs worse in more dynamic scenarios.
+ * @extends {NearBehavior}
  */
 class PenaltyCollision extends NearBehavior {
 

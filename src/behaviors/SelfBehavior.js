@@ -17,6 +17,7 @@ class SelfBehavior {
      * @param {Particle} particle 
      * @param {Number} timeStep 
      * @abstract
+     * @public
      */
     applyBehavior(particle, timeStep) {
         throw new Error("Method 'applyBehavior()' must be implemented.");
@@ -26,6 +27,7 @@ class SelfBehavior {
      * Apply a positional correction to `particle`
      * @param {Particle} particle 
      * @abstract
+     * @public
      */
     applyCorrection(particle) {
         throw new Error("Method 'applyCorrection()' must be implemented.");

@@ -1,17 +1,30 @@
+/**
+ * 
+ */
 class ParticleRenderer {
-
+    /**
+     * 
+     * @param {*} solver 
+     * @param {*} context 
+     */
     constructor(solver, context) {
         this.solver = solver;
         this.context = context;
     }
 
-    // call this anytime a new particle is added
+    /**
+     * 
+     */
     renderFrame() {
         for (let p of this.solver.particleList) {
             this.draw(p);
         }
     }
 
+    /**
+     * 
+     * @param {*} p 
+     */
 	draw(p) {
         if (p.radius > 0.5) {
             this.context.beginPath();

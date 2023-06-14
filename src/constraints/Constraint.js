@@ -20,6 +20,8 @@ class Constraint {
     /**
      * Updates the constraint.
      * @param {Number} timeStep 
+     * @abstract
+     * @public
      */
     update(timeStep) {
         throw new Error("Method 'update()' must be implemented.");
@@ -28,6 +30,8 @@ class Constraint {
     /**
      * Calculates the list of vertices that will be used in the rendering process
      * @returns {Vector2D[]}
+     * @abstract
+     * @public
      */
     vertices() {
         throw new Error("Method 'vertices()' must be implemented");
@@ -36,6 +40,8 @@ class Constraint {
      /**
      * Calculates the list of particles that is involved with the constraint
      * @returns {Particle[]}
+     * @abstract
+     * @public
      */
     particles() {
         throw new Error("Method 'vertices()' must be implemented");

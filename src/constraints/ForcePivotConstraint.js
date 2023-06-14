@@ -5,6 +5,7 @@ const Vector2D = require("../utils/Vector2D");
 /**
  * `ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
  * point in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.
+ * @extends {Constraint}
  */
 class ForcePivotConstraint extends Constraint {
     /**
@@ -15,6 +16,7 @@ class ForcePivotConstraint extends Constraint {
      * @param {Number} stiffness - the "spring constant", higher values are more stiff
      * @param {Number} breakForce - force at which the constraint breaks
      * @param {Number} dampening - damping force on constraint, must be greater than 0
+     * @constructor
      */
     constructor(pos, c1, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();

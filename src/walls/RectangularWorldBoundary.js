@@ -5,15 +5,16 @@ const Wall = require("./Wall");
  * The implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. 
  * Since the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not
  * just particles surrounding the edge.
+ * @extends {Wall}
  */
 class RectangularWorldBoundary extends Wall {
 
     /**
-     * 
      * @param {Number} minW left x position (smaller value)
      * @param {Number} maxW right x position (larger value)
      * @param {Number} minH top y position (smaller value)
      * @param {Number} maxH bottom y position (larger value)
+     * @constructor
      */
     constructor(minW, maxW, minH, maxH) {
         super();
@@ -88,6 +89,7 @@ class RectangularWorldBoundary extends Wall {
      * Checks if a Particle is colliding with the Wall
      * @param {Particle} particle 
      * @returns {Boolean} true if particle is colliding with wall
+     * @public
      */
     isCollide(particle) {
         const posX = particle.pos.x;

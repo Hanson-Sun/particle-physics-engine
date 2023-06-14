@@ -4,6 +4,7 @@ const NearBehavior = require("./NearBehavior");
  * `ChargeInteraction` is a NearBehavior that calculates the charge repulsion/attraction forces between "nearby" particles.
  * It follows Coulomb's law with `k=2`, which is arbitrarily chosen. Although charge interactions have infinite range, the default
  * effective radius for this behavior is set to 100000 pixels. Many charge interactions can lead to instability.
+ * @extends {NearBehavior}
  */
 class ChargeInteraction extends NearBehavior {
     /**

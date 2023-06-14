@@ -2,6 +2,7 @@ const SelfBehavior = require("./SelfBehavior");
 
 /**
  * `Force` is a `SelfBehavior` that applies a constant force on the particle.   
+ *  @extends {SelfBehavior}
  */
 class Force extends SelfBehavior {
 	/**

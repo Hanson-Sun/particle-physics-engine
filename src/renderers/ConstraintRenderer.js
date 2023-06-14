@@ -1,5 +1,14 @@
+/**
+ * `ConstraintRenderer` is a class responsible for rendering constraints in a `Solver`. Constraints are represented with simple lines.
+ * This renderer only provides a simple and quick way to visualize constraints in a HTMLCanvas element. 
+ */
 class ConstraintRenderer {
 
+    /**
+     * @param {Solver} solver 
+     * @param {context} context the HTMLCanvas context
+     * @constructor 
+     */
     constructor(solver, context) {
         this.solver = solver;
         this.context = context;
@@ -8,13 +17,21 @@ class ConstraintRenderer {
         this.showStress = false;
     }
 
-    // call this anytime a new particle is added
+    /**
+     * Renders the constraints per frame
+     * @public 
+     */
     renderFrame() {
         for (let c of this.solver.constraints) {
             this.draw(c);
         }
     }
 
+    /**
+     * Draws a single constraint
+     * @param {Constraint} c
+     * @public 
+     */
 	draw(c) {
         let vertices = c.vertices();
         if (vertices.length > 1) {
@@ -28,6 +45,15 @@ class ConstraintRenderer {
         }
 	}
 
+    /**
+     * 
+     * @param {Constraint} c 
+     * @param {Number} maxForce maximum force magnitude
+     * @param {Number} min minimum force magnitude
+     * @param {Number} sensitivity colour change sensitivity 
+     * @returns {string} a string in the HTML RGB color format
+     * @static
+     */
     static calculateStressColor(c, maxForce, min=0, sensitivity = 2) {
 
         let r = sensitivity * (c.force.mag() - min) / (maxForce - min) * 510;

@@ -17,6 +17,7 @@ class Solver {
      * @param {SpatialHashGrid} particles SpatialHashGrid of particles
      * @param {Constraint[]} constraints list of constraints
      * @param {Wall[]} walls list of walls
+     * @constructor
      */
     constructor(timeStep, iterationPerFrame, constraintIteration, particles, constraints, walls) {
         this.timeStep = timeStep;
@@ -32,6 +33,7 @@ class Solver {
 
     /**
      * Solves one iteration of the current physics world
+     * @public
      */
     solve() {
         // calculate future pos and store current pos as previous pos
@@ -50,6 +52,7 @@ class Solver {
 
     /**
      * Optional function that can be defined to exhibit certain behavior in the solve loop.
+     * @public
      */
     update(){
         return;
@@ -57,6 +60,7 @@ class Solver {
 
     /**
      * Move particle positions forward to the "future-position"
+     * @private
      */
     preMove() {
         for (let circ of this.particleList) {
@@ -67,6 +71,7 @@ class Solver {
 
     /**
      * Solve physics interactions from Behaviors
+     * @private
      */
     handleBehaviors() {
         for (let circ of this.particleList) {
@@ -83,6 +88,7 @@ class Solver {
 
     /**
      * Solve physics interactions from Constraints
+     * @private
      */
     handleConstraints() {
         let dt = this.timeStep / this.constraintIteration;
@@ -101,6 +107,7 @@ class Solver {
 
     /**
      * Solve collision interactions with Walls
+     * @private
      */
     handleWallCollisions() {
         for (let wall of this.walls) {
@@ -110,6 +117,7 @@ class Solver {
 
     /**
      * Update final particle velocities
+     * @private
      */
     updateVelocity() {
         for (let circ of this.particleList) {
@@ -120,6 +128,7 @@ class Solver {
 
     /**
      * Correct particle positions 
+     * @private
      */
     positionCorrection() {
 
@@ -142,6 +151,7 @@ class Solver {
 
     /**
      * Computes next frame or "world-state"
+     * @public
      */
     nextFrame() {
         for (let i = 0; i < this.iterationPerFrame; i++) {
@@ -151,6 +161,7 @@ class Solver {
 
     /**
      * Update the particle positions in the SpatialHashGrid
+     * @public
      */
     updateSolverParticles() {
         this.particleList = this.particles.values();

@@ -1,21 +1,18 @@
-
+/**
+ * A deprecated collision class that does not work.
+ * @deprecated
+ */
 class Collision extends NearBehavior {
 
     constructor() {
         super();
     }
 
-    /**
-     * 
-     * @param {*} timeStep 
-     */
     applyBehavior(particle, timeStep, particles) {
         this.collide(particle, particles, timeStep);
         this.collideCorrection(particle, particles);
     }
 
-	// this works but i literally don't know why??? 
-	// try using updated velocity --> accumulate updates and add towards the end.
 	collide(particle, particles, timeStep) {
 		for (let circ of particles) {
 			if (circ != particle) {

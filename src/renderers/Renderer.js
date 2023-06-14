@@ -2,6 +2,9 @@ const ConstraintRenderer = require("./ConstraintRenderer");
 const ParticleRenderer = require("./ParticleRenderer");
 const WallRenderer = require("./WallRenderer");
 
+/**
+ * 
+ */
 class Renderer {
     constructor(solver, canvas) {
         this.solver = solver;
@@ -13,15 +16,26 @@ class Renderer {
     }
 
     // call this anytime a new particle is added
+    /**
+     * 
+     * @param {*} list 
+     */
     updateRendererParticles(list) {
         this.particleRenderer.particles = list;
     }
 
+    /**
+     * 
+     * @param {*} context 
+     */
     updateContext(context) {
         this.constraintRenderer.context = context;
         this.particleRenderer.context = context;
     }
 
+    /**
+     * 
+     */
     renderFrame() {
         this.clear();
         this.particleRenderer.renderFrame();
@@ -29,6 +43,9 @@ class Renderer {
         this.wallRenderer.renderFrame();
     }
 
+    /**
+     * 
+     */
     clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }

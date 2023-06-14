@@ -1,5 +1,12 @@
+/**
+ * 
+ */
 class WallRenderer {
-
+    /**
+     * 
+     * @param {*} solver 
+     * @param {*} context 
+     */
     constructor(solver, context) {
         this.solver = solver;
         this.context = context;
@@ -7,13 +14,19 @@ class WallRenderer {
         this.context.strokeStyle = this.color;
     }
 
-    // call this anytime a new particle is added
+    /**
+     * 
+     */
     renderFrame() {
         for (let w of this.solver.walls) {
             this.draw(w);
         }
     }
 
+    /**
+     * 
+     * @param {*} w 
+     */
 	draw(w) {
         let vertices = w.vertices();
         if (vertices.length >= 1) {

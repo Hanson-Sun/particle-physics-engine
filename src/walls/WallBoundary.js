@@ -5,6 +5,7 @@ const Wall = require("./Wall");
  * `WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions
  * are generally meant to be immutable since the normal vector is calculated upon instantiation. However, wall position
  * can be modified with some care.
+ * @extends {Wall}
  */
 class WallBoundary extends Wall {
 
@@ -15,6 +16,7 @@ class WallBoundary extends Wall {
      * @param {*} x2 x-position of second vertex
      * @param {*} y2 y-position of second vertex
      * @param {*} width rendered line width of wall (does not effect physics)
+     * @constructor
      */
     constructor(x1, y1, x2, y2, width=1) {
         super();
@@ -136,6 +138,7 @@ class WallBoundary extends Wall {
      * Checks if a Particle is colliding with the Wall
      * @param {Particle} particle 
      * @returns {Boolean} true if particle is colliding with wall
+     * @public
      */
     isCollide(particle) {
         let pos = particle.pos;

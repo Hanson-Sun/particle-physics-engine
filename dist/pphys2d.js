@@ -84,6 +84,7 @@ class Vector2D {
 	 * Instantiate a new `Vector2D`.
 	 * @param {Number} x 
 	 * @param {Number} y 
+	 * @constructor
 	 */
 	constructor(x, y) {
 		this.x = x;
@@ -94,6 +95,7 @@ class Vector2D {
 	 * returns a new added vector denoted by `this + v`.
 	 * @param {Vector2D} v vector to be added
 	 * @returns {Vector2D} 
+	 * @public
 	 */
 	add(v) {
 		return new Vector2D(this.x + v.x, this.y + v.y);
@@ -102,6 +104,7 @@ class Vector2D {
 	/**
 	 * adds a vector to the current vector (`this = this + v`).
 	 * @param {Vector2D} v 
+	 * @public
 	 */
 	addTo(v) {
 		this.x = this.x + v.x;
@@ -112,6 +115,7 @@ class Vector2D {
 	 * returns a new subtracted vector denoted by `this - v`.
 	 * @param {Vector2D} v vector to be added
 	 * @returns {Vector2D} 
+	 * @public
 	 */
 	sub(v) {
 		return new Vector2D(this.x - v.x, this.y - v.y);
@@ -120,6 +124,7 @@ class Vector2D {
 	/**
 	 * subtracts a vector to the current vector (`this = this - v`).
 	 * @param {Vector2D} v 
+	 * @public
 	 */
 	subTo(v) {
 		this.x = this.x - v.x;
@@ -130,6 +135,7 @@ class Vector2D {
 	 * returns a new scalar-multiplied vector denoted by `this * a`.
 	 * @param {Number} a scalar multiple
 	 * @returns {Vector2D} 
+	 * @public
 	 */	
 	mult(a) {
 		return new Vector2D(this.x * a, this.y * a);
@@ -138,6 +144,7 @@ class Vector2D {
 	/**
 	 * multiplies a scalar to the current vector (`this = this * a`).
 	 * @param {Number} a 
+	 * @public
 	 */	
 	multTo(a) {
 		this.x = this.x * a;
@@ -148,6 +155,7 @@ class Vector2D {
 	 * returns the dot product of two vectors (`this` and `v`).
 	 * @param {Vector2D} v  
 	 * @returns {Number}
+	 * @public
 	 */
 	dot(v) {
 		return this.x * v.x + this.y * v.y;
@@ -158,6 +166,7 @@ class Vector2D {
 	 * z-coordinate of the 3D counter parts of these 2D vectors. It returns a scalar.
 	 * @param {Vector2D} v 
 	 * @returns {Number}
+	 * @public
 	 */
 	cross(v) {
 		return this.x * v.y - v.x * this.y;
@@ -166,6 +175,7 @@ class Vector2D {
 	/**
 	 * returns the magnitude of the vector.
 	 * @returns {Number}
+	 * @public
 	 */
 	mag() {
 		return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -175,6 +185,7 @@ class Vector2D {
 	/**
 	 * returns the magnitude squared of the vector.
 	 * @returns {Number}
+	 * @public
 	 */
 	magSqr() {
 		return this.x * this.x + this.y * this.y;
@@ -183,6 +194,7 @@ class Vector2D {
 	/**
 	 * returns a new normalized Vector2D.
 	 * @returns {Vector2D}
+	 * @public
 	 */
 	normalize() {
 		const mag = Math.sqrt(this.x * this.x + this.y * this.y);
@@ -191,6 +203,7 @@ class Vector2D {
 
 	/**
 	 * normalizes the `this` Vector2D.
+	 * @public
 	 */
 	normalizeTo() {
 		const mag = Math.sqrt(this.x * this.x + this.y * this.y);
@@ -203,6 +216,7 @@ class Vector2D {
 	 * @param {Vector2D} v 
 	 * @param {boolean} type  default set to `true` to return radians. Setting to false will return `degrees`.
 	 * @returns {number}
+	 * @public
 	 */
 	angleBetween(v, type = true) {
 		const dot = this.x * v.x + this.y * v.y;
@@ -218,6 +232,7 @@ class Vector2D {
 	 * Performs the mirror reflection for `this` about a normal vector.
 	 * @param {Vector2D} normal 
 	 * @returns Vector2D
+	 * @public
 	 */
 	reflect(normal) {
 		let dot2 = 2 * (this.x * normal.x + this.y * normal.y);
@@ -229,6 +244,7 @@ class Vector2D {
 	/**
 	 * Performs the mirror reflection for `this` about a normal vector. (modifies self)
 	 * @param {Vector2D} normal 
+	 * @public
 	 */
 	reflectTo(normal) {
 		let dot2 = 2 * (this.x * normal.x + this.y * normal.y);
@@ -248,9 +264,18 @@ const Vector2D = __webpack_require__(2);
 
 /**
  * A utility class that provides a quick user-input handling functionality. 
- * This will only work with an HTML canvas element in the browser.
+ * It supports mouse interactions with world items, with default mouse-particle interactions baked in.
+ * Moreover, it also has key-event listening (can be on a focusable element, or the whole window).
+ * Lastly, it can handle simultaneous mouse-key press combinations.
+ * 
+ * Note: This will only work with an HTML canvas element in the browser.
  */
 class InputHandler {
+    /**
+     * @param {World} world world that the handler effects
+     * @param {Boolean} enableMouseInteractions whether particle will interact with mouse (true by default)
+     * @constructor
+     */
     constructor(world, enableMouseInteractions=true) {
         this.world = world;
         this.canvas = world.canvas;
@@ -274,27 +299,50 @@ class InputHandler {
 
         this.enableMouseInteractions = enableMouseInteractions;
 
+        this.mouseSelectRadius = 15;
+
         this.mouseDownFunction = () => {};
         this.mouseUpFunction = () => {};
     }
 
+    /**
+     * Gets the mouse position relative to the world canvas element.
+     * @param {Event} event 
+     * @param {InputHandler} handler 
+     * @returns {Vector2D} the mouse position
+     * @private
+     */
     getMousePos(event, handler) {
         const rect = handler.canvas.getBoundingClientRect();
         return new Vector2D(event.clientX - rect.left, event.clientY - rect.top);
     }
 
+    /**
+     * Begins mouse tracking (must be called for mouse interactions)
+     * @public
+     */
     startMouseHandling() {
         this.mouseFocusElement.addEventListener("mousedown", (event) => {this.mousedown(event, this)});
         this.mouseFocusElement.addEventListener("mousemove", (event) => {this.mousemove(event, this)});
         window.addEventListener("mouseup", (event) => {this.mouseup(event, this)});
     }
 
+    /**
+     * Begins key tracking (must be called for key interactions)
+     * @public
+     */
     startKeyHandling() {
         // this is cursed as hell...
         this.keyFocusElement.addEventListener("keydown", (event)  => {this.keyDown(event, this)});   
         this.keyFocusElement.addEventListener("keyup", (event) => {this.keyUp(event, this)});
     }
 
+    /**
+     * Function for actions performed during a mousedown event
+     * @param {Event} event 
+     * @param {InputHandler} handler 
+     * @private
+     */
     mousedown(event, handler) {
         handler.mousePosition = handler.getMousePos(event, handler);
         handler.mouseDownPosition = handler.getMousePos(event, handler);
@@ -308,6 +356,12 @@ class InputHandler {
         handler.mouseDownFunction();
     }
 
+    /**
+     * Function for actions performed during a mousemove event
+     * @param {Event} event 
+     * @param {InputHandler} handler
+     * @private 
+     */
     mousemove(event, handler) {
         handler.mousePosition = handler.getMousePos(event, handler);
         if (handler.particleConstraint) {
@@ -315,6 +369,12 @@ class InputHandler {
         }
     }
 
+    /**
+     * Function for actions performed during a mouseup event
+     * @param {Event} event 
+     * @param {InputHandler} handler
+     * @private 
+     */
     mouseup(event, handler) {
         handler.mouseIsDown = false;
         handler.currentlySelectedParticle = null;
@@ -322,9 +382,15 @@ class InputHandler {
         handler.mouseUpFunction();
     }
 
+    /**
+     * Finds the particle selected by mouse (either the particle clicked by mouse, or the closest one to it in a certain radius). 
+     * Sets `this.selectedParticle` and `this.currentlySelectedParticle` as well.
+     * @param {InputHandler} handler 
+     * @private
+     */
     findSelectedParticle(handler) {
         const zero = new Vector2D(0,0);
-        const testParticle = new Particle(handler.mouseDownPosition, zero, 1, 10);
+        const testParticle = new Particle(handler.mouseDownPosition, zero, 1, this.mouseSelectRadius);
         let min = Infinity;
         let minParticle = null;
 
@@ -346,6 +412,11 @@ class InputHandler {
         }
     }
 
+    /**
+     * Creates a constraint between the `mousePosition` and the `currentlySelectedParticle`
+     * @param {InputHandler} handler 
+     * @private
+     */
     createConstraint(handler) {
         //let stiffness = handler.currentlySelectedParticle.mass * 50;
         //handler.particleConstraint = new ForcePivotConstraint(handler.mousePosition, handler.currentlySelectedParticle, 0, stiffness, stiffness/5);
@@ -354,6 +425,11 @@ class InputHandler {
         handler.world.addConstraint(handler.particleConstraint);
     }
 
+    /**
+     * Removes constraint between the `mousePosition` and the `currentlySelectedParticle`
+     * @param {InputHandler} handler
+     * @private 
+     */
     removeConstraint(handler) {
         if (handler.particleConstraint !== null) {
             handler.world.removeConstraint(handler.particleConstraint);
@@ -361,6 +437,12 @@ class InputHandler {
         }
     }
 
+    /**
+     * Function for keydown events
+     * @param {Event} event 
+     * @param {InputHandler} handler 
+     * @private
+     */
     keyDown(event, handler) {
         const key = event.key;
         for (let keyInput of handler.keyEvents) {
@@ -378,20 +460,38 @@ class InputHandler {
         }
     }
 
+    /**
+     * Function for keyUp events
+     * @param {Event} event 
+     * @param {InputHandler} handler 
+     * @private
+     */
     keyUp(event, handler) {
         handler.keyPress = null
     }
 
+    /**
+     * Adds a `KeyInput` to the list of events that the `InputHandler` tracks
+     * @param {KeyInput} keyInput 
+     * @public
+     */
     addKeyEvent(keyInput) {
         this.keyEvents.push(keyInput);
     }
 }
 
 /**
- * Static inner class for tracking key inputs.
+ * Static inner class of `InputHandler` for tracking Key input types.
+ * @inner
  * @static
  */
 InputHandler.KeyInput = class KeyInput {
+    /**
+     * @param {keyCode} keyCode activation key code
+     * @param {Function} func action to be performed
+     * @param {Boolean} isMouseDown determines whether activation requires mouseDown 
+     * @constructor
+     */
     constructor(keyCode, func, isMouseDown=false) {
         this.keyCode = keyCode || "";
         this.func = func || (() => {});
@@ -413,6 +513,7 @@ const NearBehavior = __webpack_require__(7);
 /**
  * `Particle` is the main object of this physics engine. It is a 2D circle that is treated like a point mass at the center
  * and does **not** rotate. `Particle` is also a `HashGridItem` so it can be added to a `SpatialHashGrid`.
+ * @extends {HashGridItem}
  */
 
 class Particle extends HashGridItem {
@@ -425,6 +526,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} bounciness a value in [0,1] that represents the amount of energy retained after collision
 	 * @param {Number} charge similar to real physical charge
 	 * @param {String} color currently only supports HTML canvas colors format
+	 * @constructor
 	 */
 	constructor(pos, vel, mass, radius, bounciness = 1, charge = 0, color="black") {
         super();
@@ -446,6 +548,7 @@ class Particle extends HashGridItem {
 	 * Increments the position by velocity `v`
 	 * @param {Vector2D} v 
 	 * @param {Number} timeStep 
+	 * @public
 	 */
 	applyVelocity(v, timeStep) {
 		this.pos.addTo(v.mult(timeStep));
@@ -455,6 +558,7 @@ class Particle extends HashGridItem {
 	 * Applies force `f` to the velocity
 	 * @param {Vector2D} f 
 	 * @param {Number} timeStep 
+	 * @public
 	 */
     applyForce(f, timeStep) {
 		this.vel.addTo(f.mult(timeStep / this.mass));
@@ -464,6 +568,7 @@ class Particle extends HashGridItem {
 	 * Increments the velocity by an acceleration `a`
 	 * @param {Vector2D} a 
 	 * @param {Number} timeStep 
+	 * @public
 	 */
 	applyAcceleration(a, timeStep) {
 		this.vel.addTo(a.mult(timeStep));
@@ -472,6 +577,7 @@ class Particle extends HashGridItem {
 	/**
 	 * Adds a `SelfBehavior` to the particle
 	 * @param {SelfBehavior} b 
+	 * @public
 	 */
 	addSelfBehavior(b) {
 		this.selfBehavior.push(b);
@@ -480,6 +586,7 @@ class Particle extends HashGridItem {
 	/**
 	 * Adds a `NearBehavior` to the particle
 	 * @param {NearBehavior} b 
+	 * @public
 	 */
 	addNearBehavior(b) {
 		this.nearBehavior.push(b);
@@ -489,6 +596,7 @@ class Particle extends HashGridItem {
 	 * Removes `NearBehavior` `b` if the particle has `b`  
 	 * @param {NearBehavior} b 
 	 * @returns {Boolean} true if the action is successful
+	 * @public
 	 */
 	removeNearBehavior(b) {
 		const index = this.nearBehavior.indexOf(b);
@@ -503,6 +611,7 @@ class Particle extends HashGridItem {
 	 * Removes `SelfBehavior` `b` if the particle has `b`  
 	 * @param {SelfBehavior} b 
 	 * @returns {Boolean} true if the action is successful
+	 * @public
 	 */
 	removeSelfBehavior(b) {
 		const index = this.selfBehavior.indexOf(b);
@@ -515,6 +624,7 @@ class Particle extends HashGridItem {
 
 	/**
 	 * Clears all behaviors of the particle
+	 * @public
 	 */
 	clearBehaviors() {
 		this.nearBehavior = [];
@@ -565,8 +675,9 @@ class HashGridItem {
 
     /**
      * Computes the coordinate position for the item within the `HashGrid`, expects center position.
-     * @abstract
      * @returns {Number[]} 
+     * @abstract
+     * @public
      */
     getHashPos() {
         throw new Error("Method 'getHashPos()' must be implemented.");
@@ -574,8 +685,9 @@ class HashGridItem {
 
     /**
      * Computes the dimensions of the item for the `HashGrid`.
-     * @abstract
      * @returns {Number[]} rectangular dimensions in [width, height]
+     * @abstract
+     * @public
      */
     getHashDimensions() {
         throw new Error("Method 'getHashDimensions()' must be implemented.");
@@ -608,6 +720,7 @@ class SelfBehavior {
      * @param {Particle} particle 
      * @param {Number} timeStep 
      * @abstract
+     * @public
      */
     applyBehavior(particle, timeStep) {
         throw new Error("Method 'applyBehavior()' must be implemented.");
@@ -617,6 +730,7 @@ class SelfBehavior {
      * Apply a positional correction to `particle`
      * @param {Particle} particle 
      * @abstract
+     * @public
      */
     applyCorrection(particle) {
         throw new Error("Method 'applyCorrection()' must be implemented.");
@@ -650,6 +764,7 @@ class NearBehavior {
      * @param {Number} timeStep time step of simulation
      * @param {Particle[]} particles surrounding particles
      * @abstract
+     * @public
      */
     applyBehavior(particle, timeStep, particles) {
         throw new Error("Method 'applyBehavior()' must be implemented.");
@@ -659,6 +774,7 @@ class NearBehavior {
      * Returns the effective range / defines the size of the nearby range
      * @returns {Number[]} pair of rectangular dimensions `[number, number]` that represent the effective range
      * @abstract
+     * @public
      */
     range() {
         throw new Error("Method 'range()' must be implemented.");
@@ -669,6 +785,7 @@ class NearBehavior {
      * @param {Particle} particle 
      * @param {Particle[]} particles 
      * @abstract
+     * @public
      */
     applyCorrection(particle, particles) {
         throw new Error("Method 'applyCorrection()' must be implemented.");
@@ -720,6 +837,8 @@ class Constraint {
     /**
      * Updates the constraint.
      * @param {Number} timeStep 
+     * @abstract
+     * @public
      */
     update(timeStep) {
         throw new Error("Method 'update()' must be implemented.");
@@ -728,6 +847,8 @@ class Constraint {
     /**
      * Calculates the list of vertices that will be used in the rendering process
      * @returns {Vector2D[]}
+     * @abstract
+     * @public
      */
     vertices() {
         throw new Error("Method 'vertices()' must be implemented");
@@ -736,6 +857,8 @@ class Constraint {
      /**
      * Calculates the list of particles that is involved with the constraint
      * @returns {Particle[]}
+     * @abstract
+     * @public
      */
     particles() {
         throw new Error("Method 'vertices()' must be implemented");
@@ -757,6 +880,7 @@ const Vector2D = __webpack_require__(2);
  * It uses a force-based implementation and can be thought of as a spring between two particles.
  * In general, energy conservation is better at lower stiffness, and it can behave unstable or 
  * energetically inconsistent at higher stiffness.
+ * @extends {Constraint}
  */
 class ForceDistanceConstraint extends Constraint {
     /**
@@ -767,6 +891,7 @@ class ForceDistanceConstraint extends Constraint {
      * @param {Number} stiffness - the "spring constant", higher values are more stiff
      * @param {Number} breakForce - force at which the constraint breaks
      * @param {Number} dampening - damping force on constraint, must be greater than 0
+     * @constructor
      */
     constructor(c1, c2, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();
@@ -842,6 +967,7 @@ const Vector2D = __webpack_require__(2);
 /**
  * `ForcePivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
  * point in space. The implementation of this constraint is force-based like that of `ForceDistanceConstraint`.
+ * @extends {Constraint}
  */
 class ForcePivotConstraint extends Constraint {
     /**
@@ -852,6 +978,7 @@ class ForcePivotConstraint extends Constraint {
      * @param {Number} stiffness - the "spring constant", higher values are more stiff
      * @param {Number} breakForce - force at which the constraint breaks
      * @param {Number} dampening - damping force on constraint, must be greater than 0
+     * @constructor
      */
     constructor(pos, c1, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();
@@ -925,6 +1052,7 @@ const Vector2D = __webpack_require__(2);
  * The stiffness parameters are closer to a relaxation factor in [0,1]. Similar to other constraints, the stiffer this constraint, 
  * the less energy conservative it becomes. There is no "force" attached to this type of constraint, so a pseudo-force value is arbitrary
  * calculated for any force based analysis.
+ * @extends {Constraint}
  */
 class PositionDistanceConstraint extends Constraint {
 	/**
@@ -934,6 +1062,7 @@ class PositionDistanceConstraint extends Constraint {
 	 * @param {Number} len - constrained length
 	 * @param {Number} stiffness - a relaxation parameter that is stable between [0,1] (higher is more stiff)
 	 * @param {Number} breakForce - force at which the constraint breaks
+     * @constructor
 	 */
     constructor(c1, c2, len, stiffness, breakForce = Infinity) {
         super();
@@ -1003,6 +1132,7 @@ const Vector2D = __webpack_require__(2);
 /**
  * `PositionPivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
  * point in space. The implementation of this constraint is position-based like that of `PositionDistanceConstraint`.
+ * @extends {Constraint}
  */
 class PositionPivotConstraint extends Constraint {
 	/**
@@ -1012,6 +1142,7 @@ class PositionPivotConstraint extends Constraint {
 	 * @param {Number} len - constrained length
 	 * @param {Number} stiffness - a relaxation parameter that is stable between [0,1] (higher is more stiff)
 	 * @param {Number} breakForce - force at which the constraint breaks
+     * @constructor
 	 */
     constructor(pos, c1, len, stiffness, breakForce = Infinity) {
         super();
@@ -1091,15 +1222,16 @@ const Wall = __webpack_require__(16);
  * The implementation uses a strict uni-directional constraint, and particles cannot escape the world boundaries. 
  * Since the boundary is strict, the current implementation checks **all** particles contained in the boundaries, not
  * just particles surrounding the edge.
+ * @extends {Wall}
  */
 class RectangularWorldBoundary extends Wall {
 
     /**
-     * 
      * @param {Number} minW left x position (smaller value)
      * @param {Number} maxW right x position (larger value)
      * @param {Number} minH top y position (smaller value)
      * @param {Number} maxH bottom y position (larger value)
+     * @constructor
      */
     constructor(minW, maxW, minH, maxH) {
         super();
@@ -1174,6 +1306,7 @@ class RectangularWorldBoundary extends Wall {
      * Checks if a Particle is colliding with the Wall
      * @param {Particle} particle 
      * @returns {Boolean} true if particle is colliding with wall
+     * @public
      */
     isCollide(particle) {
         const posX = particle.pos.x;
@@ -1223,6 +1356,7 @@ const HashGridItem = __webpack_require__(5);
  * `Wall` is an Interface for any wall objects. Walls are `HashGridItems`; however, it only uses the SpatialHashGrid methods
  * that calculate the particles in its close proximity and **cannot** be added to the grid itself. Wall objects
  * are also stationary and are not influenced by any external factors.
+ * @extends {HashGridItem}
  * @interface
  */
 class Wall extends HashGridItem {
@@ -1240,6 +1374,8 @@ class Wall extends HashGridItem {
      * Resolve the collisions between the surrounding particles and the Wall itself.
      * @param {Particle[]} particles surrounding particles that interact with the wall 
      * @param {Number} timeStep 
+     * @abstract
+     * @public
      */
     resolveCollisions(particles, timeStep) {
         throw new Error("Method 'resolveCollisions()' must be implemented.");
@@ -1248,6 +1384,8 @@ class Wall extends HashGridItem {
     /**
      * Applies positional corrections on particles (walls do not move)
      * @param {Particle[]} particles 
+     * @abstract
+     * @public
      */
     applyCorrection(particles) {
         throw new Error("Method 'applyCorrection()' must be implemented.");
@@ -1256,6 +1394,8 @@ class Wall extends HashGridItem {
     /**
      * Calculates the vertices of the wall
      * @returns {Vector2D[]}
+     * @abstract
+     * @public
      */
     vertices() {
         throw new Error("Method 'vertices()' must be implemented.");
@@ -1275,6 +1415,7 @@ const Wall = __webpack_require__(16);
  * `WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions
  * are generally meant to be immutable since the normal vector is calculated upon instantiation. However, wall position
  * can be modified with some care.
+ * @extends {Wall}
  */
 class WallBoundary extends Wall {
 
@@ -1285,6 +1426,7 @@ class WallBoundary extends Wall {
      * @param {*} x2 x-position of second vertex
      * @param {*} y2 y-position of second vertex
      * @param {*} width rendered line width of wall (does not effect physics)
+     * @constructor
      */
     constructor(x1, y1, x2, y2, width=1) {
         super();
@@ -1406,6 +1548,7 @@ class WallBoundary extends Wall {
      * Checks if a Particle is colliding with the Wall
      * @param {Particle} particle 
      * @returns {Boolean} true if particle is colliding with wall
+     * @public
      */
     isCollide(particle) {
         let pos = particle.pos;
@@ -1502,6 +1645,7 @@ class Solver {
      * @param {SpatialHashGrid} particles SpatialHashGrid of particles
      * @param {Constraint[]} constraints list of constraints
      * @param {Wall[]} walls list of walls
+     * @constructor
      */
     constructor(timeStep, iterationPerFrame, constraintIteration, particles, constraints, walls) {
         this.timeStep = timeStep;
@@ -1517,6 +1661,7 @@ class Solver {
 
     /**
      * Solves one iteration of the current physics world
+     * @public
      */
     solve() {
         // calculate future pos and store current pos as previous pos
@@ -1535,6 +1680,7 @@ class Solver {
 
     /**
      * Optional function that can be defined to exhibit certain behavior in the solve loop.
+     * @public
      */
     update(){
         return;
@@ -1542,6 +1688,7 @@ class Solver {
 
     /**
      * Move particle positions forward to the "future-position"
+     * @private
      */
     preMove() {
         for (let circ of this.particleList) {
@@ -1552,6 +1699,7 @@ class Solver {
 
     /**
      * Solve physics interactions from Behaviors
+     * @private
      */
     handleBehaviors() {
         for (let circ of this.particleList) {
@@ -1568,6 +1716,7 @@ class Solver {
 
     /**
      * Solve physics interactions from Constraints
+     * @private
      */
     handleConstraints() {
         let dt = this.timeStep / this.constraintIteration;
@@ -1586,6 +1735,7 @@ class Solver {
 
     /**
      * Solve collision interactions with Walls
+     * @private
      */
     handleWallCollisions() {
         for (let wall of this.walls) {
@@ -1595,6 +1745,7 @@ class Solver {
 
     /**
      * Update final particle velocities
+     * @private
      */
     updateVelocity() {
         for (let circ of this.particleList) {
@@ -1605,6 +1756,7 @@ class Solver {
 
     /**
      * Correct particle positions 
+     * @private
      */
     positionCorrection() {
 
@@ -1627,6 +1779,7 @@ class Solver {
 
     /**
      * Computes next frame or "world-state"
+     * @public
      */
     nextFrame() {
         for (let i = 0; i < this.iterationPerFrame; i++) {
@@ -1636,6 +1789,7 @@ class Solver {
 
     /**
      * Update the particle positions in the SpatialHashGrid
+     * @public
      */
     updateSolverParticles() {
         this.particleList = this.particles.values();
@@ -1665,7 +1819,7 @@ class SpatialHashGrid {
      * @param {Number} height height of HashGrid
      * @param {int} xGrids number of grid separations on the x-axis
      * @param {int} [yGrids=null] optional param number of grid separations on the y-axis, defaults to same as xGrids
-     * @access public
+     * @public
      */
     constructor(width, height, xGrids, yGrids=null) {
         this.width = width;
@@ -1680,7 +1834,7 @@ class SpatialHashGrid {
     /**
      * Adds an item to the HashGrid.
      * @param {HashGridItem} item 
-     * @access public
+     * @public
      */
     add(item) {
         this.#insert(item);
@@ -1688,7 +1842,7 @@ class SpatialHashGrid {
 
     /**
      * Private method that initializes 2D grid.
-     * @access private
+     * @private
      */
     #initialize() {
         for (let x = 0; x < this.xGrids; x++) {
@@ -1703,7 +1857,7 @@ class SpatialHashGrid {
     /**
      * Private method that inserts the item into its corresponding grid cell
      * @param {HashGridItem} item 
-     * @access private
+     * @private
      */
     #insert(item) {
         const [x, y] = item.getHashPos();
@@ -1726,7 +1880,7 @@ class SpatialHashGrid {
      * @param {Number} x 
      * @param {Number} y 
      * @returns {Number[]} integer grid coordinates in [x, y]
-     * @access private
+     * @private
      */
     #getCellIndex(x, y) {
         const xScaled = Math.min(Math.max((x / this.width), 0.0), 1);
@@ -1743,7 +1897,7 @@ class SpatialHashGrid {
      * @param {HashGridItem} item 
      * @param {Number[]} range - optional param that overrides the `getHashDimensions` default surrounding dimensions of the hash item.
      * @returns {HashGridItem[]}
-     * @access public
+     * @public
      */
     findNear(item, range = null) {
         const [x, y] = item.getHashPos();
@@ -1774,7 +1928,7 @@ class SpatialHashGrid {
     /**
      * Updates the grid positions of the item within the HashGrid. This function **MUST** be called after any position change.
      * @param {HashGridItem} item 
-     * @access public
+     * @public
      */
     updateItem(item) {
         const [x, y] = item.getHashPos();
@@ -1799,6 +1953,7 @@ class SpatialHashGrid {
     /**
      * Delete item from HashGrid.
      * @param {HashGridItem} item
+     * @public
      */
     deleteItem(item) {
         const [i1, i2] = item._gridIndex;
@@ -1813,6 +1968,7 @@ class SpatialHashGrid {
     /**
      * Returns a unique list of all HashGridItems the HashGrid. 
      * @returns {HashGridItem[]}
+     * @public
      */
     values() {
         const iterable = [];
@@ -1850,6 +2006,7 @@ const Renderer = __webpack_require__(23);
 const Gravity = __webpack_require__(27);
 const PositionLock = __webpack_require__(28);
 const Particle = __webpack_require__(4);
+const Vector2D = __webpack_require__(2);
 
 /**
  * `World` the global-state instance of the physics engine that keeps track of all the objects. This provides
@@ -1868,6 +2025,7 @@ class World {
      * @param {Number} timeStep change in time per solve iteration
      * @param {Number} iterationPerFrame number of solve iterations per frame
      * @param {Number} constraintIteration number of times constraints are solved per iteration
+     * @constructor
      */
     constructor(canvas, width, height, xGrids, yGrids = null, timeStep = 1, iterationPerFrame = 1, constraintIteration = 1) {
         this.timeStep = timeStep;
@@ -1894,6 +2052,7 @@ class World {
     /**
      * Adds a particle to the world
      * @param {Particle} p 
+     * @public
      */
     addParticle(p) {
         this.particles.add(p);
@@ -1903,6 +2062,7 @@ class World {
     /**
      * Removes a particle from the world
      * @param {Particle} p
+     * @public
      */
     removeParticle(p) {
         this.particles.deleteItem(p);
@@ -1923,6 +2083,7 @@ class World {
     /**
      * Adds a constraint to the world
      * @param {Constraint} c 
+     * @public
      */
     addConstraint(c) {
         this.constraints.push(c);
@@ -1932,6 +2093,7 @@ class World {
      * Removes a constraint from the world
      * @param {Constraint} c 
      * @returns {Boolean} true if the constraint is removed
+     * @public
      */
     removeConstraint(c) {
         const index = this.constraints.indexOf(c);
@@ -1945,11 +2107,18 @@ class World {
     /**
      * Adds a wall to the world
      * @param {Wall} w 
+     * @public
      */
     addWall(w) {
         this.walls.push(w);
     }
 
+    /**
+     * Removes a wall from the world
+     * @param {Wall} w 
+     * @returns {boolean} true if the wall is removed 
+     * @public
+     */
     removeWall(w) {
         const index = this.walls.indexOf(w);
 		if (index > -1) {
@@ -1960,7 +2129,8 @@ class World {
     }
 
     /**
-     * Clears all of the particles and constraints
+     * Clears all of the particles and any associated constraints
+     * @public
      */
     clearParticles() {
         this.particles = new SpatialHashGrid(this.width, this.height, this.xGrids, this.yGrids);
@@ -1971,6 +2141,7 @@ class World {
 
     /**
      * Clears all of the constraints
+     * @public
      */
     clearConstraints() {
         this.constraints = [];
@@ -1978,6 +2149,10 @@ class World {
         this.updateParticleList();
     }
 
+    /**
+     * Clears all of the walls
+     * @public 
+     */
     clearWalls() {
         this.walls = [];
         this.solver.walls = [];
@@ -1985,6 +2160,7 @@ class World {
 
     /**
      * Update the list of particles. Must be called every time the number of particles change.
+     * @public
      */
     updateParticleList() {
         this.particlesList = this.particles.values();
@@ -1992,8 +2168,9 @@ class World {
     }
 
     /**
-     * Adds a SelfBehavior to all the particles
+     * Adds a SelfBehavior to **all** the particles in the world
      * @param {SelfBehavior} b 
+     * @public
      */
     addGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
@@ -2002,8 +2179,9 @@ class World {
     }
 
     /**
-     * Removes a SelfBehavior from all the particles
+     * Removes a SelfBehavior from **all** the particles in the world
      * @param {SelfBehavior} b 
+     * @public
      */
     removeGlobalSelfBehavior(b) {
         for (let p of this.particlesList) {
@@ -2012,8 +2190,9 @@ class World {
     }
 
     /**
-     * Adds a NearBehavior to all the particles
+     * Adds a NearBehavior to **all** the particles in the world
      * @param {NearBehavior} b 
+     * @public
      */
     addGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
@@ -2022,8 +2201,9 @@ class World {
     }
 
     /**
-     * Removes a NearBehavior to all the particles
+     * Removes a NearBehavior to **all** the particles in the world
      * @param {NearBehavior} b 
+     * @public
      */
     removeGlobalNearBehavior(b) {
         for (let p of this.particlesList) {
@@ -2032,9 +2212,10 @@ class World {
     }
 
     /**
-     * Disables gravity and adds a new global gravity behavior to all the particles, while updating 
-     * the gravity pointer
+     * Removes existing gravity and adds a new global gravity behavior to all the particles, while updating 
+     * `this.gravity`
      * @param {Number} num 
+     * @public
      */
     enableGravity(num) {
         if (this.gravity) {
@@ -2045,19 +2226,22 @@ class World {
     }
 
     /**
-     * Removes the global gravity behavior
+     * Removes the global gravity behavior and sets `this.gravity` to `null`
      * @returns {Boolean} true if gravity is successfully disabled
+     * @public
      */
     disableGravity() {
         if (this.gravity) {
             this.removeGlobalSelfBehavior(this.gravity);
+            this.gravity = null
             return true;
         }
         return false;
     }
 
     /**
-     * Progresses world to next area
+     * Progresses world to next state
+     * @public
      */
     nextFrame() {
         this.solver.nextFrame();
@@ -2066,6 +2250,11 @@ class World {
         }
     }
 
+    /**
+     * Removes existing collision behavior and adds a new global collision behavior to all the particles, while updating 
+     * `this.collision`
+     * @public
+     */
     enableCollisions() {
         if (this.collision) {
             this.disableCollisions();
@@ -2074,20 +2263,39 @@ class World {
         this.addGlobalNearBehavior(this.collision);
     }
 
+    /**
+     * Removes the global gravity behavior and sets `this.collision` to `null`
+     * @returns {Boolean} true if collision is successfully disabled
+     * @public
+     */
     disableCollisions() {
         if (this.collision) {
             this.removeGlobalNearBehavior(this.collision);
+            this.collision = null;
             return true;
         }
         return false;
     }
 
-    // TODO: implement rayCasting for line obstacle support
+    /**
+     * Creates a `RectangularWorldBoundary` that confines the boundary of the world with rigid collisions. Also sets `this.worldConstraint`.
+     * @param {Number} x1 x value of top-left coordinate (smaller)
+     * @param {Number} x2 larger x value of bottom-right coordinate (larger)
+     * @param {Number} y1 y value of top-left coordinate (smaller)
+     * @param {Number} y2 y value of bottom-right coordinate (larger)
+     * @public
+     */
     constrainBoundary(x1= -Infinity, x2= Infinity, y1= -Infinity, y2= Infinity) {
         this.worldConstraint = new RectangularWorldBoundary(x1, x2, y1, y2);
         this.walls.push(this.worldConstraint);
     }
 
+    /**
+     * Removes existing drag behavior and adds a new global drag behavior  with a given viscosity to all the particles, while updating 
+     * `this.drag`
+     * @param {Number} viscosity 
+     * @public
+     */
     enableDrag(viscosity) {
         if (this.dragBehavior) {
             this.disableDrag();
@@ -2096,6 +2304,11 @@ class World {
         this.addGlobalSelfBehavior(this.dragBehavior);
     }
 
+    /**
+     * Removes existing drag behavior and sets `this.drag` to `null`
+     * @returns {Boolean} true if drag is successfully disabled 
+     * @public
+     */
     disableDrag() {
         if (this.dragBehavior) {
             this.removeGlobalSelfBehavior(this.dragBehavior);
@@ -2104,6 +2317,11 @@ class World {
         return false;
     }
 
+    /**
+     * Removes existing ChargeInteraction behavior and adds a new global ChargeInteraction behavior to all the particles, while updating 
+     * `this.chargeBehavior`
+     * @public
+     */
     enableChargeInteractions() {
         if(this.chargeBehavior) {
            this.disableChargeInteractions();
@@ -2112,6 +2330,11 @@ class World {
         this.addGlobalNearBehavior(this.chargeBehavior);
     }
 
+    /**
+     * Removes the global ChargeInteraction behavior and sets `this.chargeBehavior` to `null`
+     * @returns {Boolean} true if charge behavior is successfully disabled
+     * @public
+     */
     disableChargeInteractions() {
         if (this.chargeBehavior) {
             this.removeGlobalSelfBehavior(this.chargeBehavior);
@@ -2120,6 +2343,14 @@ class World {
         return false;
     }
 
+    /**
+     * Make a particle a "mass-pivot" by adding a `PositionLock` behavior and setting the adds `Number.MAX_SAFE_INTEGER / 10` to the particle mass. This is a **work around**
+     * and may cause some other physics to break. This particle pivot will not work with position constraints.
+     * @param {Particle} p 
+     * @param {Vector2D} pos 
+     * @returns {Boolean} true if particle is successfully converted to a "mass-pivot".
+     * @public
+     */
     makePivot(p, pos=null) {
         // this is incredibly scuffed, but this is what i could think of without introducing high cohesion
         for (let b of p.selfBehavior) {
@@ -2137,6 +2368,13 @@ class World {
         return true;
     }
 
+    /**
+     * Frees a particle from being a "mass-pivot". This attempts to correct the mass increase from the `makePivot()` method. 
+     * Once again, it may not work properly :skull:.
+     * @param {Particle} p 
+     * @returns true if particle is successfully freed from a "mass-pivot".
+     * @public
+     */
     freePivot(p) {
         for (let b of p.selfBehavior) {
             if(b instanceof PositionLock) {
@@ -2149,8 +2387,9 @@ class World {
     }
 
     /**
-     * 
+     * Sets the optional `update()` function for the solver. 
      * @param {Function} update 
+     * @public
      */
     setSolverUpdate(update) {
         this.solver.update = update;
@@ -2171,6 +2410,7 @@ const NearBehavior = __webpack_require__(7);
  * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.
  * Collisions operate on impulse-based dynamics and are quite stiff. There are some potential issues with collision instability
  * when too much force / number of collisions stack.
+ * @extends {NearBehavior}
  */
 class Collision extends NearBehavior {
 
@@ -2297,6 +2537,9 @@ const ConstraintRenderer = __webpack_require__(24);
 const ParticleRenderer = __webpack_require__(25);
 const WallRenderer = __webpack_require__(26);
 
+/**
+ * 
+ */
 class Renderer {
     constructor(solver, canvas) {
         this.solver = solver;
@@ -2308,15 +2551,26 @@ class Renderer {
     }
 
     // call this anytime a new particle is added
+    /**
+     * 
+     * @param {*} list 
+     */
     updateRendererParticles(list) {
         this.particleRenderer.particles = list;
     }
 
+    /**
+     * 
+     * @param {*} context 
+     */
     updateContext(context) {
         this.constraintRenderer.context = context;
         this.particleRenderer.context = context;
     }
 
+    /**
+     * 
+     */
     renderFrame() {
         this.clear();
         this.particleRenderer.renderFrame();
@@ -2324,6 +2578,9 @@ class Renderer {
         this.wallRenderer.renderFrame();
     }
 
+    /**
+     * 
+     */
     clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
@@ -2335,8 +2592,17 @@ module.exports = Renderer;
 /* 24 */
 /***/ ((module) => {
 
+/**
+ * `ConstraintRenderer` is a class responsible for rendering constraints in a `Solver`. Constraints are represented with simple lines.
+ * This renderer only provides a simple and quick way to visualize constraints in a HTMLCanvas element. 
+ */
 class ConstraintRenderer {
 
+    /**
+     * @param {Solver} solver 
+     * @param {context} context the HTMLCanvas context
+     * @constructor 
+     */
     constructor(solver, context) {
         this.solver = solver;
         this.context = context;
@@ -2345,13 +2611,21 @@ class ConstraintRenderer {
         this.showStress = false;
     }
 
-    // call this anytime a new particle is added
+    /**
+     * Renders the constraints per frame
+     * @public 
+     */
     renderFrame() {
         for (let c of this.solver.constraints) {
             this.draw(c);
         }
     }
 
+    /**
+     * Draws a single constraint
+     * @param {Constraint} c
+     * @public 
+     */
 	draw(c) {
         let vertices = c.vertices();
         if (vertices.length > 1) {
@@ -2365,6 +2639,15 @@ class ConstraintRenderer {
         }
 	}
 
+    /**
+     * 
+     * @param {Constraint} c 
+     * @param {Number} maxForce maximum force magnitude
+     * @param {Number} min minimum force magnitude
+     * @param {Number} sensitivity colour change sensitivity 
+     * @returns {string} a string in the HTML RGB color format
+     * @static
+     */
     static calculateStressColor(c, maxForce, min=0, sensitivity = 2) {
 
         let r = sensitivity * (c.force.mag() - min) / (maxForce - min) * 510;
@@ -2384,20 +2667,33 @@ module.exports = ConstraintRenderer;
 /* 25 */
 /***/ ((module) => {
 
+/**
+ * 
+ */
 class ParticleRenderer {
-
+    /**
+     * 
+     * @param {*} solver 
+     * @param {*} context 
+     */
     constructor(solver, context) {
         this.solver = solver;
         this.context = context;
     }
 
-    // call this anytime a new particle is added
+    /**
+     * 
+     */
     renderFrame() {
         for (let p of this.solver.particleList) {
             this.draw(p);
         }
     }
 
+    /**
+     * 
+     * @param {*} p 
+     */
 	draw(p) {
         if (p.radius > 0.5) {
             this.context.beginPath();
@@ -2417,8 +2713,15 @@ module.exports = ParticleRenderer;
 /* 26 */
 /***/ ((module) => {
 
+/**
+ * 
+ */
 class WallRenderer {
-
+    /**
+     * 
+     * @param {*} solver 
+     * @param {*} context 
+     */
     constructor(solver, context) {
         this.solver = solver;
         this.context = context;
@@ -2426,13 +2729,19 @@ class WallRenderer {
         this.context.strokeStyle = this.color;
     }
 
-    // call this anytime a new particle is added
+    /**
+     * 
+     */
     renderFrame() {
         for (let w of this.solver.walls) {
             this.draw(w);
         }
     }
 
+    /**
+     * 
+     * @param {*} w 
+     */
 	draw(w) {
         let vertices = w.vertices();
         if (vertices.length >= 1) {
@@ -2458,6 +2767,7 @@ const SelfBehavior = __webpack_require__(6);
 
 /**
  * `Gravity` is a `SelfBehavior` that applies a constant acceleration downwards.
+ *  @extends {SelfBehavior}
  */
 class Gravity extends SelfBehavior {
 	/**
@@ -2498,12 +2808,15 @@ const Vector2D = __webpack_require__(2);
 const SelfBehavior = __webpack_require__(6);
 
 /**
- * 
+ * `PositionLock` is a `SelfBehavior` that constraints the position of a particle to a given point in space. 
+ * It ignores any any energy loss and is a direct positional correction.
+ * @extends {SelfBehavior}
  */
 class PositionLock extends SelfBehavior {
     /**
      * Instantiates new `PositionLock`
      * @param {Vector2D} position locked position
+     * @constructor
      */
     constructor(position) {
         super();
@@ -2561,6 +2874,7 @@ const NearBehavior = __webpack_require__(7);
  * `ChargeInteraction` is a NearBehavior that calculates the charge repulsion/attraction forces between "nearby" particles.
  * It follows Coulomb's law with `k=2`, which is arbitrarily chosen. Although charge interactions have infinite range, the default
  * effective radius for this behavior is set to 100000 pixels. Many charge interactions can lead to instability.
+ * @extends {NearBehavior}
  */
 class ChargeInteraction extends NearBehavior {
     /**
@@ -2637,6 +2951,7 @@ const NearBehavior = __webpack_require__(7);
  * Collisions are basically spring constraints between particles when they collide. High stiffness values can lead to energy inconsistency, whereas 
  * lower stiffness can cause poor colliding behavior between particles. Overall, this method is more stable in high density stacking simulations, 
  * but performs worse in more dynamic scenarios.
+ * @extends {NearBehavior}
  */
 class PenaltyCollision extends NearBehavior {
 
@@ -2740,6 +3055,7 @@ const SelfBehavior = __webpack_require__(6);
 /**
  * `Drag` is a `SelfBehavior` that applies a viscous drag force on the particle itself.
  * It generally follows the circular quadratic drag formula in turbulent fluids. Units are arbitrary and should be tuned experimentally.
+ * @extends {SelfBehavior}
  */
 class Drag extends SelfBehavior {
 	/**
@@ -2789,6 +3105,7 @@ const SelfBehavior = __webpack_require__(6);
 
 /**
  * `Force` is a `SelfBehavior` that applies a constant force on the particle.   
+ *  @extends {SelfBehavior}
  */
 class Force extends SelfBehavior {
 	/**

@@ -8,6 +8,7 @@ const Vector2D = require("../utils/Vector2D");
  * The stiffness parameters are closer to a relaxation factor in [0,1]. Similar to other constraints, the stiffer this constraint, 
  * the less energy conservative it becomes. There is no "force" attached to this type of constraint, so a pseudo-force value is arbitrary
  * calculated for any force based analysis.
+ * @extends {Constraint}
  */
 class PositionDistanceConstraint extends Constraint {
 	/**
@@ -17,6 +18,7 @@ class PositionDistanceConstraint extends Constraint {
 	 * @param {Number} len - constrained length
 	 * @param {Number} stiffness - a relaxation parameter that is stable between [0,1] (higher is more stiff)
 	 * @param {Number} breakForce - force at which the constraint breaks
+     * @constructor
 	 */
     constructor(c1, c2, len, stiffness, breakForce = Infinity) {
         super();

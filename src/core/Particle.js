@@ -6,6 +6,7 @@ const NearBehavior = require("../behaviors/NearBehavior");
 /**
  * `Particle` is the main object of this physics engine. It is a 2D circle that is treated like a point mass at the center
  * and does **not** rotate. `Particle` is also a `HashGridItem` so it can be added to a `SpatialHashGrid`.
+ * @extends {HashGridItem}
  */
 
 class Particle extends HashGridItem {
@@ -18,6 +19,7 @@ class Particle extends HashGridItem {
 	 * @param {Number} bounciness a value in [0,1] that represents the amount of energy retained after collision
 	 * @param {Number} charge similar to real physical charge
 	 * @param {String} color currently only supports HTML canvas colors format
+	 * @constructor
 	 */
 	constructor(pos, vel, mass, radius, bounciness = 1, charge = 0, color="black") {
         super();
@@ -39,6 +41,7 @@ class Particle extends HashGridItem {
 	 * Increments the position by velocity `v`
 	 * @param {Vector2D} v 
 	 * @param {Number} timeStep 
+	 * @public
 	 */
 	applyVelocity(v, timeStep) {
 		this.pos.addTo(v.mult(timeStep));
@@ -48,6 +51,7 @@ class Particle extends HashGridItem {
 	 * Applies force `f` to the velocity
 	 * @param {Vector2D} f 
 	 * @param {Number} timeStep 
+	 * @public
 	 */
     applyForce(f, timeStep) {
 		this.vel.addTo(f.mult(timeStep / this.mass));
@@ -57,6 +61,7 @@ class Particle extends HashGridItem {
 	 * Increments the velocity by an acceleration `a`
 	 * @param {Vector2D} a 
 	 * @param {Number} timeStep 
+	 * @public
 	 */
 	applyAcceleration(a, timeStep) {
 		this.vel.addTo(a.mult(timeStep));
@@ -65,6 +70,7 @@ class Particle extends HashGridItem {
 	/**
 	 * Adds a `SelfBehavior` to the particle
 	 * @param {SelfBehavior} b 
+	 * @public
 	 */
 	addSelfBehavior(b) {
 		this.selfBehavior.push(b);
@@ -73,6 +79,7 @@ class Particle extends HashGridItem {
 	/**
 	 * Adds a `NearBehavior` to the particle
 	 * @param {NearBehavior} b 
+	 * @public
 	 */
 	addNearBehavior(b) {
 		this.nearBehavior.push(b);
@@ -82,6 +89,7 @@ class Particle extends HashGridItem {
 	 * Removes `NearBehavior` `b` if the particle has `b`  
 	 * @param {NearBehavior} b 
 	 * @returns {Boolean} true if the action is successful
+	 * @public
 	 */
 	removeNearBehavior(b) {
 		const index = this.nearBehavior.indexOf(b);
@@ -96,6 +104,7 @@ class Particle extends HashGridItem {
 	 * Removes `SelfBehavior` `b` if the particle has `b`  
 	 * @param {SelfBehavior} b 
 	 * @returns {Boolean} true if the action is successful
+	 * @public
 	 */
 	removeSelfBehavior(b) {
 		const index = this.selfBehavior.indexOf(b);
@@ -108,6 +117,7 @@ class Particle extends HashGridItem {
 
 	/**
 	 * Clears all behaviors of the particle
+	 * @public
 	 */
 	clearBehaviors() {
 		this.nearBehavior = [];

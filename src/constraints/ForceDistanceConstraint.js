@@ -7,6 +7,7 @@ const Vector2D = require("../utils/Vector2D");
  * It uses a force-based implementation and can be thought of as a spring between two particles.
  * In general, energy conservation is better at lower stiffness, and it can behave unstable or 
  * energetically inconsistent at higher stiffness.
+ * @extends {Constraint}
  */
 class ForceDistanceConstraint extends Constraint {
     /**
@@ -17,6 +18,7 @@ class ForceDistanceConstraint extends Constraint {
      * @param {Number} stiffness - the "spring constant", higher values are more stiff
      * @param {Number} breakForce - force at which the constraint breaks
      * @param {Number} dampening - damping force on constraint, must be greater than 0
+     * @constructor
      */
     constructor(c1, c2, len, stiffness, breakForce = Infinity, dampening = 0) {
         super();

@@ -5,6 +5,7 @@ const Vector2D = require("../utils/Vector2D");
 /**
  * `PositionPivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
  * point in space. The implementation of this constraint is position-based like that of `PositionDistanceConstraint`.
+ * @extends {Constraint}
  */
 class PositionPivotConstraint extends Constraint {
 	/**
@@ -14,6 +15,7 @@ class PositionPivotConstraint extends Constraint {
 	 * @param {Number} len - constrained length
 	 * @param {Number} stiffness - a relaxation parameter that is stable between [0,1] (higher is more stiff)
 	 * @param {Number} breakForce - force at which the constraint breaks
+     * @constructor
 	 */
     constructor(pos, c1, len, stiffness, breakForce = Infinity) {
         super();

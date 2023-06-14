@@ -19,8 +19,9 @@ class HashGridItem {
 
     /**
      * Computes the coordinate position for the item within the `HashGrid`, expects center position.
-     * @abstract
      * @returns {Number[]} 
+     * @abstract
+     * @public
      */
     getHashPos() {
         throw new Error("Method 'getHashPos()' must be implemented.");
@@ -28,8 +29,9 @@ class HashGridItem {
 
     /**
      * Computes the dimensions of the item for the `HashGrid`.
-     * @abstract
      * @returns {Number[]} rectangular dimensions in [width, height]
+     * @abstract
+     * @public
      */
     getHashDimensions() {
         throw new Error("Method 'getHashDimensions()' must be implemented.");
