@@ -6,7 +6,8 @@
   "homepage": "https://github.com/Hanson-Sun/particle-physics-engine",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "build-docs": "jsdoc -t ./node_modules/jsdoc2diagram --package '' --configure jsdoc.json --verbose --destination ./docs",
+    "build-docs": "jsdoc --package '' --configure jsdoc.json --verbose --destination ./docs",
+    "build-diagram": "jsdoc -t ./node_modules/jsdoc2diagram --package '' --configure jsdoc.json --verbose --destination ./docs",
     "docs-coverage": "inchjs suggest ./src/**/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
