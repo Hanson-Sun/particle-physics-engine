@@ -2948,6 +2948,7 @@ class ChargeInteraction extends NearBehavior {
     }
 
     /**
+     * This class does not require final position corrections
      * @override
      * @param {Particle} particle 
      * @param {Particle[]} particles 
@@ -3030,7 +3031,7 @@ class PenaltyCollision extends NearBehavior {
 	}
 
 	/**
-	 * Does not do anything
+	 * This class does not require final position corrections
      * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`
@@ -3168,25 +3169,41 @@ const NearBehavior = __webpack_require__(7);
 const Vector2D = __webpack_require__(2);
 
 /**
- * `Pressure` is a `NearBehavior` 
+ * `Pressure` is a `NearBehavior` that simulates pressure behavior between particles. Pressure relaxation is a fundamental step for modelling
+ * particle-based fluid behavior. The implementation uses a double-density relaxation algorithm based on the common SPH paradigm from the paper
+ * "Particle-based Viscoelastic Fluid Simulation" by Clavet. The pressure relaxation algorithm loses energy overtime at a rate depending on the scaling factors.
+ * Note that the size of the effective radius will effect the rest density as well as the emergent interactions from this behavior; 
+ * larger values have pronounced surface tension effects. Moreover, `pScale` alters the long range pressure reactions, while `pScaleNear` determines the 
+ * "stiffness" of the particle system. The user is encouraged to test out different constants for specific effects.
  * @extends {NearBehavior}
  */
 class Pressure extends NearBehavior {
 
-	/**
-	 * Instantiates new Collision behavior object
+    /**
+	 * Instantiates new `Pressure` behavior object
 	 * @constructor
-	 */
-    constructor(radius, pScale, restDensity, pScaleNear=0, tension=true) {
+     * @param {Number} radius effective radius, determines the area of which density is sampled from 
+     * @param {*} pScale pressure relaxation scaling constant
+     * @param {*} restDensity target resting density (there are no units, its an approximate value)
+     * @param {*} pScaleNear near pressure relaxation scaling constant
+     * @param {Boolean} nearRepulsion whether near pressure repulsion is active (true by default)
+     */
+    constructor(radius, pScale, restDensity, pScaleNear=0, nearRepulsion=true) {
         super();
         this.hasCorrection = false;
         this.radius = radius;
         this.restDensity = restDensity;
         this.pScale = pScale;
         this.pScaleNear = pScaleNear;
-        this.tension = tension;  
+        this.nearRepulsion = nearRepulsion;  
     }
 
+    /**
+     * Calculates the approximate density within the effective radius of the particle
+     * @param {Particle} particle 
+     * @param {Particle[]} particles 
+     * @returns {Number[]} an array of 2 numbers, `[density, nearDensity]`
+     */
     findDensity(particle, particles) {
         let density = 0;
         let nearDensity = 0;
@@ -3205,7 +3222,7 @@ class Pressure extends NearBehavior {
 
 
 	/**
-	 * 
+	 * Calculates and applies the pressure relaxation
 	 * @override
 	 * @param {Particle} particle
 	 * @param {Particle[]} particles 
@@ -3216,7 +3233,7 @@ class Pressure extends NearBehavior {
         let [density, nearDensity] = this.findDensity(particle, particles);
 
         let pressure = 0;
-        if (this.tension) {
+        if (this.nearRepulsion) {
             pressure = this.pScale * (density - this.restDensity);
         } else {
             pressure = Math.max(this.pScale * (density - this.restDensity), 0);
@@ -3244,7 +3261,7 @@ class Pressure extends NearBehavior {
 	}
 
 	/**
-	 * 
+     * This class does not require final position corrections
 	 * @override
 	 * @param {Particle} particle 
 	 * @param {Particle[]} particles 
@@ -3254,7 +3271,6 @@ class Pressure extends NearBehavior {
 	}
 
 
-
    	/**
      * @override
      * @returns {null}
@@ -3262,22 +3278,6 @@ class Pressure extends NearBehavior {
     range() {
         return [this.radius * 2, this.radius * 2];
     }
-
-	/**
-	 * A static method that checks whether two particles are colliding
-	 * @param {Particle} p1 
-	 * @param {Particle} p2 
-	 * @returns boolean
-	 * @static
-	 */
-	static isCollide(p1, p2) {
-		let position = p1.pos;
-		let radius = p1.radius;
-		let c_position = p2.pos;
-		let c_radius = p2.radius;
-		let posDiff1 = position.sub(c_position);
-		return posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius);
-	}
 }
 
 module.exports = Pressure;
