@@ -1,0 +1,23 @@
+body{
+    align-items: center;
+    text-align: center;
+	background-color: lightgrey;
+}
+canvas{
+    border: 2px solid black;
+}
+table{
+    margin:auto;
+    text-align: center;
+    align-self: center;
+	border: 1px solid black;
+}
+tr{
+	display: flex;
+	align-items: center;
+    text-align: center;
+}
+td{
+    text-align: center;
+	margin:5px;
+}

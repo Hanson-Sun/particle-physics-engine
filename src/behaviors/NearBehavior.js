@@ -3,10 +3,12 @@
  * @interface
  */
 class NearBehavior {
+    
     /**
      * Interface cannot be instantiated
      */
     constructor() {
+        this.hasCorrection = true;
         if (this.constructor == NearBehavior) {
             throw new Error("NearBehavior interface class cannot be instantiated.");
         }

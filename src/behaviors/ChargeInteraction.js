@@ -13,6 +13,7 @@ class ChargeInteraction extends NearBehavior {
      */
     constructor(radius=100000) {
         super();
+        this.hasCorrection = false;
         this.radius = radius;
         this.epsilon = 0.00001;
     }
@@ -59,6 +60,7 @@ class ChargeInteraction extends NearBehavior {
     }
 
     /**
+     * This class does not require final position corrections
      * @override
      * @param {Particle} particle 
      * @param {Particle[]} particles 

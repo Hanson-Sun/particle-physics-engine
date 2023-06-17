@@ -51,7 +51,7 @@ pphys.constraints = __webpack_require__(8);
 pphys.walls = __webpack_require__(14);
 pphys.core = __webpack_require__(18);
 pphys.behaviors = __webpack_require__(29);
-pphys.renderers = __webpack_require__(34);
+pphys.renderers = __webpack_require__(35);
 
 
 
@@ -749,10 +749,12 @@ module.exports = SelfBehavior;
  * @interface
  */
 class NearBehavior {
+    
     /**
      * Interface cannot be instantiated
      */
     constructor() {
+        this.hasCorrection = true;
         if (this.constructor == NearBehavior) {
             throw new Error("NearBehavior interface class cannot be instantiated.");
         }
@@ -1767,7 +1769,11 @@ class Solver {
             }
 
             for (let nb of circ.nearBehavior) {
-                nb.applyCorrection(circ, this.particles.findNear(circ, nb.range()));
+                if (nb.hasCorrection) {
+                    nb.applyCorrection(circ, this.particles.findNear(circ, nb.range()));
+                } else {
+                    nb.applyCorrection(circ, []);
+                }
             }       
         }
    
@@ -2874,6 +2880,7 @@ behaviors.Gravity = __webpack_require__(27);
 behaviors.PositionLock = __webpack_require__(28);
 behaviors.NearBehavior = __webpack_require__(7);
 behaviors.SelfBehavior = __webpack_require__(6);
+behaviors.Pressure = __webpack_require__(34);
 
 /***/ }),
 /* 30 */
@@ -2894,6 +2901,7 @@ class ChargeInteraction extends NearBehavior {
      */
     constructor(radius=100000) {
         super();
+        this.hasCorrection = false;
         this.radius = radius;
         this.epsilon = 0.00001;
     }
@@ -2972,6 +2980,7 @@ class PenaltyCollision extends NearBehavior {
 	 */
     constructor(stiffness) {
         super();
+		this.hasCorrection = false;
         this.stiffness = stiffness;
     }
 
@@ -3153,6 +3162,128 @@ module.exports = Force;
 
 /***/ }),
 /* 34 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const NearBehavior = __webpack_require__(7);
+const Vector2D = __webpack_require__(2);
+
+/**
+ * `Pressure` is a `NearBehavior` 
+ * @extends {NearBehavior}
+ */
+class Pressure extends NearBehavior {
+
+	/**
+	 * Instantiates new Collision behavior object
+	 * @constructor
+	 */
+    constructor(radius, pScale, restDensity, pScaleNear=0, tension=true) {
+        super();
+        this.hasCorrection = false;
+        this.radius = radius;
+        this.restDensity = restDensity;
+        this.pScale = pScale;
+        this.pScaleNear = pScaleNear;
+        this.tension = tension;  
+    }
+
+    findDensity(particle, particles) {
+        let density = 0;
+        let nearDensity = 0;
+        for (let p of particles) {
+            if (p !== particle) {
+                let diff = particle.pos.sub(p.pos).mag();
+                if (diff <= this.radius) {
+                    let q = (1-diff/this.radius);
+                    density = density + q * q;
+                    nearDensity = nearDensity + q * q * q;
+                }
+            }
+        }
+        return [density, nearDensity];
+    }
+
+
+	/**
+	 * 
+	 * @override
+	 * @param {Particle} particle
+	 * @param {Particle[]} particles 
+	 * @param {Number} timeStep 
+	 */
+	applyBehavior(particle, timeStep, particles) {
+        let mass = particle.mass;
+        let [density, nearDensity] = this.findDensity(particle, particles);
+
+        let pressure = 0;
+        if (this.tension) {
+            pressure = this.pScale * (density - this.restDensity);
+        } else {
+            pressure = Math.max(this.pScale * (density - this.restDensity), 0);
+        }
+
+        let nearPressure = this.pScaleNear * nearDensity;
+
+        let dx = new Vector2D(0,0);
+        for (let p of particles) {
+            if (p !== particle) {
+                let diff = p.pos.sub(particle.pos);
+                let diffMag = diff.mag();
+                if (diffMag <= this.radius) {
+                    let q = (1 - diffMag/this.radius);
+                    let d = timeStep * timeStep * (pressure * q + nearPressure * q * q);
+                    
+                    diff.normalizeTo();
+                    
+                    p.pos.addTo(diff.mult(mass/(mass + p.mass) * d));
+                    dx.subTo(diff.mult(p.mass/(mass + p.mass) * d));
+                }      
+            }
+        }
+        particle.pos.addTo(dx);
+	}
+
+	/**
+	 * 
+	 * @override
+	 * @param {Particle} particle 
+	 * @param {Particle[]} particles 
+	 */
+	applyCorrection(particle, particles) {
+        return;
+	}
+
+
+
+   	/**
+     * @override
+     * @returns {null}
+     */
+    range() {
+        return [this.radius * 2, this.radius * 2];
+    }
+
+	/**
+	 * A static method that checks whether two particles are colliding
+	 * @param {Particle} p1 
+	 * @param {Particle} p2 
+	 * @returns boolean
+	 * @static
+	 */
+	static isCollide(p1, p2) {
+		let position = p1.pos;
+		let radius = p1.radius;
+		let c_position = p2.pos;
+		let c_radius = p2.radius;
+		let posDiff1 = position.sub(c_position);
+		return posDiff1.magSqr() < (radius + c_radius) * (radius + c_radius);
+	}
+}
+
+module.exports = Pressure;
+
+/***/ }),
+/* 35 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**

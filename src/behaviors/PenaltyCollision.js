@@ -15,6 +15,7 @@ class PenaltyCollision extends NearBehavior {
 	 */
     constructor(stiffness) {
         super();
+		this.hasCorrection = false;
         this.stiffness = stiffness;
     }
 
@@ -64,7 +65,7 @@ class PenaltyCollision extends NearBehavior {
 	}
 
 	/**
-	 * Does not do anything
+	 * This class does not require final position corrections
      * @override
 	 * @param {Particle} particle - particle with collision check
 	 * @param {Particle[]} particles - nearby particles that interact with `particle`

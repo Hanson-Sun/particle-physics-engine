@@ -139,7 +139,11 @@ class Solver {
             }
 
             for (let nb of circ.nearBehavior) {
-                nb.applyCorrection(circ, this.particles.findNear(circ, nb.range()));
+                if (nb.hasCorrection) {
+                    nb.applyCorrection(circ, this.particles.findNear(circ, nb.range()));
+                } else {
+                    nb.applyCorrection(circ, []);
+                }
             }       
         }
    
