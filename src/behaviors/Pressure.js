@@ -16,9 +16,9 @@ class Pressure extends NearBehavior {
 	 * Instantiates new `Pressure` behavior object
 	 * @constructor
      * @param {Number} radius effective radius, determines the area of which density is sampled from 
-     * @param {*} pScale pressure relaxation scaling constant
-     * @param {*} restDensity target resting density (there are no units, its an approximate value)
-     * @param {*} pScaleNear near pressure relaxation scaling constant
+     * @param {Number} pScale pressure relaxation scaling constant
+     * @param {Number} restDensity target resting density (there are no units, its an approximate value)
+     * @param {Number} pScaleNear near pressure relaxation scaling constant
      * @param {Boolean} nearRepulsion whether near pressure repulsion is active (true by default)
      */
     constructor(radius, pScale, restDensity, pScaleNear=0, nearRepulsion=true) {
