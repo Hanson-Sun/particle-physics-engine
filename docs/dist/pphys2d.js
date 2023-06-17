@@ -47,7 +47,7 @@ return /******/ (() => { // webpackBootstrap
 const pphys = module.exports;
 
 pphys.utils = __webpack_require__(1);
-pphys.constraints = __webpack_require__(8);
+pphys.constraints = __webpack_require__(10);
 pphys.walls = __webpack_require__(14);
 pphys.core = __webpack_require__(18);
 pphys.behaviors = __webpack_require__(29);
@@ -261,6 +261,7 @@ module.exports = Vector2D;
 
 const Particle = __webpack_require__(4);
 const Vector2D = __webpack_require__(2);
+const PositionPivotConstraint = __webpack_require__(8);
 
 /**
  * A utility class that provides a quick user-input handling functionality. 
@@ -800,18 +801,76 @@ module.exports = NearBehavior;
 /* 8 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const Constraint = __webpack_require__(9);
+const Particle = __webpack_require__(4);
+const Vector2D = __webpack_require__(2);
+
 /**
- * Node module exports for the constraints directory
+ * `PositionPivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
+ * point in space. The implementation of this constraint is position-based like that of `PositionDistanceConstraint`.
+ * @extends {Constraint}
  */
+class PositionPivotConstraint extends Constraint {
+	/**
+	 * Instantiates new `PositionPivotConstraint`
+     * @param {Vector2D} pos - position of pivot
+     * @param {Particle} c1 - constrained particle
+	 * @param {Number} len - constrained length
+	 * @param {Number} stiffness - a relaxation parameter that is stable between [0,1] (higher is more stiff)
+	 * @param {Number} breakForce - force at which the constraint breaks
+     * @constructor
+	 */
+    constructor(pos, c1, len, stiffness, breakForce = Infinity) {
+        super();
+        if (c1 === null) {
+            throw new Error("One of the particles is null!");
+        }
+		this.c1 = c1;
+		this.pos = pos;
+		this.breakForce = breakForce;
+        this.stiffness = stiffness;
+		this.len = len;
+	}
 
-const constraints =  module.exports;
+	/**
+     * @override
+     * @param {Number} timeStep 
+     */
+    update(timeStep) {
+        let pos1 = this.c1.pos;
+        let pos2 = this.pos;
 
-constraints.Constraint = __webpack_require__(9);
-constraints.ForceDistanceConstraint = __webpack_require__(10);
-constraints.ForcePivotConstraint = __webpack_require__(11);
-constraints.PositionDistanceConstraint = __webpack_require__(12);
-constraints.PositionPivotConstraint = __webpack_require__(13);
+		let dp = pos2.sub(pos1);
+		let dpMag = dp.mag();
+        if (dpMag != 0) {
+            let dpDiff = (dpMag - this.len) * this.stiffness;
+            dp.normalizeTo();
+            dp.multTo(dpDiff);
+            this.force = dp.mult(this.c1.mass * 100 * this.stiffness);
 
+            pos1.addTo(dp);
+            //this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
+        }
+	}
+
+    /**
+     * @override
+     * @returns {Vector2D[]}
+     */	
+	vertices() {
+        return [this.c1.pos, this.pos];
+    }
+
+    /**
+     * @override
+     * @returns {Particle[]}
+     */
+    particles() {
+        return [this.c1];
+    }
+}
+
+module.exports = PositionPivotConstraint;
 
 /***/ }),
 /* 9 */
@@ -871,6 +930,23 @@ module.exports = Constraint;
 
 /***/ }),
 /* 10 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Node module exports for the constraints directory
+ */
+
+const constraints =  module.exports;
+
+constraints.Constraint = __webpack_require__(9);
+constraints.ForceDistanceConstraint = __webpack_require__(11);
+constraints.ForcePivotConstraint = __webpack_require__(12);
+constraints.PositionDistanceConstraint = __webpack_require__(13);
+constraints.PositionPivotConstraint = __webpack_require__(8);
+
+
+/***/ }),
+/* 11 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(9);
@@ -959,7 +1035,7 @@ class ForceDistanceConstraint extends Constraint {
 module.exports = ForceDistanceConstraint;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(9);
@@ -1041,7 +1117,7 @@ class ForcePivotConstraint extends Constraint {
 module.exports = ForcePivotConstraint;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(9);
@@ -1122,81 +1198,6 @@ class PositionDistanceConstraint extends Constraint {
 }
 
 module.exports = PositionDistanceConstraint;
-
-/***/ }),
-/* 13 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-const Constraint = __webpack_require__(9);
-const Particle = __webpack_require__(4);
-const Vector2D = __webpack_require__(2);
-
-/**
- * `PositionPivotConstraint` is a `Constraint` that limits the motion of a particle to a certain length away from a 
- * point in space. The implementation of this constraint is position-based like that of `PositionDistanceConstraint`.
- * @extends {Constraint}
- */
-class PositionPivotConstraint extends Constraint {
-	/**
-	 * Instantiates new `PositionPivotConstraint`
-     * @param {Vector2D} pos - position of pivot
-     * @param {Particle} c1 - constrained particle
-	 * @param {Number} len - constrained length
-	 * @param {Number} stiffness - a relaxation parameter that is stable between [0,1] (higher is more stiff)
-	 * @param {Number} breakForce - force at which the constraint breaks
-     * @constructor
-	 */
-    constructor(pos, c1, len, stiffness, breakForce = Infinity) {
-        super();
-        if (c1 === null) {
-            throw new Error("One of the particles is null!");
-        }
-		this.c1 = c1;
-		this.pos = pos;
-		this.breakForce = breakForce;
-        this.stiffness = stiffness;
-		this.len = len;
-	}
-
-	/**
-     * @override
-     * @param {Number} timeStep 
-     */
-    update(timeStep) {
-        let pos1 = this.c1.pos;
-        let pos2 = this.pos;
-
-		let dp = pos2.sub(pos1);
-		let dpMag = dp.mag();
-        if (dpMag != 0) {
-            let dpDiff = (dpMag - this.len) * this.stiffness;
-            dp.normalizeTo();
-            dp.multTo(dpDiff);
-            this.force = dp.mult(this.c1.mass * 100 * this.stiffness);
-
-            pos1.addTo(dp);
-            //this.c1.vel = this.c1.vel.add(disP.mult(m1 / timeStep));
-        }
-	}
-
-    /**
-     * @override
-     * @returns {Vector2D[]}
-     */	
-	vertices() {
-        return [this.c1.pos, this.pos];
-    }
-
-    /**
-     * @override
-     * @returns {Particle[]}
-     */
-    particles() {
-        return [this.c1];
-    }
-}
-
-module.exports = PositionPivotConstraint;
 
 /***/ }),
 /* 14 */
@@ -3183,9 +3184,9 @@ class Pressure extends NearBehavior {
 	 * Instantiates new `Pressure` behavior object
 	 * @constructor
      * @param {Number} radius effective radius, determines the area of which density is sampled from 
-     * @param {*} pScale pressure relaxation scaling constant
-     * @param {*} restDensity target resting density (there are no units, its an approximate value)
-     * @param {*} pScaleNear near pressure relaxation scaling constant
+     * @param {Number} pScale pressure relaxation scaling constant
+     * @param {Number} restDensity target resting density (there are no units, its an approximate value)
+     * @param {Number} pScaleNear near pressure relaxation scaling constant
      * @param {Boolean} nearRepulsion whether near pressure repulsion is active (true by default)
      */
     constructor(radius, pScale, restDensity, pScaleNear=0, nearRepulsion=true) {

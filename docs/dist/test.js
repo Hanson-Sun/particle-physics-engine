@@ -43,7 +43,7 @@ const mag = 0.5;
 const mass = 10;
 const bounce = 1;
 
-for (let i = 0; i < 3000; i++) {
+for (let i = 0; i < 1800; i++) {
     let s1 = Math.random() < 0.5 ? -1 : 1;
     let s2 = Math.random() < 0.5 ? -1 : 1;
     let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
@@ -51,13 +51,27 @@ for (let i = 0; i < 3000; i++) {
     let part = new Particle(p, v, mass, 1, bounce, 0);
     world.addParticle(part);
 }
+world.addGlobalNearBehavior(new Pressure(20, 50, 10, 100, true));
+
+for (let i = 0; i < 1000; i++) {
+    let s1 = Math.random() < 0.5 ? -1 : 1;
+    let s2 = Math.random() < 0.5 ? -1 : 1;
+    let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
+    let p = new Vector2D((width - 50) * Math.random() + 25, (height - 50) * Math.random() + 25);
+    let part = new Particle(p, v, mass, 3, bounce, 0);
+    world.addParticle(part);
+    part.addNearBehavior(new Pressure(35, 5, 0.1, 120, true));
+}
 
 let radius = 15;
 const pt = new Particle(pos, vel, mass * 10, radius, bounce, 0);
 const pt2 = new Particle(pos2, vel, mass * 30, radius, bounce, 0);
-const pt3 = new Particle(pos3, vel, mass, radius, bounce, 0);
+const pt3 = new Particle(pos3, vel, mass * 10, radius * 2, bounce, 0);
 
 
+pt.addNearBehavior(new Pressure(40, 600, 4, 1000, true));
+pt2.addNearBehavior(new Pressure(40, 600, 4, 1000, true));
+pt3.addNearBehavior(new Pressure(40, 600, 4, 1000, true));
 
 world.addParticle(pt);
 world.addParticle(pt2);
@@ -73,7 +87,7 @@ world.addConstraint(cons);
 //world.addConstraint(new ForcePivotConstraint(pos2, pt2, 0, 100));
 //softBody();
 
-world.enableGravity(1);
+world.enableGravity(5);
 // world.addWall(new WallBoundary(250, 310, 600, 300));
 // world.addWall(new WallBoundary(50, 690, 650, 690));
 // world.addWall(new WallBoundary(0, 0, 700, 0));
@@ -81,8 +95,8 @@ world.enableGravity(1);
 //  world.addWall(new WallBoundary(0, 0, 0, 700));
 //  world.addWall(new WallBoundary(700, 0, 700, 700));
 // world.enableCollisions();
-world.addGlobalNearBehavior(new PenaltyCollision(500));
-world.addGlobalNearBehavior(new Pressure(20, 600, 4, 1000, true));
+//world.addGlobalNearBehavior(new PenaltyCollision(500));
+
 world.constrainBoundary(0, width, 0, height);
 // world.enableDrag(100);
 // world.enableChargeInteractions();

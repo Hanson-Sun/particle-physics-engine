@@ -47,6 +47,12 @@ yeah i need to make these
 
 [String Strands](./demos/strands/index.html)
 
+[Cloth](./demos/cloth/index.html)
+
+[Soft Body](./demos/softbody/index.html)
+
+[Fluid Sorting](./demos/fluid-sorting/index.html)
+
 
 ## Structure
 The key modules of `pphys2d` are

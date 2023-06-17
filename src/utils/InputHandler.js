@@ -1,5 +1,6 @@
 const Particle = require("../core/Particle");
 const Vector2D = require("./Vector2D");
+const PositionPivotConstraint = require("../constraints/PositionPivotConstraint");
 
 /**
  * A utility class that provides a quick user-input handling functionality. 
