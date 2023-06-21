@@ -3467,13 +3467,15 @@ class Viscosity extends NearBehavior {
      * @param {Number} radius 
      * @param {Number} linearCoeff the coefficient of linear drag, dominant at lower speeds (recommend [0, 1])
      * @param {Number} QuadraticCoeff the coefficient of quadratic drag, dominant at higher speeds (recommend [0, 1])
+     * @param {Number} maxU maximum impulse correction value, constraining it can increase stability
      */
-    constructor(radius, linearCoeff, QuadraticCoeff) {
+    constructor(radius, linearCoeff, QuadraticCoeff, maxU = Infinity) {
         super();
         this.hasCorrection = false;
         this.radius = radius;
         this.linearCoeff = linearCoeff;
         this.QuadraticCoeff = QuadraticCoeff;
+        this.maxU = maxU;
 
     }
 
@@ -3495,7 +3497,7 @@ class Viscosity extends NearBehavior {
                 if (q < 1) {
                     diff.normalizeTo();
                     let u = (p.vel.sub(particle.vel)).dot(diff);
-                    if (u > 0) {
+                    if (u > 0 && u < this.maxU) {
                         diff.multTo(timeStep * (1 - q) * (this.linearCoeff * u + this.QuadraticCoeff * u * u));
                         p.vel.subTo(diff.mult(mass/(mass + p.mass)));
                         p.pos.subTo(diff.mult(mass/(mass + p.mass) * timeStep));
