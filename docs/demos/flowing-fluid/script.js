@@ -44,7 +44,7 @@ for (let i = 0; i < 4000; i++) {
 
 let radius = 11;
 const pt = new Particle(pos, vel, mass * 10, radius, bounce, 0);
-pt.addNearBehavior(new PenaltyCollision(1500));
+pt.addNearBehavior(new PenaltyCollision(1000));
 world.addParticle(pt);
 
 
