@@ -36,6 +36,7 @@ class Pressure extends NearBehavior {
      * @param {Particle} particle 
      * @param {Particle[]} particles 
      * @returns {Number[]} an array of 2 numbers, `[density, nearDensity]`
+     * @public
      */
     findDensity(particle, particles) {
         let density = 0;
@@ -60,6 +61,7 @@ class Pressure extends NearBehavior {
 	 * @param {Particle} particle
 	 * @param {Particle[]} particles 
 	 * @param {Number} timeStep 
+     * @public
 	 */
 	applyBehavior(particle, timeStep, particles) {
         let mass = particle.mass;
@@ -98,6 +100,7 @@ class Pressure extends NearBehavior {
 	 * @override
 	 * @param {Particle} particle 
 	 * @param {Particle[]} particles 
+     * @public
 	 */
 	applyCorrection(particle, particles) {
         return;
@@ -107,6 +110,7 @@ class Pressure extends NearBehavior {
    	/**
      * @override
      * @returns {null}
+     * @public
      */
     range() {
         return [this.radius * 2, this.radius * 2];

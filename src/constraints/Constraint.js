@@ -28,6 +28,14 @@ class Constraint {
     }
 
     /**
+     * Applies positional correction on particle.
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        throw new Error("Method 'correction()' must be implemented.");
+    }
+
+    /**
      * Calculates the list of vertices that will be used in the rendering process
      * @returns {Vector2D[]}
      * @abstract

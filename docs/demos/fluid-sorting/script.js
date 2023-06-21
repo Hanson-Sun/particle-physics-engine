@@ -42,14 +42,14 @@ for (let i = 0; i < 2000; i++) {
     part.addNearBehavior(new Pressure(20, 30, 10, 100, true));
 }
 
-for (let i = 0; i < 1500; i++) {
+for (let i = 0; i < 1300; i++) {
     let s1 = Math.random() < 0.5 ? -1 : 1;
     let s2 = Math.random() < 0.5 ? -1 : 1;
     let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
     let p = new Vector2D((width - 50) * Math.random() + 25, (height - 50) * Math.random() + 25);
     let part = new Particle(p, v, mass, 3, bounce, 0);
     world.addParticle(part);
-    part.addNearBehavior(new Pressure(35, 25, 0.1, 140, true));
+    part.addNearBehavior(new Pressure(35, 25, 1, 140, true));
 }
 
 let radius = 20;

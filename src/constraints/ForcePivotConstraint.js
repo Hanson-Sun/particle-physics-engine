@@ -72,6 +72,14 @@ class ForcePivotConstraint extends Constraint {
         return [this.c1];
     }
 
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
+    }
+
 }
 
 module.exports = ForcePivotConstraint;

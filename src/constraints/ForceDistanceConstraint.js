@@ -79,6 +79,14 @@ class ForceDistanceConstraint extends Constraint {
         return [this.c1, this.c2];
     }
 
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
+    }
+
 }
 
 module.exports = ForceDistanceConstraint;

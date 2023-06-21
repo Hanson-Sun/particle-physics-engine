@@ -41,7 +41,7 @@ Modules can then be imported with `requires` or `import`.
 
 
 ## Demos
-yeah i need to make these
+More to come... if i remember...
 
 [Newton's Cradle](./demos/newtons-cradle/index.html)
 
@@ -52,6 +52,8 @@ yeah i need to make these
 [Soft Body](./demos/softbody/index.html)
 
 [Fluid Sorting](./demos/fluid-sorting/index.html)
+
+[Viscous Fluid Flow](./demos/flowing-fluid/index.html) (this has some stability issues)
 
 
 ## Structure

@@ -48,10 +48,10 @@ const pphys = module.exports;
 
 pphys.utils = __webpack_require__(1);
 pphys.constraints = __webpack_require__(10);
-pphys.walls = __webpack_require__(14);
-pphys.core = __webpack_require__(18);
-pphys.behaviors = __webpack_require__(29);
-pphys.renderers = __webpack_require__(35);
+pphys.walls = __webpack_require__(15);
+pphys.core = __webpack_require__(19);
+pphys.behaviors = __webpack_require__(30);
+pphys.renderers = __webpack_require__(37);
 
 
 
@@ -868,6 +868,14 @@ class PositionPivotConstraint extends Constraint {
     particles() {
         return [this.c1];
     }
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
+    }    
 }
 
 module.exports = PositionPivotConstraint;
@@ -903,6 +911,14 @@ class Constraint {
      */
     update(timeStep) {
         throw new Error("Method 'update()' must be implemented.");
+    }
+
+    /**
+     * Applies positional correction on particle.
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        throw new Error("Method 'correction()' must be implemented.");
     }
 
     /**
@@ -943,6 +959,7 @@ constraints.ForceDistanceConstraint = __webpack_require__(11);
 constraints.ForcePivotConstraint = __webpack_require__(12);
 constraints.PositionDistanceConstraint = __webpack_require__(13);
 constraints.PositionPivotConstraint = __webpack_require__(8);
+constraints.RigidGroup = __webpack_require__(14);
 
 
 /***/ }),
@@ -1030,6 +1047,14 @@ class ForceDistanceConstraint extends Constraint {
         return [this.c1, this.c2];
     }
 
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
+    }
+
 }
 
 module.exports = ForceDistanceConstraint;
@@ -1110,6 +1135,14 @@ class ForcePivotConstraint extends Constraint {
      */
     particles() {
         return [this.c1];
+    }
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
     }
 
 }
@@ -1195,6 +1228,14 @@ class PositionDistanceConstraint extends Constraint {
     particles() {
         return [this.c1, this.c2];
     }
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
+    }    
 }
 
 module.exports = PositionDistanceConstraint;
@@ -1203,22 +1244,134 @@ module.exports = PositionDistanceConstraint;
 /* 14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const Vector2D = __webpack_require__(2);
+const Constraint = __webpack_require__(9);
+
+/**
+ * Rigid body constraint
+ * @deprecated
+ */
+class RigidGroup extends Constraint {
+    /**
+     * `Constraint` interface cannot be instantiated
+     */
+    constructor(particles, stiffness = 1) {
+        super();
+        this.particles = particles;
+        this.stiffness = stiffness;
+        this.centroid = null;
+        this.angularVelocity = 0;
+        this.linearVelocity = null;
+
+    }
+
+    findCentroid() {
+        this.centroid = new Vector2D(0,0);
+        for (let p of this.particles) {
+            this.centroid.addTo(p.pos);
+        }
+        this.centroid.multTo(1/this.particles.length);
+    }
+
+    findAngularVelocity() {
+        this.angularVelocity = 0;
+        for (let p of this.particles) {
+            let diff = p.pos.sub(this.centroid);
+            let dist = diff.magSqr();
+            diff.multTo(1/dist);
+            this.angularVelocity += p.vel.cross(diff);
+        }
+        this.angularVelocity = this.angularVelocity / this.particles.length;
+    }
+
+    findLinearVelocity() {
+        this.linearVelocity = new Vector2D(0,0);
+        for (let p of this.particles) {
+            this.linearVelocity.addTo(p.vel);
+        }
+        this.linearVelocity.multTo(1/this.particles.length);
+    }
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     * @public
+     */
+    update(timeStep) {
+        
+    }
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+
+        this.findCentroid();
+        this.findAngularVelocity();
+        this.findLinearVelocity();
+        for (let p of this.particles) {
+            let diff = p.pos.sub(this.centroid);
+            let mag = diff.mag();
+            diff.normalizeTo();
+            let tVel = new Vector2D(diff.y * this.angularVelocity * mag, -diff.x * this.angularVelocity * mag);
+            
+            let vel = this.linearVelocity.add(tVel);
+
+            vel.multTo(this.stiffness);
+            //p.pos.sub(p.vel.mult(timeStep))
+            p.vel = vel;
+
+            p.pos = p.prevPos.add(vel.mult(timeStep));
+        }
+    }
+
+    /**
+     * @override
+     * @returns {Vector2D[]}
+     * @public
+     */
+    vertices() {
+        let vert = [];
+        for (let p of this.particles) {
+            vert.push(p.pos);
+        }
+        return vert;
+    }
+
+     /**
+     * @override
+     * @returns {Particle[]}
+     * @public
+     */
+    particles() {
+        return this.particles;
+    }
+}
+
+
+module.exports = RigidGroup;
+
+/***/ }),
+/* 15 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
 /**
  * Node module exports for the walls directory
  */
 
 const walls = module.exports;
 
-walls.RectangularWorldBoundary = __webpack_require__(15);
-walls.WallBoundary = __webpack_require__(17);
-walls.Wall = __webpack_require__(16);
+walls.RectangularWorldBoundary = __webpack_require__(16);
+walls.WallBoundary = __webpack_require__(18);
+walls.Wall = __webpack_require__(17);
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Wall = __webpack_require__(16);
+const Wall = __webpack_require__(17);
 
 /**
  * `RectangularWorldBoundary` is a rectangular bounding box that constrains all particles *within* the boundaries.
@@ -1350,7 +1503,7 @@ class RectangularWorldBoundary extends Wall {
 module.exports = RectangularWorldBoundary;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const HashGridItem = __webpack_require__(5);
@@ -1408,11 +1561,11 @@ class Wall extends HashGridItem {
 module.exports = Wall;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Vector2D = __webpack_require__(2);
-const Wall = __webpack_require__(16);
+const Wall = __webpack_require__(17);
 
 /**
  * `WallBoundary` is a simple `Wall` that is comprised of a straight-line between two spatial coordinates. Wall positions
@@ -1610,7 +1763,7 @@ class WallBoundary extends Wall {
 module.exports = WallBoundary;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -1621,18 +1774,18 @@ const core = module.exports;
 
 core.HashGridItem = __webpack_require__(5);
 core.Particle = __webpack_require__(4);
-core.Solver = __webpack_require__(19);
-core.SpatialHashGrid = __webpack_require__(20);
-core.World = __webpack_require__(21);
+core.Solver = __webpack_require__(20);
+core.SpatialHashGrid = __webpack_require__(21);
+core.World = __webpack_require__(22);
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Constraint = __webpack_require__(9);
-const Wall = __webpack_require__(16);
+const Wall = __webpack_require__(17);
 const Particle = __webpack_require__(4);
-const SpatialHashGrid = __webpack_require__(20);
+const SpatialHashGrid = __webpack_require__(21);
 
 /**
  * `Solver` is the discrete solver algorithm that calculates the movement of the physics world. It uses a modified 
@@ -1777,8 +1930,11 @@ class Solver {
                 }
             }       
         }
-   
 
+        for (let c of this.constraints) {
+            c.applyCorrection(this.timeStep);
+        }
+   
         for (let wall of this.walls) {
             wall.applyCorrection(this.particles.findNear(wall));
         }
@@ -1806,7 +1962,7 @@ class Solver {
 module.exports = Solver;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ ((module) => {
 
 /**
@@ -2002,16 +2158,16 @@ class SpatialHashGrid {
 module.exports = SpatialHashGrid;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const RectangularWorldBoundary = __webpack_require__(15);
-const Collision = __webpack_require__(22);
-const SpatialHashGrid = __webpack_require__(20);
-const Solver = __webpack_require__(19);
-const Renderer = __webpack_require__(23);
-const Gravity = __webpack_require__(27);
-const PositionLock = __webpack_require__(28);
+const RectangularWorldBoundary = __webpack_require__(16);
+const Collision = __webpack_require__(23);
+const SpatialHashGrid = __webpack_require__(21);
+const Solver = __webpack_require__(20);
+const Renderer = __webpack_require__(24);
+const Gravity = __webpack_require__(28);
+const PositionLock = __webpack_require__(29);
 const Particle = __webpack_require__(4);
 const Vector2D = __webpack_require__(2);
 
@@ -2408,7 +2564,7 @@ module.exports = World;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const NearBehavior = __webpack_require__(7);
@@ -2537,12 +2693,12 @@ class Collision extends NearBehavior {
 module.exports = Collision;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const ConstraintRenderer = __webpack_require__(24);
-const ParticleRenderer = __webpack_require__(25);
-const WallRenderer = __webpack_require__(26);
+const ConstraintRenderer = __webpack_require__(25);
+const ParticleRenderer = __webpack_require__(26);
+const WallRenderer = __webpack_require__(27);
 
 /**
  * `Renderer` is the general renderer class that renders `Particle`s, `Constraint`s and `Wall`s. Overall, this is a simplistic renderer
@@ -2600,7 +2756,7 @@ class Renderer {
 module.exports = Renderer;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ ((module) => {
 
 /**
@@ -2675,7 +2831,7 @@ class ConstraintRenderer {
 module.exports = ConstraintRenderer;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ ((module) => {
 
 /**
@@ -2724,7 +2880,7 @@ class ParticleRenderer {
 module.exports = ParticleRenderer;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((module) => {
 
 
@@ -2778,7 +2934,7 @@ class WallRenderer {
 module.exports = WallRenderer;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(6);
@@ -2819,7 +2975,7 @@ class Gravity extends SelfBehavior {
 module.exports = Gravity;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const Vector2D = __webpack_require__(2);
@@ -2863,7 +3019,7 @@ class PositionLock extends SelfBehavior {
 module.exports = PositionLock;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -2872,19 +3028,20 @@ module.exports = PositionLock;
 
 const behaviors = module.exports;
 
-behaviors.ChargeInteraction = __webpack_require__(30);
-behaviors.Collision = __webpack_require__(22);
-behaviors.PenaltyCollision = __webpack_require__(31);
-behaviors.Drag = __webpack_require__(32);
-behaviors.Force = __webpack_require__(33);
-behaviors.Gravity = __webpack_require__(27);
-behaviors.PositionLock = __webpack_require__(28);
+behaviors.ChargeInteraction = __webpack_require__(31);
+behaviors.Collision = __webpack_require__(23);
+behaviors.PenaltyCollision = __webpack_require__(32);
+behaviors.Drag = __webpack_require__(33);
+behaviors.Force = __webpack_require__(34);
+behaviors.Gravity = __webpack_require__(28);
+behaviors.PositionLock = __webpack_require__(29);
 behaviors.NearBehavior = __webpack_require__(7);
 behaviors.SelfBehavior = __webpack_require__(6);
-behaviors.Pressure = __webpack_require__(34);
+behaviors.Pressure = __webpack_require__(35);
+behaviors.Viscosity = __webpack_require__(36);
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const NearBehavior = __webpack_require__(7);
@@ -2962,7 +3119,7 @@ class ChargeInteraction extends NearBehavior {
 module.exports = ChargeInteraction;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const NearBehavior = __webpack_require__(7);
@@ -3069,7 +3226,7 @@ class PenaltyCollision extends NearBehavior {
 module.exports = PenaltyCollision;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(6);
@@ -3120,7 +3277,7 @@ class Drag extends SelfBehavior {
 module.exports = Drag;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const SelfBehavior = __webpack_require__(6);
@@ -3163,7 +3320,7 @@ class Force extends SelfBehavior {
 module.exports = Force;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const NearBehavior = __webpack_require__(7);
@@ -3204,6 +3361,7 @@ class Pressure extends NearBehavior {
      * @param {Particle} particle 
      * @param {Particle[]} particles 
      * @returns {Number[]} an array of 2 numbers, `[density, nearDensity]`
+     * @public
      */
     findDensity(particle, particles) {
         let density = 0;
@@ -3228,6 +3386,7 @@ class Pressure extends NearBehavior {
 	 * @param {Particle} particle
 	 * @param {Particle[]} particles 
 	 * @param {Number} timeStep 
+     * @public
 	 */
 	applyBehavior(particle, timeStep, particles) {
         let mass = particle.mass;
@@ -3266,6 +3425,7 @@ class Pressure extends NearBehavior {
 	 * @override
 	 * @param {Particle} particle 
 	 * @param {Particle[]} particles 
+     * @public
 	 */
 	applyCorrection(particle, particles) {
         return;
@@ -3275,6 +3435,7 @@ class Pressure extends NearBehavior {
    	/**
      * @override
      * @returns {null}
+     * @public
      */
     range() {
         return [this.radius * 2, this.radius * 2];
@@ -3284,7 +3445,97 @@ class Pressure extends NearBehavior {
 module.exports = Pressure;
 
 /***/ }),
-/* 35 */
+/* 36 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const NearBehavior = __webpack_require__(7);
+const Vector2D = __webpack_require__(2);
+
+/**
+ * `Viscosity` is a `NearBehavior` that adds a a viscous drag effect on a particle. Viscosity applies an impulse opposing movement 
+ * determined by the relative speed between particles and a set of drag coefficients. Tis is intended to be used in conjunction with the 
+ * `Pressure` behavior and both are position-based paradigms of SPH simulations. 
+ * 
+ * Note: this behavior can become unstable at high coefficient values. It is important to keep the relative velocity between particles low
+ * and avoid rapid impulses.
+ * @extends {NearBehavior}
+ */
+class Viscosity extends NearBehavior {
+
+    /**
+     * Instantiates new `Viscosity` object
+     * @param {Number} radius 
+     * @param {Number} linearCoeff the coefficient of linear drag, dominant at lower speeds (recommend [0, 1])
+     * @param {Number} QuadraticCoeff the coefficient of quadratic drag, dominant at higher speeds (recommend [0, 1])
+     */
+    constructor(radius, linearCoeff, QuadraticCoeff) {
+        super();
+        this.hasCorrection = false;
+        this.radius = radius;
+        this.linearCoeff = linearCoeff;
+        this.QuadraticCoeff = QuadraticCoeff;
+
+    }
+
+	/**
+	 * @override
+	 * @param {Particle} particle
+	 * @param {Particle[]} particles 
+	 * @param {Number} timeStep 
+     * @public
+	 */
+	applyBehavior(particle, timeStep, particles) {
+        let mass = particle.mass;
+        let impulse = new Vector2D(0,0);
+        for (let p of particles) {
+            if (p !== particle) {
+                let diff = p.pos.sub(particle.pos)
+                let mag = diff.mag();
+                let q = mag/this.radius;
+                if (q < 1) {
+                    diff.normalizeTo();
+                    let u = (p.vel.sub(particle.vel)).dot(diff);
+                    if (u > 0) {
+                        diff.multTo(timeStep * (1 - q) * (this.linearCoeff * u + this.QuadraticCoeff * u * u));
+                        p.vel.subTo(diff.mult(mass/(mass + p.mass)));
+                        p.pos.subTo(diff.mult(mass/(mass + p.mass) * timeStep));
+
+                        impulse.addTo(diff.mult(p.mass/(mass + p.mass)));
+                    }
+                }
+            }
+        }
+
+        particle.vel.addTo(impulse);
+        particle.pos.addTo(impulse.mult(timeStep));
+	}
+
+	/**
+     * This class does not require final position corrections
+	 * @override
+	 * @param {Particle} particle 
+	 * @param {Particle[]} particles 
+     * @public
+	 */
+	applyCorrection(particle, particles) {
+        return;
+	}
+
+
+   	/**
+     * @override
+     * @returns {null}
+     * @public
+     */
+    range() {
+        return [this.radius * 2, this.radius * 2];
+    }
+}
+
+module.exports = Viscosity;
+
+/***/ }),
+/* 37 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**
@@ -3293,10 +3544,10 @@ module.exports = Pressure;
 
 const renderers = module.exports;
 
-renderers.Renderer = __webpack_require__(23);
-renderers.ParticleRenderer = __webpack_require__(25);
-renderers.ConstraintRenderer = __webpack_require__(24);
-renderers.WallRenderer = __webpack_require__(26);
+renderers.Renderer = __webpack_require__(24);
+renderers.ParticleRenderer = __webpack_require__(26);
+renderers.ConstraintRenderer = __webpack_require__(25);
+renderers.WallRenderer = __webpack_require__(27);
 
 /***/ })
 /******/ 	]);

@@ -65,6 +65,14 @@ class PositionPivotConstraint extends Constraint {
     particles() {
         return [this.c1];
     }
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
+    }    
 }
 
 module.exports = PositionPivotConstraint;

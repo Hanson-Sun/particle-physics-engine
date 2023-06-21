@@ -73,6 +73,14 @@ class PositionDistanceConstraint extends Constraint {
     particles() {
         return [this.c1, this.c2];
     }
+
+    /**
+     * @override
+     * @param {Number} timeStep 
+     */
+    applyCorrection(timeStep) {
+        return;
+    }    
 }
 
 module.exports = PositionDistanceConstraint;

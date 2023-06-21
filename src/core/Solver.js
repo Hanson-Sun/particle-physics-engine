@@ -146,8 +146,11 @@ class Solver {
                 }
             }       
         }
-   
 
+        for (let c of this.constraints) {
+            c.applyCorrection(this.timeStep);
+        }
+   
         for (let wall of this.walls) {
             wall.applyCorrection(this.particles.findNear(wall));
         }
