@@ -34,7 +34,7 @@ p.addNearBehavior(new PenaltyCollision(500));
 world.addParticle(p);
 
 function generateStrand(x, y) {
-    let length = 400;
+    let length = 500;
     let separation = 10;
     let radius = 0.1;
     let mass = 1;
@@ -61,7 +61,7 @@ function generateStrand(x, y) {
 let h = 20;
 let end = 450;
 let start = 300;
-let distance = 1;
+let distance = 2;
 for (let i = start; i < end; i += distance) {
     generateStrand(i, h);
 }
