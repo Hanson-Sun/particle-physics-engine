@@ -576,21 +576,31 @@ class Particle extends HashGridItem {
 	}
 
 	/**
-	 * Adds a `SelfBehavior` to the particle
+	 * Adds a `SelfBehavior` to the particle if not added already
 	 * @param {SelfBehavior} b 
+	 * @return {Boolean} true if successfully added
 	 * @public
 	 */
 	addSelfBehavior(b) {
-		this.selfBehavior.push(b);
+		if (!this.selfBehavior.includes(b)) {
+			this.selfBehavior.push(b);
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	 * Adds a `NearBehavior` to the particle
+	 * Adds a `NearBehavior` to the particle if not added already
 	 * @param {NearBehavior} b 
+	 * @return {Boolean} true if successfully added
 	 * @public
 	 */
 	addNearBehavior(b) {
-		this.nearBehavior.push(b);
+		if (!this.nearBehavior.includes(b)) {
+			this.nearBehavior.push(b);
+			return true;
+		}
+		return false;
 	}
 
 	/**

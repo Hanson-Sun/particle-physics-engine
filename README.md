@@ -138,9 +138,9 @@ for particle in particles:
         applyCorrection()
 ```
 This engine does not use force-based accumulation, because changes must be immediately updated. As such, any forces are linearly-discretized and converted to a change in `position`. 
-```
-v = v + a * dt
-x = x + v * dt
+```js
+v = v + a * dt;
+x = x + v * dt;
 ```
 
 Velocity is typically not updated in behaviors or constraints unless it is a velocity dependent behavior (like collisions).
