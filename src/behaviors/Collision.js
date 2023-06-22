@@ -3,7 +3,7 @@ const NearBehavior = require("./NearBehavior");
 /**
  * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.
  * Collisions operate on impulse-based dynamics and are quite stiff. There are some potential issues with collision instability
- * when too much force / number of collisions stack.
+ * when too much force / number of collisions stack. When encountering stability issues, consider the use of the `PowderForce` behavior. 
  * @extends {NearBehavior}
  */
 class Collision extends NearBehavior {

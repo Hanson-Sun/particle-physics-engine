@@ -17,7 +17,8 @@ const Vector2D = pphys.utils.Vector2D,
       PenaltyCollision = pphys.behaviors.PenaltyCollision,
       Pressure = pphys.behaviors.Pressure,
       RigidGroup = pphys.constraints.RigidGroup,
-      Viscosity = pphys.behaviors.Viscosity;
+      Viscosity = pphys.behaviors.Viscosity,
+      PowderForce = pphys.behaviors.PowderForce;
 
 const canvas = document.getElementById("test");
 const width = 700;
@@ -46,39 +47,52 @@ const vel3 = new Vector2D(0, -90);
 
 const mag = 0.5;
 const mass = 10;
-const bounce = 0.95;
+const bounce = 0.90;
 
 
-for (let i = 0; i < 4000; i++) {
+for (let i = 0; i < 1000; i++) {
     let s1 = Math.random() < 0.5 ? -1 : 1;
     let s2 = Math.random() < 0.5 ? -1 : 1;
     let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
-    let p = new Vector2D((width - 50) * Math.random() + 50, (height/11) * Math.random() + 25);
-    let part = new Particle(p, v, mass, 1, bounce, 0);
+    let p = new Vector2D((width - 50) * Math.random() + 50, (height / 4.5) * Math.random() + 25);
+    let part = new Particle(p, v, mass, 2, bounce, 0);
     world.addParticle(part);
-    part.addNearBehavior(new Pressure(10, 20, 5, 100, true));
-    part.addNearBehavior(new Viscosity(10, 1, 0.1));
+    part.addNearBehavior(new PowderForce(4, 1000, 0.00001));
+    part.addNearBehavior(new Viscosity(4, 5, 0.1));
 }
 
-for (let i = 0; i < 0; i++) {
+for (let i = 0; i < 1000; i++) {
     let s1 = Math.random() < 0.5 ? -1 : 1;
     let s2 = Math.random() < 0.5 ? -1 : 1;
     let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
-    let p = new Vector2D((width - 50) * Math.random() + 100, (height - 50) * Math.random() + 25);
+    let p = new Vector2D((width - 50) * Math.random() + 50, (height / 4.5) * Math.random() + 25);
     let part = new Particle(p, v, mass, 3, bounce, 0);
     world.addParticle(part);
-    part.addNearBehavior(new Pressure(35, 25, 1, 140, true));
-    part.addNearBehavior(new Viscosity(35, 10, 1));
+    part.addNearBehavior(new PowderForce(6, 1000, 0.00001));
+    part.addNearBehavior(new Viscosity(6, 5, 0.1));
 }
 
 
-for (let i = 0; i < 0; i++) {
+for (let i = 0; i < 500; i++) {
     let s1 = Math.random() < 0.5 ? -1 : 1;
     let s2 = Math.random() < 0.5 ? -1 : 1;
     let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
-    let p = new Vector2D((width - 50) * Math.random() + 25, (height - 50) * Math.random() + 25);
-    let part = new Particle(p, v, mass, 1, bounce, 0);
+    let p = new Vector2D((width - 50) * Math.random() + 25, (height / 4.5) * Math.random() + 25);
+    let part = new Particle(p, v, mass, 4, bounce, 0);
     world.addParticle(part);
+    part.addNearBehavior(new PowderForce(8, 1000, 0.00001));
+    part.addNearBehavior(new Viscosity(8, 5, 0.1));
+}
+
+for (let i = 0; i < 300; i++) {
+    let s1 = Math.random() < 0.5 ? -1 : 1;
+    let s2 = Math.random() < 0.5 ? -1 : 1;
+    let v = new Vector2D(s1 * mag * Math.random(), s2 * mag * Math.random());
+    let p = new Vector2D((width - 50) * Math.random() + 25, (height / 4.5) * Math.random() + 25);
+    let part = new Particle(p, v, mass, 5, bounce, 0);
+    world.addParticle(part);
+    part.addNearBehavior(new PowderForce(10, 1000, 0.00001));
+    part.addNearBehavior(new Viscosity(10, 5, 0.1));
 }
 
 
@@ -104,20 +118,20 @@ world.addConstraint(cons);
 
 //world.addConstraint(new ForcePivotConstraint(pos2, pt2, 0, 100));
 //softBody();
-
+let shift = 70; 
 world.enableGravity(1);
-world.addWall(new WallBoundary(50, 130, width, 100));
-world.addWall(new WallBoundary(0, 250, width - 80, 320));
-world.addWall(new WallBoundary(300, 480, width, 400));
-world.addWall(new WallBoundary(0, 400, 270, 480));
-world.addWall(new WallBoundary(270, 480, 270, 505));
-world.addWall(new WallBoundary(300, 480, 300, 505));
+world.addWall(new WallBoundary(50, 150 + shift, width, 120 + shift));
+world.addWall(new WallBoundary(0, 250 + shift, width - 80, 320 + shift));
+world.addWall(new WallBoundary(300, 480 + shift, width, 400 + shift));
+world.addWall(new WallBoundary(0, 400 + shift, 270, 480 + shift));
+world.addWall(new WallBoundary(270, 480 + shift, 270, 505 + shift));
+world.addWall(new WallBoundary(300, 480 + shift, 300, 505 + shift));
 //world.addWall(new WallBoundary(50, 690, 650, 690));
 // world.addWall(new WallBoundary(0, 0, 700, 0));
 //  world.addWall(new WallBoundary(0, 700, 700, 700));
 //  world.addWall(new WallBoundary(0, 0, 0, 700));
 //  world.addWall(new WallBoundary(700, 0, 700, 700));
-world.enableCollisions();
+//world.enableCollisions();
 //world.addGlobalNearBehavior(new PenaltyCollision(500));
 
 world.constrainBoundary(0, width, 0, height);

@@ -15,3 +15,4 @@ behaviors.NearBehavior = require("./NearBehavior");
 behaviors.SelfBehavior = require("./SelfBehavior");
 behaviors.Pressure = require("./Pressure");
 behaviors.Viscosity = require("./Viscosity");
+behaviors.PowderForce = require("./PowderForce");

@@ -51,7 +51,7 @@ pphys.constraints = __webpack_require__(10);
 pphys.walls = __webpack_require__(15);
 pphys.core = __webpack_require__(19);
 pphys.behaviors = __webpack_require__(30);
-pphys.renderers = __webpack_require__(37);
+pphys.renderers = __webpack_require__(38);
 
 
 
@@ -2572,7 +2572,7 @@ const NearBehavior = __webpack_require__(7);
 /**
  * `Collision` is a `NearBehavior` that calculates collision interactions between a particle and its nearby particles.
  * Collisions operate on impulse-based dynamics and are quite stiff. There are some potential issues with collision instability
- * when too much force / number of collisions stack.
+ * when too much force / number of collisions stack. When encountering stability issues, consider the use of the `PowderForce` behavior. 
  * @extends {NearBehavior}
  */
 class Collision extends NearBehavior {
@@ -3039,6 +3039,7 @@ behaviors.NearBehavior = __webpack_require__(7);
 behaviors.SelfBehavior = __webpack_require__(6);
 behaviors.Pressure = __webpack_require__(35);
 behaviors.Viscosity = __webpack_require__(36);
+behaviors.PowderForce = __webpack_require__(37);
 
 /***/ }),
 /* 31 */
@@ -3538,6 +3539,112 @@ module.exports = Viscosity;
 
 /***/ }),
 /* 37 */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const NearBehavior = __webpack_require__(7);
+const Vector2D = __webpack_require__(2);
+
+/**
+ * `PowderForce` is a `NearBehavior` that models the interaction between particles that are rigidly constrained (like a fine powder). It is a stiff deviation of 
+ * `Pressure` behavior that directly applies a corrective impulse to maintain a target rest density. The idea for this behavior is inspired from the liquidFun engine.
+ * To simulate collision-like behavior, make the radius twice the size of the particle radius, and tune scaling and density values to fit to the collision stiffness.
+ * For more information on how this behavior works, go to the documentation for `Pressure`. This behavior can be used in conjunction with viscosity (0 quadratic drag) to 
+ * simulate sliding friction.
+ * @extends {NearBehavior}
+ */
+class PowderForce extends NearBehavior {
+
+    /**
+	 * Instantiates new `PowderForce` behavior object
+	 * @constructor
+     * @param {Number} radius effective radius, determines the area of which density is sampled from 
+     * @param {Number} pScale density relaxation scaling constant
+     * @param {Number} restDensity target resting density (there are no units, its an approximate value)
+     */
+    constructor(radius, pScale, restDensity) {
+        super();
+        this.hasCorrection = false;
+        this.radius = radius;
+        this.restDensity = restDensity;
+        this.pScale = pScale;
+    }
+
+    /**
+     * Calculates the approximate density within the effective radius of the particle
+     * @param {Particle} particle 
+     * @param {Particle[]} particles 
+     * @returns {Number[]} an array of 2 numbers, `[density, nearDensity]`
+     * @public
+     */
+    findDensity(particle, particles) {
+        let density = 0;
+        for (let p of particles) {
+            if (p !== particle) {
+                let diff = particle.pos.sub(p.pos).mag();
+                if (diff <= this.radius) {
+                    let q = (1-diff/this.radius);
+                    density = density + q * q;
+                }
+            }
+        }
+        return density;
+    }
+
+
+	/**
+	 * Calculates and applies the powder force relaxation
+	 * @override
+	 * @param {Particle} particle
+	 * @param {Particle[]} particles 
+	 * @param {Number} timeStep 
+     * @public
+	 */
+	applyBehavior(particle, timeStep, particles) {
+        let mass = particle.mass;
+        let density = this.findDensity(particle, particles);
+        let pressure = Math.max(0, this.pScale * (density - this.restDensity));
+
+        let dx = new Vector2D(0,0);
+        for (let p of particles) {
+            if (p !== particle) {
+                let diff = p.pos.sub(particle.pos);
+                let diffMag = diff.mag();
+                if (diffMag <= this.radius) {
+                    diff.normalizeTo();
+                    p.pos.addTo(diff.mult(mass/(mass + p.mass) * pressure * timeStep * timeStep));
+                    dx.subTo(diff.mult(p.mass/(mass + p.mass) * pressure * timeStep * timeStep));
+                }      
+            }
+        }
+        particle.pos.addTo(dx);
+	}
+
+	/**
+     * This class does not require final position corrections
+	 * @override
+	 * @param {Particle} particle 
+	 * @param {Particle[]} particles 
+     * @public
+	 */
+	applyCorrection(particle, particles) {
+        return;
+	}
+
+
+   	/**
+     * @override
+     * @returns {null}
+     * @public
+     */
+    range() {
+        return [this.radius * 2, this.radius * 2];
+    }
+}
+
+module.exports = PowderForce;
+
+/***/ }),
+/* 38 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 /**

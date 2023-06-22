@@ -55,6 +55,30 @@ More to come... if i remember...
 
 [Viscous Fluid Flow](./demos/flowing-fluid/index.html) (this has some stability issues)
 
+[Flowing Sand](./demos/powder-force/index.html) 
+
+**Work in Progress**:
+
+
+Surface Tension
+
+Brownian Motion
+
+Stacking (it explodes!)
+
+Fluid Playground
+
+Rigid Body
+
+Truss
+
+Charge Interactions
+
+Pendulums
+
+Input Handler Fun
+
+A little bit of everything
 
 ## Structure
 The key modules of `pphys2d` are
