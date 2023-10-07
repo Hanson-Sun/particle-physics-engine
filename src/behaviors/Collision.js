@@ -40,6 +40,8 @@ class Collision extends NearBehavior {
 
 				let posDiff1 = position.sub(c_position);
 				let posDiffMagSqr = posDiff1.magSqr();
+				//consider a refactor
+				//https://physics.stackexchange.com/questions/599278/how-can-i-calculate-the-final-velocities-of-two-spheres-after-an-elastic-collisi
 				if (posDiffMagSqr < (radius + c_radius) * (radius + c_radius)) {
 					let massConst1 = 2 * c_mass / (mass + c_mass);
 					let vDiff1 = velocity.sub(c_velocity);
