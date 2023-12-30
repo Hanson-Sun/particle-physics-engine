@@ -80,7 +80,7 @@ class WallBoundary extends Wall {
             } else if (distance <= particle.radius) {
                 let mag = particle.vel.reflect(this.normal);
                 mag.subTo(particle.vel);
-                mag.multTo(timeStep);
+                mag.multTo(timeStep * bounciness);
                 particle.vel.reflectTo(this.normal);
                 particle.vel.multTo(bounciness);
                 //let mag = particle.vel.reflect(this.normal).dot(this.normal);

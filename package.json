@@ -21,7 +21,7 @@
     "jsdoc": "^4.0.2",
     "jsdoc2diagram": "^0.0.6",
     "tui-jsdoc-template": "^1.2.2",
-    "webpack": "^5.84.1",
+    "webpack": "^5.89.0",
     "webpack-cli": "^5.1.1"
   },
   "files": [

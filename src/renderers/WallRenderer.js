@@ -32,6 +32,7 @@ class WallRenderer {
      * @public
      */
 	draw(w) {
+        this.context.strokeStyle = this.color;
         let vertices = w.vertices();
         if (vertices.length >= 1) {
             this.context.beginPath();

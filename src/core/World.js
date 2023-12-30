@@ -37,6 +37,9 @@ class World {
         this.xGrids = xGrids;
         this.yGrids = yGrids;
         this.gravity = null;
+        this.collision = null;
+        this.dragBehavior = null;
+        this.chargeBehavior = null;
         
         this.particles = new SpatialHashGrid(width, height, xGrids, yGrids);
         this.particlesList = [];
@@ -55,6 +58,14 @@ class World {
      * @public
      */
     addParticle(p) {
+        if (this.gravity)
+            p.addSelfBehavior(this.gravity);
+        if (this.collision)
+            p.addNearBehavior(this.collision);
+        if (this.dragBehavior)
+            p.addSelfBehavior(this.dragBehavior);
+        if (this.chargeBehavior)
+            p.addSelfBehavior(this.chargeBehavior);
         this.particles.add(p);
         this.updateParticleList();
     }
