@@ -57,7 +57,7 @@ More to come... if i remember...
 
 [Flowing Sand](./demos/powder-force/index.html) 
 
-[Connect 4](./demos/connect-four/index.html)
+[Connect 4](./demos/connect-four/index.html) (good example of mouse input and key input processing)
 
 **Work in Progress**:
 
