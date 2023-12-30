@@ -57,6 +57,8 @@ More to come... if i remember...
 
 [Flowing Sand](./demos/powder-force/index.html) 
 
+[Connect 4](./demos/connect-four/index.html)
+
 **Work in Progress**:
 
 
