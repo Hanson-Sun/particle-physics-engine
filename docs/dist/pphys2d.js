@@ -1656,7 +1656,7 @@ class WallBoundary extends Wall {
             } else if (distance <= particle.radius) {
                 let mag = particle.vel.reflect(this.normal);
                 mag.subTo(particle.vel);
-                mag.multTo(timeStep);
+                mag.multTo(timeStep * bounciness);
                 particle.vel.reflectTo(this.normal);
                 particle.vel.multTo(bounciness);
                 //let mag = particle.vel.reflect(this.normal).dot(this.normal);
@@ -2210,6 +2210,9 @@ class World {
         this.xGrids = xGrids;
         this.yGrids = yGrids;
         this.gravity = null;
+        this.collision = null;
+        this.dragBehavior = null;
+        this.chargeBehavior = null;
         
         this.particles = new SpatialHashGrid(width, height, xGrids, yGrids);
         this.particlesList = [];
@@ -2228,6 +2231,14 @@ class World {
      * @public
      */
     addParticle(p) {
+        if (this.gravity)
+            p.addSelfBehavior(this.gravity);
+        if (this.collision)
+            p.addNearBehavior(this.collision);
+        if (this.dragBehavior)
+            p.addSelfBehavior(this.dragBehavior);
+        if (this.chargeBehavior)
+            p.addSelfBehavior(this.chargeBehavior);
         this.particles.add(p);
         this.updateParticleList();
     }
@@ -2619,6 +2630,8 @@ class Collision extends NearBehavior {
 
 				let posDiff1 = position.sub(c_position);
 				let posDiffMagSqr = posDiff1.magSqr();
+				//consider a refactor
+				//https://physics.stackexchange.com/questions/599278/how-can-i-calculate-the-final-velocities-of-two-spheres-after-an-elastic-collisi
 				if (posDiffMagSqr < (radius + c_radius) * (radius + c_radius)) {
 					let massConst1 = 2 * c_mass / (mass + c_mass);
 					let vDiff1 = velocity.sub(c_velocity);
@@ -2927,6 +2940,7 @@ class WallRenderer {
      * @public
      */
 	draw(w) {
+        this.context.strokeStyle = this.color;
         let vertices = w.vertices();
         if (vertices.length >= 1) {
             this.context.beginPath();
