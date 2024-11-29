@@ -59,8 +59,9 @@ More to come... if i remember...
 
 [Connect 4](./demos/connect-four/index.html) (good example of mouse input and key input processing)
 
-**Work in Progress**:
+[Platformer](./demos/movement/index.html) (a little bit of everything)
 
+**Work in Progress**:
 
 Surface Tension
 
@@ -79,8 +80,6 @@ Charge Interactions
 Pendulums
 
 Input Handler Fun
-
-A little bit of everything
 
 ## Structure
 The key modules of `pphys2d` are
