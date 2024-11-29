@@ -118,7 +118,7 @@ setInterval(function () {
             drawVel = false;
         }
         if (keys["s"]) {
-            targetVel.y += diff;
+            targetVel.y = p.vel.y + 10;
         }
         if (keys["a"]) {
             targetVel.x -= diff;
