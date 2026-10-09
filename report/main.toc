@@ -1,0 +1,29 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Notation}{4}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Introduction to Particle-Based Systems}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Particle Systems and Constrained Systems}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Particle System Solvers and Integration Schemes}{5}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Semi-Implicit Euler}{6}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Predictor-Corrector}{8}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Iterative Gauss-Seidel}{9}{subsubsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.3}General Solver Algorithm}{10}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Penalty Constraints (PC)}{11}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Explanation and Generalization}{11}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Damping}{15}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Programmatic Implementation and Analysis}{18}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Inconsistent Stiffness}{18}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Convergence and Energy Conservation}{20}{subsubsection.3.3.2}%
+\contentsline {section}{\numberline {4}Relaxed Geometric Constraints (RGC)}{23}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Explanation and Generalization}{23}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Damping}{30}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Programmatic Implementation and Analysis}{31}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Inconsistent Stiffness}{31}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Constraint Convergence and Energy Conservation}{33}{subsubsection.4.3.2}%
+\contentsline {section}{\numberline {5}Conclusion}{35}{section.5}%
+\contentsline {section}{\numberline {6}Bibliography}{37}{section.6}%
+\contentsline {section}{\numberline {7}Appendix A: Additional Resources}{39}{section.7}%
+\contentsline {section}{\numberline {8}Appendix B: Detailed Calculations}{40}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Detailed PC Stretch Constraint Derivation}{40}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1}Part 1: No damping}{40}{subsubsection.8.1.1}%
+\contentsline {subsubsection}{\numberline {8.1.2}Part 2: With damping}{41}{subsubsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.2}Detailed RGC Stretch Constraint Derivation}{41}{subsection.8.2}%

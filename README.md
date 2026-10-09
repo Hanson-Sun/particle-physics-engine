@@ -112,7 +112,7 @@ Other miscellaneous classes include:
 - `HashItem` and `SpatialHashGrid` for efficient spatial partition
 
 ## Implementation Notes
-Technical implementation details can be found [here](./pphys_paper.pdf). It should provide a decent technical overview; however, it is **not up to date**.
+Technical implementation details can be found [here](./report/main.pdf). It should provide a decent technical overview; however, it is **not up to date**.
 
 As a general overview, `pphys2D` is an impulse-based particle physics engine that uses a predictor-corrector numerical integration model. Simply put, 
 ``` js

@@ -39,7 +39,7 @@
                     "content": "Particle Physics 2D Engine Documentation"
                 }
             ],
-            "static_dir": ["./demos", "./assets", "pphys_paper.pdf", "./dist"]
+            "static_dir": ["./demos", "./assets", "./report/main.pdf", "./dist"]
 
           }
     },
