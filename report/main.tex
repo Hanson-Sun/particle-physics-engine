@@ -1,6 +1,6 @@
 \documentclass[12pt, letterpaper]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath,amsfonts,amssymb, mathtools, geometry, algorithm, algorithmic, graphicx, wrapfig, float, hyperref, array, xurl,setspace,tocloft}
+\usepackage{amsmath,amsfonts,amssymb, mathtools, geometry, algorithm, algorithmic, graphicx, wrapfig, float, hyperref, array, xurl,setspace}
 \makeatletter
 \renewcommand*\env@matrix[1][\arraystretch]{%
   \edef\arraystretch{#1}%
@@ -549,7 +549,7 @@ $$=w_{j,1}\left( \frac{\partial}{\partial q_{j,1}} C_j(q_j) \right) ^{2} + w_{j,
 \end{equation}
 To clarify, the notation $\nabla_{q_{j,i}} C_j(q_j)$ is the term of $\nabla_{q_{j,i}} C_j(q_j)$ corresponding to $q_{j,i}$. Substituting back to Equation 36 and expanding yields,
 $$\Delta q_j = -\begin{bmatrix}[1.1]w_{j,1}&0&0&0\\0&w_{j,2}&0&0\\0&0&\ddots&0\\0&0&0&w_{j,4}\end{bmatrix} \frac{C_j(q_j)}{\sum\limits_{u}^{n} w_{j,u}[\nabla_{q_{j,u}} C_j(q_j) \cdot \nabla_{q_{j,u}} C_j(q_j)]} \begin{bmatrix}[1.1]\frac{\partial}{\partial q_{j,1}} C_j(q_j)\\\frac{\partial}{\partial q_{j,2}} C_j(q_j) \\ \vdots\\\frac{\partial}{\partial q_{j,n}}C_j(q_j)\end{bmatrix}$$
-$$\scalebox{1.2}{=\;-\begin{bmatrix}[1.3]w_{j,1}\frac{C_j(q_j)}{\sum\limits_{u}^{n} w_{j,u}[\nabla_{q_{j,u}} C_j(q_j) \cdot \nabla_{q_{j,u}} C_j(q_j)]} \frac{\partial}{\partial q_{j,1}} C_j(q_j)  \\ w_{j,2} \frac{C_j(q_j)} {\sum\limits_{u}^{n} w_{j,u} [\nabla_{q_{j,u}} C_j(q_j) \cdot \nabla_{q_{j,u}} C_j(q_j)]} \frac{\partial}{\partial q_{j,2}}C(x)\\ \vdots\\w_{j,n}\frac{C_j(q_j)}{\sum\limits_{u}^{n} w_{j,u}[\nabla_{q_{j,u}} C_j(q_j) \cdot \nabla_{q_{j,u}} C_j(q_j)]} \frac{\partial}{\partial q_{j,n}}C_j(q_j)\end{bmatrix}.}$$
+$$=-\begin{bmatrix}[1.3]w_{j,1}\frac{C_j(q_j)}{\sum\limits_{u}^{n} w_{j,u}[\nabla_{q_{j,u}} C_j(q_j) \cdot \nabla_{q_{j,u}} C_j(q_j)]} \frac{\partial}{\partial q_{j,1}} C_j(q_j)  \\ w_{j,2} \frac{C_j(q_j)} {\sum\limits_{u}^{n} w_{j,u} [\nabla_{q_{j,u}} C_j(q_j) \cdot \nabla_{q_{j,u}} C_j(q_j)]} \frac{\partial}{\partial q_{j,2}}C(x)\\ \vdots\\w_{j,n}\frac{C_j(q_j)}{\sum\limits_{u}^{n} w_{j,u}[\nabla_{q_{j,u}} C_j(q_j) \cdot \nabla_{q_{j,u}} C_j(q_j)]} \frac{\partial}{\partial q_{j,n}}C_j(q_j)\end{bmatrix}.$$
 Hence for each $q_{j,i}$,
 \begin{equation}
    \Delta q_{j,i} = -w_{j,i} \frac{C_j(q_j)}{\sum\limits^{n}_{u} w_{j,u}[ \nabla_{q_{j,k}}C_j(q_j) \cdot \nabla_{q_{j,k}}C_j(q_j)]}\nabla_{q_{j,i}}C_j(q_j).

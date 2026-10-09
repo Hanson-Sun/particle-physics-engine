@@ -33,9 +33,22 @@ jobs:
         with:
           path: ./docs
 
+  latex:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile LaTeX report
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: report
+          args: -pdf -interaction=nonstopmode -halt-on-error
+
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: webpack
+    needs: [webpack, latex]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
